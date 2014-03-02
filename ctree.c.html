@@ -1,0 +1,868 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ctree.c package &mdash; ctree alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="ctree alpha documentation" href="index.html" />
+    <link rel="up" title="ctree package" href="ctree.html" />
+    <link rel="next" title="ctree.cilk package" href="ctree.cilk.html" />
+    <link rel="prev" title="ctree package" href="ctree.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ctree.cilk.html" title="ctree.cilk package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ctree.html" title="ctree package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">ctree alpha documentation</a> &raquo;</li>
+          <li><a href="ctree.html" accesskey="U">ctree package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ctree-c-package">
+<h1>ctree.c package<a class="headerlink" href="#ctree-c-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ctree.c.codegen">
+<span id="ctree-c-codegen-module"></span><h2>ctree.c.codegen module<a class="headerlink" href="#module-ctree.c.codegen" title="Permalink to this headline">¶</a></h2>
+<p>Code generator for C constructs.</p>
+<dl class="class">
+<dt id="ctree.c.codegen.CCodeGen">
+<em class="property">class </em><tt class="descclassname">ctree.c.codegen.</tt><tt class="descname">CCodeGen</tt><big>(</big><em>indent=0</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ctree.html#ctree.codegen.CodeGenVisitor" title="ctree.codegen.CodeGenVisitor"><tt class="xref py py-class docutils literal"><span class="pre">ctree.codegen.CodeGenVisitor</span></tt></a></p>
+<p>Manages generation of C code.</p>
+<dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_AugAssign">
+<tt class="descname">visit_AugAssign</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_AugAssign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_AugAssign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_BinaryOp">
+<tt class="descname">visit_BinaryOp</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_BinaryOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_BinaryOp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_Block">
+<tt class="descname">visit_Block</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_Block"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_Block" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_CFile">
+<tt class="descname">visit_CFile</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_CFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_CFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_Cast">
+<tt class="descname">visit_Cast</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_Cast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_Cast" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_Constant">
+<tt class="descname">visit_Constant</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_Constant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_Constant" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_DoWhile">
+<tt class="descname">visit_DoWhile</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_DoWhile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_DoWhile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_For">
+<tt class="descname">visit_For</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_For"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_For" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_FunctionCall">
+<tt class="descname">visit_FunctionCall</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_FunctionCall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_FunctionCall" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_FunctionDecl">
+<tt class="descname">visit_FunctionDecl</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_FunctionDecl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_FunctionDecl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_If">
+<tt class="descname">visit_If</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_If"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_If" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_Return">
+<tt class="descname">visit_Return</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_Return"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_Return" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_String">
+<tt class="descname">visit_String</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_String"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_String" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_SymbolRef">
+<tt class="descname">visit_SymbolRef</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_SymbolRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_SymbolRef" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_TernaryOp">
+<tt class="descname">visit_TernaryOp</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_TernaryOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_TernaryOp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_UnaryOp">
+<tt class="descname">visit_UnaryOp</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_UnaryOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_UnaryOp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_While">
+<tt class="descname">visit_While</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_While"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_While" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ctree.c.dotgen">
+<span id="ctree-c-dotgen-module"></span><h2>ctree.c.dotgen module<a class="headerlink" href="#module-ctree.c.dotgen" title="Permalink to this headline">¶</a></h2>
+<p>DOT generator for C constructs.</p>
+<dl class="class">
+<dt id="ctree.c.dotgen.CDotGen">
+<em class="property">class </em><tt class="descclassname">ctree.c.dotgen.</tt><tt class="descname">CDotGen</tt><a class="reference internal" href="_modules/ctree/c/dotgen.html#CDotGen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.dotgen.CDotGen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ctree.html#ctree.dotgen.DotGenVisitor" title="ctree.dotgen.DotGenVisitor"><tt class="xref py py-class docutils literal"><span class="pre">ctree.dotgen.DotGenVisitor</span></tt></a></p>
+<p>Manages generation of DOT.</p>
+<dl class="method">
+<dt id="ctree.c.dotgen.CDotGen.label_Constant">
+<tt class="descname">label_Constant</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/dotgen.html#CDotGen.label_Constant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.dotgen.CDotGen.label_Constant" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.dotgen.CDotGen.label_FunctionDecl">
+<tt class="descname">label_FunctionDecl</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/dotgen.html#CDotGen.label_FunctionDecl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.dotgen.CDotGen.label_FunctionDecl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.dotgen.CDotGen.label_String">
+<tt class="descname">label_String</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/dotgen.html#CDotGen.label_String"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.dotgen.CDotGen.label_String" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.dotgen.CDotGen.label_SymbolRef">
+<tt class="descname">label_SymbolRef</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/dotgen.html#CDotGen.label_SymbolRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.dotgen.CDotGen.label_SymbolRef" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ctree.c.nodes">
+<span id="ctree-c-nodes-module"></span><h2>ctree.c.nodes module<a class="headerlink" href="#module-ctree.c.nodes" title="Permalink to this headline">¶</a></h2>
+<p>AST nodes for C constructs.</p>
+<dl class="function">
+<dt id="ctree.c.nodes.Add">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Add</tt><big>(</big><em>a</em>, <em>b=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.AddAssign">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">AddAssign</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#AddAssign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.AddAssign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.And">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">And</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#And"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.And" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.ArrayRef">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">ArrayRef</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#ArrayRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.ArrayRef" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.Arrow">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Arrow</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Arrow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Arrow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.Assign">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Assign</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Assign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Assign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.AugAssign">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">AugAssign</tt><big>(</big><em>target=None</em>, <em>op=None</em>, <em>value=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#AugAssign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.AugAssign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Expression" title="ctree.c.nodes.Expression"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Expression</span></tt></a></p>
+<p>Cite me.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.BinaryOp">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">BinaryOp</tt><big>(</big><em>left=None</em>, <em>op=None</em>, <em>right=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#BinaryOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.BinaryOp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Expression" title="ctree.c.nodes.Expression"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Expression</span></tt></a></p>
+<p>Cite me.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.BitAnd">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">BitAnd</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#BitAnd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.BitAnd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.BitAndAssign">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">BitAndAssign</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#BitAndAssign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.BitAndAssign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.BitNot">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">BitNot</tt><big>(</big><em>a</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#BitNot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.BitNot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.BitOr">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">BitOr</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#BitOr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.BitOr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.BitOrAssign">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">BitOrAssign</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#BitOrAssign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.BitOrAssign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.BitShL">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">BitShL</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#BitShL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.BitShL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.BitShLAssign">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">BitShLAssign</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#BitShLAssign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.BitShLAssign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.BitShR">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">BitShR</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#BitShR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.BitShR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.BitShRAssign">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">BitShRAssign</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#BitShRAssign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.BitShRAssign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.BitXor">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">BitXor</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#BitXor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.BitXor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.BitXorAssign">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">BitXorAssign</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#BitXorAssign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.BitXorAssign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Block">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Block</tt><big>(</big><em>body=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Block"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Block" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Statement" title="ctree.c.nodes.Statement"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Statement</span></tt></a></p>
+<p>Cite me.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.CFile">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">CFile</tt><big>(</big><em>name='generated'</em>, <em>body=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#CFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.CFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.CNode" title="ctree.c.nodes.CNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.CNode</span></tt></a>, <a class="reference internal" href="ctree.html#ctree.ast.File" title="ctree.ast.File"><tt class="xref py py-class docutils literal"><span class="pre">ctree.ast.File</span></tt></a></p>
+<p>Represents a .c file.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.CNode">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">CNode</tt><big>(</big><em>parent=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#CNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.CNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ctree.html#ctree.ast.CtreeNode" title="ctree.ast.CtreeNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.ast.CtreeNode</span></tt></a></p>
+<p>Base class for all C nodes in ctree.</p>
+<dl class="method">
+<dt id="ctree.c.nodes.CNode.codegen">
+<tt class="descname">codegen</tt><big>(</big><em>indent=0</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#CNode.codegen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.CNode.codegen" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Cast">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Cast</tt><big>(</big><em>ctype=None</em>, <em>value=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Cast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Cast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Expression" title="ctree.c.nodes.Expression"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Expression</span></tt></a></p>
+<p>doc</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.Comma">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Comma</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Comma"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Comma" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Constant">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Constant</tt><big>(</big><em>value=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Constant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Constant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Literal" title="ctree.c.nodes.Literal"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Literal</span></tt></a></p>
+<p>Section B.1.4 6.1.3.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.Deref">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Deref</tt><big>(</big><em>a</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Deref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Deref" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.Div">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Div</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Div"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Div" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.DivAssign">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">DivAssign</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#DivAssign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.DivAssign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.DoWhile">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">DoWhile</tt><big>(</big><em>body=</em>, <span class="optional">[</span><span class="optional">]</span><em>cond=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#DoWhile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.DoWhile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Statement" title="ctree.c.nodes.Statement"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Statement</span></tt></a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.Dot">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Dot</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Dot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.Eq">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Eq</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Eq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Eq" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Expression">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Expression</tt><big>(</big><em>parent=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Expression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Expression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.CNode" title="ctree.c.nodes.CNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.CNode</span></tt></a></p>
+<p>Cite me.</p>
+<dl class="method">
+<dt id="ctree.c.nodes.Expression.get_type">
+<tt class="descname">get_type</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Expression.get_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Expression.get_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.For">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">For</tt><big>(</big><em>init=None</em>, <em>test=None</em>, <em>incr=None</em>, <em>body=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#For"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.For" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Statement" title="ctree.c.nodes.Statement"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Statement</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.FunctionCall">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">FunctionCall</tt><big>(</big><em>func=None</em>, <em>args=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#FunctionCall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.FunctionCall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Expression" title="ctree.c.nodes.Expression"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Expression</span></tt></a></p>
+<p>Cite me.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.FunctionDecl">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">FunctionDecl</tt><big>(</big><em>return_type=None</em>, <em>name=None</em>, <em>params=</em>, <span class="optional">[</span><span class="optional">]</span><em>defn=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#FunctionDecl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.FunctionDecl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Statement" title="ctree.c.nodes.Statement"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Statement</span></tt></a></p>
+<p>Cite me.</p>
+<dl class="method">
+<dt id="ctree.c.nodes.FunctionDecl.get_callable">
+<tt class="descname">get_callable</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#FunctionDecl.get_callable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.FunctionDecl.get_callable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.nodes.FunctionDecl.get_type">
+<tt class="descname">get_type</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#FunctionDecl.get_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.FunctionDecl.get_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.nodes.FunctionDecl.set_inline">
+<tt class="descname">set_inline</tt><big>(</big><em>value=True</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#FunctionDecl.set_inline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.FunctionDecl.set_inline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.nodes.FunctionDecl.set_static">
+<tt class="descname">set_static</tt><big>(</big><em>value=True</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#FunctionDecl.set_static"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.FunctionDecl.set_static" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.Gt">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Gt</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Gt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Gt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.GtE">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">GtE</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#GtE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.GtE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.If">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">If</tt><big>(</big><em>cond=None</em>, <em>then=None</em>, <em>elze=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#If"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.If" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Statement" title="ctree.c.nodes.Statement"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Statement</span></tt></a></p>
+<p>Cite me.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Literal">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Literal</tt><big>(</big><em>parent=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Literal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Literal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Expression" title="ctree.c.nodes.Expression"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Expression</span></tt></a></p>
+<p>Cite me.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.Lt">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Lt</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Lt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Lt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.LtE">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">LtE</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#LtE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.LtE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.Mod">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Mod</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Mod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Mod" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.ModAssign">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">ModAssign</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#ModAssign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.ModAssign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.Mul">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Mul</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Mul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Mul" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.MulAssign">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">MulAssign</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#MulAssign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.MulAssign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.Not">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Not</tt><big>(</big><em>a</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Not"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Not" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.NotEq">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">NotEq</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#NotEq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.NotEq" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Op</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<dl class="class">
+<dt id="ctree.c.nodes.Op.Add">
+<em class="property">class </em><tt class="descname">Add</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.Add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.Add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.AddUnary">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">AddUnary</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.AddUnary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.AddUnary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.And">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">And</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.And"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.And" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.ArrayRef">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">ArrayRef</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.ArrayRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.ArrayRef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.Arrow">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">Arrow</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.Arrow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.Arrow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.Assign">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">Assign</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.Assign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.Assign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.BitAnd">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">BitAnd</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.BitAnd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.BitAnd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.BitNot">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">BitNot</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.BitNot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.BitNot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.BitOr">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">BitOr</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.BitOr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.BitOr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.BitShL">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">BitShL</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.BitShL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.BitShL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.BitShR">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">BitShR</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.BitShR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.BitShR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.BitXor">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">BitXor</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.BitXor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.BitXor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.Comma">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">Comma</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.Comma"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.Comma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.Deref">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">Deref</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.Deref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.Deref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.Div">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">Div</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.Div"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.Div" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.Dot">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">Dot</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.Dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.Dot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.Eq">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">Eq</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.Eq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.Eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.Gt">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">Gt</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.Gt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.Gt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.GtE">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">GtE</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.GtE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.GtE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.Lt">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">Lt</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.Lt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.Lt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.LtE">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">LtE</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.LtE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.LtE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.Mod">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">Mod</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.Mod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.Mod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.Mul">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">Mul</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.Mul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.Mul" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.Not">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">Not</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.Not"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.Not" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.NotEq">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">NotEq</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.NotEq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.NotEq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.Or">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">Or</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.Or"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.Or" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.PostDec">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">PostDec</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.PostDec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.PostDec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.PostInc">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">PostInc</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.PostInc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.PostInc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.PreDec">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">PreDec</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.PreDec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.PreDec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.PreInc">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">PreInc</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.PreInc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.PreInc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.Ref">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">Ref</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.Ref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.Ref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.SizeOf">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">SizeOf</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.SizeOf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.SizeOf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.Sub">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">Sub</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.Sub"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.Sub" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Op.SubUnary">
+<em class="property">class </em><tt class="descclassname">Op.</tt><tt class="descname">SubUnary</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.SubUnary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.SubUnary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.Or">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Or</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Or"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Or" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.PostDec">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">PostDec</tt><big>(</big><em>a</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#PostDec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.PostDec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.PostInc">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">PostInc</tt><big>(</big><em>a</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#PostInc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.PostInc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.PreDec">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">PreDec</tt><big>(</big><em>a</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#PreDec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.PreDec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.PreInc">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">PreInc</tt><big>(</big><em>a</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#PreInc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.PreInc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.Ref">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Ref</tt><big>(</big><em>a</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Ref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Ref" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Return">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Return</tt><big>(</big><em>value=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Return"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Return" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Statement" title="ctree.c.nodes.Statement"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Statement</span></tt></a></p>
+<p>Section B.2.3 6.6.6 line 4.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.SizeOf">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">SizeOf</tt><big>(</big><em>a</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#SizeOf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.SizeOf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.Statement">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Statement</tt><big>(</big><em>parent=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Statement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Statement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.CNode" title="ctree.c.nodes.CNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.CNode</span></tt></a></p>
+<p>Section B.2.3 6.6.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.String">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">String</tt><big>(</big><em>value=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#String"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.String" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Literal" title="ctree.c.nodes.Literal"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Literal</span></tt></a></p>
+<p>Cite me.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.Sub">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Sub</tt><big>(</big><em>a</em>, <em>b=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Sub"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Sub" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.c.nodes.SubAssign">
+<tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">SubAssign</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#SubAssign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.SubAssign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.SymbolRef">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">SymbolRef</tt><big>(</big><em>name=None</em>, <em>type=None</em>, <em>ctype=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#SymbolRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.SymbolRef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Literal" title="ctree.c.nodes.Literal"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Literal</span></tt></a></p>
+<p>Cite me.</p>
+<dl class="method">
+<dt id="ctree.c.nodes.SymbolRef.get_ctype">
+<tt class="descname">get_ctype</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#SymbolRef.get_ctype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.SymbolRef.get_ctype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.TernaryOp">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">TernaryOp</tt><big>(</big><em>cond=None</em>, <em>then=None</em>, <em>elze=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#TernaryOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.TernaryOp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Expression" title="ctree.c.nodes.Expression"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Expression</span></tt></a></p>
+<p>Cite me.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.UnaryOp">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">UnaryOp</tt><big>(</big><em>op=None</em>, <em>arg=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#UnaryOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.UnaryOp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Expression" title="ctree.c.nodes.Expression"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Expression</span></tt></a></p>
+<p>Cite me.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.c.nodes.While">
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">While</tt><big>(</big><em>cond=None</em>, <em>body=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#While"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.While" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Statement" title="ctree.c.nodes.Statement"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Statement</span></tt></a></p>
+<p>Cite me.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ctree.c">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ctree.c" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ctree.c package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-ctree.c.codegen">ctree.c.codegen module</a></li>
+<li><a class="reference internal" href="#module-ctree.c.dotgen">ctree.c.dotgen module</a></li>
+<li><a class="reference internal" href="#module-ctree.c.nodes">ctree.c.nodes module</a></li>
+<li><a class="reference internal" href="#module-ctree.c">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ctree.html"
+                        title="previous chapter">ctree package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ctree.cilk.html"
+                        title="next chapter">ctree.cilk package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/ctree.c.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ctree.cilk.html" title="ctree.cilk package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ctree.html" title="ctree package"
+             >previous</a> |</li>
+        <li><a href="index.html">ctree alpha documentation</a> &raquo;</li>
+          <li><a href="ctree.html" >ctree package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Michael Driscoll.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

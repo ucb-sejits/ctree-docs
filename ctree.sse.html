@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ctree.sse package &mdash; ctree alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="ctree alpha documentation" href="index.html" />
+    <link rel="up" title="ctree package" href="ctree.html" />
+    <link rel="prev" title="ctree.py package" href="ctree.py.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ctree.py.html" title="ctree.py package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">ctree alpha documentation</a> &raquo;</li>
+          <li><a href="ctree.html" accesskey="U">ctree package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ctree-sse-package">
+<h1>ctree.sse package<a class="headerlink" href="#ctree-sse-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ctree.sse.codegen">
+<span id="ctree-sse-codegen-module"></span><h2>ctree.sse.codegen module<a class="headerlink" href="#module-ctree.sse.codegen" title="Permalink to this headline">¶</a></h2>
+<p>Code generation for SSE.</p>
+<dl class="class">
+<dt id="ctree.sse.codegen.SseCodeGen">
+<em class="property">class </em><tt class="descclassname">ctree.sse.codegen.</tt><tt class="descname">SseCodeGen</tt><big>(</big><em>indent=0</em><big>)</big><a class="reference internal" href="_modules/ctree/sse/codegen.html#SseCodeGen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.sse.codegen.SseCodeGen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ctree.html#ctree.codegen.CodeGenVisitor" title="ctree.codegen.CodeGenVisitor"><tt class="xref py py-class docutils literal"><span class="pre">ctree.codegen.CodeGenVisitor</span></tt></a></p>
+<p>Visitor to generate SSE code.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ctree.sse.dotgen">
+<span id="ctree-sse-dotgen-module"></span><h2>ctree.sse.dotgen module<a class="headerlink" href="#module-ctree.sse.dotgen" title="Permalink to this headline">¶</a></h2>
+<p>DOT generation for SSE.</p>
+<dl class="class">
+<dt id="ctree.sse.dotgen.SseDotGen">
+<em class="property">class </em><tt class="descclassname">ctree.sse.dotgen.</tt><tt class="descname">SseDotGen</tt><a class="reference internal" href="_modules/ctree/sse/dotgen.html#SseDotGen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.sse.dotgen.SseDotGen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ctree.html#ctree.dotgen.DotGenVisitor" title="ctree.dotgen.DotGenVisitor"><tt class="xref py py-class docutils literal"><span class="pre">ctree.dotgen.DotGenVisitor</span></tt></a></p>
+<p>Visitor to generator DOT.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ctree.sse.nodes">
+<span id="ctree-sse-nodes-module"></span><h2>ctree.sse.nodes module<a class="headerlink" href="#module-ctree.sse.nodes" title="Permalink to this headline">¶</a></h2>
+<p>SSE vector nodes supported by ctree.</p>
+<dl class="class">
+<dt id="ctree.sse.nodes.SSENode">
+<em class="property">class </em><tt class="descclassname">ctree.sse.nodes.</tt><tt class="descname">SSENode</tt><big>(</big><em>parent=None</em><big>)</big><a class="reference internal" href="_modules/ctree/sse/nodes.html#SSENode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.sse.nodes.SSENode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ctree.html#ctree.ast.CtreeNode" title="ctree.ast.CtreeNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.ast.CtreeNode</span></tt></a></p>
+<p>Base class for all SSE nodes supported by ctree.</p>
+<dl class="method">
+<dt id="ctree.sse.nodes.SSENode.codegen">
+<tt class="descname">codegen</tt><big>(</big><em>indent=0</em><big>)</big><a class="reference internal" href="_modules/ctree/sse/nodes.html#SSENode.codegen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.sse.nodes.SSENode.codegen" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.sse.nodes.SSENode.dotgen">
+<tt class="descname">dotgen</tt><big>(</big><em>indent=0</em><big>)</big><a class="reference internal" href="_modules/ctree/sse/nodes.html#SSENode.dotgen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.sse.nodes.SSENode.dotgen" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ctree.sse">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ctree.sse" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ctree.sse package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-ctree.sse.codegen">ctree.sse.codegen module</a></li>
+<li><a class="reference internal" href="#module-ctree.sse.dotgen">ctree.sse.dotgen module</a></li>
+<li><a class="reference internal" href="#module-ctree.sse.nodes">ctree.sse.nodes module</a></li>
+<li><a class="reference internal" href="#module-ctree.sse">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ctree.py.html"
+                        title="previous chapter">ctree.py package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/ctree.sse.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ctree.py.html" title="ctree.py package"
+             >previous</a> |</li>
+        <li><a href="index.html">ctree alpha documentation</a> &raquo;</li>
+          <li><a href="ctree.html" >ctree package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Michael Driscoll.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

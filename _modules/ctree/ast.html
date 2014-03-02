@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ctree.ast &mdash; ctree alpha documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     'alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="ctree alpha documentation" href="../../index.html" />
+    <link rel="up" title="ctree" href="../ctree.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">ctree alpha documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../ctree.html" accesskey="U">ctree</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for ctree.ast</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Defines the hierarchy of AST nodes.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">ctypes</span> <span class="kn">as</span> <span class="nn">ct</span>
+
+<span class="kn">from</span> <span class="nn">ctree.codegen</span> <span class="kn">import</span> <span class="n">CodeGenVisitor</span>
+<span class="kn">from</span> <span class="nn">ctree.dotgen</span> <span class="kn">import</span> <span class="n">DotGenVisitor</span>
+
+<div class="viewcode-block" id="CtreeNode"><a class="viewcode-back" href="../../ctree.html#ctree.ast.CtreeNode">[docs]</a><span class="k">class</span> <span class="nc">CtreeNode</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">AST</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Base class for all AST nodes in ctree.&quot;&quot;&quot;</span>
+  <span class="n">_fields</span> <span class="o">=</span> <span class="p">[]</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Initialize a new AST Node.&quot;&quot;&quot;</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set attribute and preserve parent pointers.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s">&quot;parent&quot;</span><span class="p">:</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">CtreeNode</span><span class="p">):</span>
+        <span class="n">value</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span>
+      <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">grandchild</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+          <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grandchild</span><span class="p">,</span> <span class="n">CtreeNode</span><span class="p">):</span>
+            <span class="n">grandchild</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__setattr__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">codegen</span><span class="p">()</span>
+
+<div class="viewcode-block" id="CtreeNode.codegen"><a class="viewcode-back" href="../../ctree.html#ctree.ast.CtreeNode.codegen">[docs]</a>  <span class="k">def</span> <span class="nf">codegen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Node class </span><span class="si">%s</span><span class="s"> should override codegen()&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+</div>
+  <span class="k">def</span> <span class="nf">_to_dot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Retrieve the AST in DOT format for vizualization.&quot;&quot;&quot;</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Node class </span><span class="si">%s</span><span class="s"> should override _to_dot()&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
+  <span class="k">def</span> <span class="nf">_requires_semicolon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;When coverted to a string, this node should be followed by a semicolon.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">True</span>
+
+<div class="viewcode-block" id="CtreeNode.get_root"><a class="viewcode-back" href="../../ctree.html#ctree.ast.CtreeNode.get_root">[docs]</a>  <span class="k">def</span> <span class="nf">get_root</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Traverse the parent pointer list to find the eldest</span>
+<span class="sd">    parent without a parent, aka the root.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="bp">self</span>
+    <span class="k">while</span> <span class="n">root</span><span class="o">.</span><span class="n">parent</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+      <span class="n">root</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">parent</span>
+    <span class="k">return</span> <span class="n">root</span>
+</div>
+<div class="viewcode-block" id="CtreeNode.find_all"><a class="viewcode-back" href="../../ctree.html#ctree.ast.CtreeNode.find_all">[docs]</a>  <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a generator that yields all nodes of type</span>
+<span class="sd">    &#39;node_class&#39; type whose attributes match those specified</span>
+<span class="sd">    in kwargs. For example, all FunctionDecls with name &#39;fib&#39;</span>
+<span class="sd">    can be accessed via:</span>
+<span class="sd">    &gt;&gt;&gt; my_ast.find_all(FunctionDecl, name=&quot;fib&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">pred</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+      <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="o">==</span> <span class="n">node_class</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+          <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="o">!=</span> <span class="n">value</span><span class="p">:</span>
+              <span class="k">break</span>
+          <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="k">return</span> <span class="bp">True</span>
+      <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_if</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="CtreeNode.find"><a class="viewcode-back" href="../../ctree.html#ctree.ast.CtreeNode.find">[docs]</a>  <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns one node of type &#39;node_class&#39; whose attributes</span>
+<span class="sd">    match those specified in kwargs, or None if no nodes</span>
+<span class="sd">    can be found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matching</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">node_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">matching</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">None</span>
+</div>
+<div class="viewcode-block" id="CtreeNode.find_if"><a class="viewcode-back" href="../../ctree.html#ctree.ast.CtreeNode.find_if">[docs]</a>  <span class="k">def</span> <span class="nf">find_if</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns all nodes satisfying the given predicate,</span>
+<span class="sd">    or None if no satisfactory nodes are found. The search</span>
+<span class="sd">    starts from the current node.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">if</span> <span class="n">pred</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">node</span>
+</div>
+<div class="viewcode-block" id="CtreeNode.replace"><a class="viewcode-back" href="../../ctree.html#ctree.ast.CtreeNode.replace">[docs]</a>  <span class="k">def</span> <span class="nf">replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_node</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Replace the current node with &#39;new_node&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
+    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="s">&quot;Tried to replace a node without a parent.&quot;</span>
+    <span class="k">for</span> <span class="n">fieldname</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">iter_fields</span><span class="p">(</span><span class="n">parent</span><span class="p">):</span>
+      <span class="k">if</span> <span class="n">child</span> <span class="ow">is</span> <span class="bp">self</span><span class="p">:</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">fieldname</span><span class="p">,</span> <span class="n">new_node</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span> <span class="ow">in</span> <span class="n">child</span><span class="p">:</span>
+        <span class="n">child</span><span class="p">[</span> <span class="n">child</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">]</span> <span class="o">=</span> <span class="n">new_node</span>
+    <span class="k">return</span> <span class="n">new_node</span>
+</div>
+<div class="viewcode-block" id="CtreeNode.insert_before"><a class="viewcode-back" href="../../ctree.html#ctree.ast.CtreeNode.insert_before">[docs]</a>  <span class="k">def</span> <span class="nf">insert_before</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">older_sibling</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Insert the given node just before &#39;self&#39; in the current scope. Requires</span>
+<span class="sd">    that &#39;self&#39; be contained in a list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
+    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="s">&quot;Tried to insert_before a node without a parent.&quot;</span>
+    <span class="k">for</span> <span class="n">fieldname</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">iter_fields</span><span class="p">(</span><span class="n">parent</span><span class="p">):</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span> <span class="ow">in</span> <span class="n">child</span><span class="p">:</span>
+        <span class="n">child</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">older_sibling</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Couldn&#39;t perform insertion.&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="CtreeNode.insert_after"><a class="viewcode-back" href="../../ctree.html#ctree.ast.CtreeNode.insert_after">[docs]</a>  <span class="k">def</span> <span class="nf">insert_after</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">younger_sibling</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Insert the given node just before &#39;self&#39; in the current scope. Requires</span>
+<span class="sd">    that &#39;self&#39; be contained in a list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
+    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="s">&quot;Tried to insert_before a node without a parent.&quot;</span>
+    <span class="k">for</span> <span class="n">fieldname</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">iter_fields</span><span class="p">(</span><span class="n">parent</span><span class="p">):</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span> <span class="ow">in</span> <span class="n">child</span><span class="p">:</span>
+        <span class="n">child</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">younger_sibling</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Couldn&#39;t perform insertion.&quot;</span><span class="p">)</span>
+
+<span class="c"># ---------------------------------------------------------------------------</span>
+<span class="c"># Common nodes</span>
+</div></div>
+<div class="viewcode-block" id="CommonNode"><a class="viewcode-back" href="../../ctree.html#ctree.ast.CommonNode">[docs]</a><span class="k">class</span> <span class="nc">CommonNode</span><span class="p">(</span><span class="n">CtreeNode</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Miscellaneous IR nodes.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CommonNode.codegen"><a class="viewcode-back" href="../../ctree.html#ctree.ast.CommonNode.codegen">[docs]</a>  <span class="k">def</span> <span class="nf">codegen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">CommonCodeGen</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</div>
+  <span class="k">def</span> <span class="nf">_to_dot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">CommonDotGen</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Project"><a class="viewcode-back" href="../../ctree.html#ctree.ast.Project">[docs]</a><span class="k">class</span> <span class="nc">Project</span><span class="p">(</span><span class="n">CommonNode</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Holds a list files.&quot;&quot;&quot;</span>
+  <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;files&#39;</span><span class="p">]</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="n">files</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="File"><a class="viewcode-back" href="../../ctree.html#ctree.ast.File">[docs]</a><span class="k">class</span> <span class="nc">File</span><span class="p">(</span><span class="n">CommonNode</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Holds a list of statements.&quot;&quot;&quot;</span>
+  <span class="k">pass</span>
+</div>
+<div class="viewcode-block" id="CommonCodeGen"><a class="viewcode-back" href="../../ctree.html#ctree.ast.CommonCodeGen">[docs]</a><span class="k">class</span> <span class="nc">CommonCodeGen</span><span class="p">(</span><span class="n">CodeGenVisitor</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Manages conversion of all common nodes to txt.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CommonCodeGen.visit_File"><a class="viewcode-back" href="../../ctree.html#ctree.ast.CommonCodeGen.visit_File">[docs]</a>  <span class="k">def</span> <span class="nf">visit_File</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">&quot;;</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">))</span> <span class="o">+</span> <span class="s">&quot;;</span><span class="se">\n</span><span class="s">&quot;</span>
+
+</div></div>
+<div class="viewcode-block" id="CommonDotGen"><a class="viewcode-back" href="../../ctree.html#ctree.ast.CommonDotGen">[docs]</a><span class="k">class</span> <span class="nc">CommonDotGen</span><span class="p">(</span><span class="n">DotGenVisitor</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Manages coversion of all common nodes to dot.&quot;&quot;&quot;</span>
+  <span class="k">pass</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">ctree alpha documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../ctree.html" >ctree</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Michael Driscoll.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ctree.jit &mdash; ctree alpha documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     'alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="ctree alpha documentation" href="../../index.html" />
+    <link rel="up" title="ctree" href="../ctree.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">ctree alpha documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../ctree.html" accesskey="U">ctree</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for ctree.jit</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="kn">import</span> <span class="nn">ctree</span>
+<span class="kn">import</span> <span class="nn">ctypes</span>
+<span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">ctree.frontend</span> <span class="kn">import</span> <span class="n">get_ast</span>
+<span class="kn">from</span> <span class="nn">ctree.analyses</span> <span class="kn">import</span> <span class="n">VerifyOnlyCtreeNodes</span>
+
+<span class="kn">import</span> <span class="nn">llvm.core</span> <span class="kn">as</span> <span class="nn">ll</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="JitModule"><a class="viewcode-back" href="../../ctree.html#ctree.jit.JitModule">[docs]</a><span class="k">class</span> <span class="nc">JitModule</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Manages compilation of multiple ASTs.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">destroy_compilation_dir_on_exit</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">compilation_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s">&quot;ctree-&quot;</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">())</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ll_module</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">Module</span><span class="p">(</span><span class="s">&#39;ctree_generated_code&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ll_exec_engine</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">destroy_compilation_dir_on_exit</span> <span class="o">=</span> <span class="n">destroy_compilation_dir_on_exit</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Temporary compilation directory is: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">compilation_dir</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Removing temporary compilation directory </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">compilation_dir</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">destroy_compilation_dir_on_exit</span><span class="p">:</span>
+      <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compilation_dir</span><span class="p">)</span>
+
+<div class="viewcode-block" id="JitModule.load"><a class="viewcode-back" href="../../ctree.html#ctree.jit.JitModule.load">[docs]</a>  <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert node to LLVM IR and store the result in this module.&quot;&quot;&quot;</span>
+    <span class="c"># generate program text</span>
+    <span class="n">program_txt</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Generated C Program: &lt;&lt;&lt;</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">&gt;&gt;&gt;&quot;</span> <span class="o">%</span> <span class="n">program_txt</span><span class="p">)</span>
+
+    <span class="c"># determine paths for C and LLVM bitcode files</span>
+    <span class="n">c_src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compilation_dir</span><span class="p">,</span> <span class="s">&quot;generated.c&quot;</span><span class="p">)</span>
+    <span class="n">ll_bc_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compilation_dir</span><span class="p">,</span> <span class="s">&quot;generated.bc&quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;File for generated C: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">c_src_file</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;File for generated LLVM: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">ll_bc_file</span><span class="p">)</span>
+
+    <span class="c"># write program text to C file</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">c_src_file</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">c_file</span><span class="p">:</span>
+      <span class="n">c_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">program_txt</span><span class="p">)</span>
+
+    <span class="c"># call clang to generate LLVM bitcode file</span>
+    <span class="n">CC</span> <span class="o">=</span> <span class="n">ctree</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;jit&#39;</span><span class="p">][</span><span class="s">&#39;CC&#39;</span><span class="p">]</span>
+    <span class="n">CFLAGS</span> <span class="o">=</span> <span class="n">ctree</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;jit&#39;</span><span class="p">][</span><span class="s">&#39;CFLAGS&#39;</span><span class="p">]</span>
+    <span class="n">compile_cmd</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> -emit-llvm </span><span class="si">%s</span><span class="s"> -o </span><span class="si">%s</span><span class="s"> -c </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">CC</span><span class="p">,</span> <span class="n">CFLAGS</span><span class="p">,</span> <span class="n">ll_bc_file</span><span class="p">,</span> <span class="n">c_src_file</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Compilation command: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">compile_cmd</span><span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">compile_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="c"># load llvm bitcode</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ll_bc_file</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">bc</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">ll_module</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">Module</span><span class="o">.</span><span class="n">from_bitcode</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Generated LLVM Program: &lt;&lt;&lt;</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">&gt;&gt;&gt;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">ll_module</span><span class="p">)</span>
+
+    <span class="c"># return self to aid in method chaining</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</div>
+<div class="viewcode-block" id="JitModule.get_callable"><a class="viewcode-back" href="../../ctree.html#ctree.jit.JitModule.get_callable">[docs]</a>  <span class="k">def</span> <span class="nf">get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a python callable that dispatches to the requested C function.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">FunctionDecl</span><span class="p">)</span>
+
+    <span class="c"># get llvm represetation of function</span>
+    <span class="n">ll_function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ll_module</span><span class="o">.</span><span class="n">get_function_named</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c"># run jit compiler</span>
+    <span class="kn">from</span> <span class="nn">llvm.ee</span> <span class="kn">import</span> <span class="n">EngineBuilder</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">exec_engine</span> <span class="o">=</span> <span class="n">EngineBuilder</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ll_module</span><span class="p">)</span><span class="o">.</span><span class="n">mcjit</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">opt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+    <span class="n">c_func_ptr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exec_engine</span><span class="o">.</span><span class="n">get_pointer_to_function</span><span class="p">(</span><span class="n">ll_function</span><span class="p">)</span>
+
+    <span class="c"># cast c_func_ptr to python callable using ctypes</span>
+    <span class="n">cfunctype</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">get_type</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">cfunctype</span><span class="p">(</span><span class="n">c_func_ptr</span><span class="p">)</span>
+
+</div></div>
+<span class="k">class</span> <span class="nc">_ConcreteSpecializedFunction</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  A function backed by generated code.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c_ast</span><span class="p">,</span> <span class="n">entry_point_name</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">JitModule</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">c_ast</span><span class="o">.</span><span class="n">get_root</span><span class="p">())</span>
+    <span class="n">entry_point</span> <span class="o">=</span> <span class="n">c_ast</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">FunctionDecl</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">entry_point_name</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">get_callable</span><span class="p">(</span><span class="n">entry_point</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="p">,</span> <span class="s">&quot;Passing kwargs to SpecializedFunction.__call__ isn&#39;t supported.&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="LazySpecializedFunction"><a class="viewcode-back" href="../../ctree.html#ctree.jit.LazySpecializedFunction">[docs]</a><span class="k">class</span> <span class="nc">LazySpecializedFunction</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  A callable object that will produce executable</span>
+<span class="sd">  code just-in-time.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">py_ast</span><span class="p">,</span> <span class="n">entry_point_name</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">original_tree</span> <span class="o">=</span> <span class="n">py_ast</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">entry_point_name</span> <span class="o">=</span> <span class="n">entry_point_name</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">c_functions</span> <span class="o">=</span> <span class="p">{}</span> <span class="c"># typesig -&gt; callable map</span>
+
+  <span class="k">def</span> <span class="nf">_args_to_subconfig_safely</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Ask the instance for the component of the program configuration</span>
+<span class="sd">    that comes from the arguments, and then verify that it&#39;s hashable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">subconfig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args_to_subconfig</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="nb">hash</span><span class="p">(</span><span class="n">subconfig</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;args_to_subconfig must return a hashable type&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">subconfig</span>
+
+  <span class="k">def</span> <span class="nf">_next_tuning_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">()</span>
+
+  <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determines the program_configuration to be run. If it has yet to be built,</span>
+<span class="sd">    build it. Then, execute it.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ctree</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&quot;specialized function call&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="p">,</span> <span class="s">&quot;Passing kwargs to specialized functions isn&#39;t supported.&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;detected specialized function call with arg types: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span><span class="p">])</span>
+
+    <span class="n">args_subconfig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args_to_subconfig_safely</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">tuner_subconfig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_tuning_config</span><span class="p">()</span>
+    <span class="n">program_config</span> <span class="o">=</span> <span class="p">(</span><span class="n">args_subconfig</span><span class="p">,</span> <span class="n">tuner_subconfig</span><span class="p">)</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;specializer returned subconfig for arguments: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">args_subconfig</span><span class="p">,))</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;tuner returned subconfig: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tuner_subconfig</span><span class="p">,))</span>
+
+    <span class="k">if</span> <span class="n">program_config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_functions</span><span class="p">:</span>
+      <span class="n">ctree</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&quot;specialized function cache hit&quot;</span><span class="p">)</span>
+      <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;specialized function cache hit!&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;specialized function cache miss.&quot;</span><span class="p">)</span>
+      <span class="n">c_ast</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">original_tree</span><span class="p">),</span> <span class="n">program_config</span> <span class="p">)</span>
+      <span class="n">VerifyOnlyCtreeNodes</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">c_ast</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">c_functions</span><span class="p">[</span><span class="n">program_config</span><span class="p">]</span> <span class="o">=</span> <span class="n">_ConcreteSpecializedFunction</span><span class="p">(</span><span class="n">c_ast</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">entry_point_name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_functions</span><span class="p">[</span><span class="n">program_config</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LazySpecializedFunction.tune"><a class="viewcode-back" href="../../ctree.html#ctree.jit.LazySpecializedFunction.tune">[docs]</a>  <span class="k">def</span> <span class="nf">tune</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c"># TODO here&#39;s the tuning hook!</span>
+    <span class="k">for</span> <span class="n">program_config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_tuning_config</span><span class="p">():</span>
+      <span class="k">pass</span>
+
+
+  <span class="c"># =====================================================</span>
+  <span class="c"># Methods to be overridden by the user</span>
+</div>
+<div class="viewcode-block" id="LazySpecializedFunction.transform"><a class="viewcode-back" href="../../ctree.html#ctree.jit.LazySpecializedFunction.transform">[docs]</a>  <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">program_config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert the AST &#39;tree&#39; into a C AST, optionally taking advantage of the</span>
+<span class="sd">    actual runtime arguments.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">tree</span>
+</div>
+<div class="viewcode-block" id="LazySpecializedFunction.set_tuning_space"><a class="viewcode-back" href="../../ctree.html#ctree.jit.LazySpecializedFunction.set_tuning_space">[docs]</a>  <span class="k">def</span> <span class="nf">set_tuning_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">space</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Define the space of possible implementations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="LazySpecializedFunction.args_to_subconfig"><a class="viewcode-back" href="../../ctree.html#ctree.jit.LazySpecializedFunction.args_to_subconfig">[docs]</a>  <span class="k">def</span> <span class="nf">args_to_subconfig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract features from the arguments to define uniqueness of</span>
+<span class="sd">    this particular invocation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;arguments will not influence program_config. &quot;</span> <span class="o">+</span> \
+      <span class="s">&quot;Consider overriding args_to_subconfig() in </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">ctree alpha documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../ctree.html" >ctree</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Michael Driscoll.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

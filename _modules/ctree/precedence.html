@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ctree.precedence &mdash; ctree alpha documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     'alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="ctree alpha documentation" href="../../index.html" />
+    <link rel="up" title="ctree" href="../ctree.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">ctree alpha documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../ctree.html" accesskey="U">ctree</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for ctree.precedence</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utilities for determining precedence in C, with the goal of minimizing the</span>
+<span class="sd">number of parentheses in the generated code.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c"># ---------------------------------------------------------------------------</span>
+<span class="c"># dictionary of node class -&gt; precedence ids, where 1 denotes the highest-</span>
+<span class="c"># precedence operator and 18 is the lowest. This is how the table on</span>
+<span class="c"># wikipedia does it, but we flip it later so larger numbers mean higher</span>
+<span class="c"># precedence. For the origin of this table see</span>
+<span class="c"># http://en.wikipedia.org/wiki/Operators_in_C_and_C%2B%2B#Operator_precedence</span>
+<span class="n">_EXPR_TO_PRECEDENCE</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s">&#39;PostInc&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="s">&#39;PostDec&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="s">&#39;FunctionCall&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="s">&#39;ArrayRef&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="s">&#39;Dot&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="s">&#39;Arrow&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+
+  <span class="s">&#39;PreInc&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="s">&#39;PreDec&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="c">#&#39;Plus&#39;: 3,</span>
+  <span class="c"># TODO: work out naming schemes for add/sub unary</span>
+  <span class="s">&#39;AddUnary&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="c">#&#39;Minus&#39;: 3,</span>
+  <span class="s">&#39;SubUnary&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="s">&#39;Not&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="s">&#39;BitNot&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="c"># &#39;cast&#39;: 3,</span>
+  <span class="s">&#39;Deref&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="s">&#39;Ref&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="s">&#39;SizeOf&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+
+  <span class="s">&#39;Mul&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="s">&#39;Div&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="s">&#39;Mod&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+
+  <span class="s">&#39;Add&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+  <span class="s">&#39;Sub&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+
+  <span class="s">&#39;BitShL&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+  <span class="s">&#39;BitShR&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+
+  <span class="s">&#39;Lt&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+  <span class="s">&#39;LtE&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+  <span class="s">&#39;Gt&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+  <span class="s">&#39;GtE&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+
+  <span class="s">&#39;Eq&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+  <span class="s">&#39;NotEq&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+
+  <span class="s">&#39;BitAnd&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+
+  <span class="s">&#39;BitXor&#39;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+
+  <span class="s">&#39;BitOr&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+
+  <span class="s">&#39;And&#39;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span>
+
+  <span class="s">&#39;Or&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+
+  <span class="s">&#39;TernaryOp&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+
+  <span class="s">&#39;Assign&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+  <span class="s">&#39;AddAssign&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+  <span class="s">&#39;SubAssign&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+  <span class="s">&#39;MulAssign&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+  <span class="s">&#39;DivAssign&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+  <span class="s">&#39;ModAssign&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+  <span class="s">&#39;BitShLAssign&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+  <span class="s">&#39;BitShRAssign&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+  <span class="s">&#39;BitAndAssign&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+  <span class="s">&#39;BitXorAssign&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+  <span class="c"># &#39;BitNotAssign&#39;: 16,</span>
+
+  <span class="s">&#39;Comma&#39;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
+<span class="p">}</span>
+
+<div class="viewcode-block" id="get_precedence"><a class="viewcode-back" href="../../ctree.html#ctree.precedence.get_precedence">[docs]</a><span class="k">def</span> <span class="nf">get_precedence</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">_EXPR_TO_PRECEDENCE</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">]</span>
+  <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Unable to determine precedence for </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+  <span class="c"># flip precedence so higher numbers mean higher precedence</span>
+  <span class="k">return</span> <span class="mi">20</span> <span class="o">-</span> <span class="n">pred</span>
+</div>
+<span class="n">_PRECEDENCE_ASSOCIATES_LTR</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="mi">2</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+  <span class="mi">3</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+  <span class="mi">5</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+  <span class="mi">6</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+  <span class="mi">7</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+  <span class="mi">8</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+  <span class="mi">9</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+  <span class="mi">10</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+  <span class="mi">11</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+  <span class="mi">12</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+  <span class="mi">13</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+  <span class="mi">14</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+  <span class="mi">15</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+  <span class="mi">16</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+  <span class="mi">18</span><span class="p">:</span> <span class="bp">True</span>
+<span class="p">}</span>
+
+<div class="viewcode-block" id="is_left_associative"><a class="viewcode-back" href="../../ctree.html#ctree.precedence.is_left_associative">[docs]</a><span class="k">def</span> <span class="nf">is_left_associative</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">get_precedence</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="n">ltr</span> <span class="o">=</span> <span class="n">_PRECEDENCE_ASSOCIATES_LTR</span><span class="p">[</span><span class="mi">20</span> <span class="o">-</span> <span class="n">pred</span><span class="p">]</span>
+  <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot determine if operator </span><span class="si">%s</span><span class="s"> (precedence </span><span class="si">%d</span><span class="s">) is left- or right-associative.&quot;</span> \
+      <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">pred</span><span class="p">))</span>
+  <span class="k">return</span> <span class="n">ltr</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">ctree alpha documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../ctree.html" >ctree</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Michael Driscoll.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

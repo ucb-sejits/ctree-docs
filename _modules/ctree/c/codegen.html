@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ctree.c.codegen &mdash; ctree alpha documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     'alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="ctree alpha documentation" href="../../../index.html" />
+    <link rel="up" title="ctree" href="../../ctree.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">ctree alpha documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../ctree.html" accesskey="U">ctree</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for ctree.c.codegen</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Code generator for C constructs.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">ctypes</span> <span class="kn">as</span> <span class="nn">ct</span>
+<span class="kn">from</span> <span class="nn">ctree.ast</span> <span class="kn">import</span> <span class="n">CtreeNode</span>
+<span class="kn">from</span> <span class="nn">ctree.codegen</span> <span class="kn">import</span> <span class="n">CodeGenVisitor</span>
+<span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">ctree.precedence</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="CCodeGen"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen">[docs]</a><span class="k">class</span> <span class="nc">CCodeGen</span><span class="p">(</span><span class="n">CodeGenVisitor</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Manages generation of C code.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">_requires_parentheses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return True if the current precedence is less than the</span>
+<span class="sd">    parent precedence.  If the precedences are equal, check whether the</span>
+<span class="sd">    node&#39;s orientation to the parent matches associativity.  If it doesn&#39;t,</span>
+<span class="sd">    enclose with parentheses.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s">&#39;parent&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span>  <span class="n">node</span><span class="p">,</span> <span class="p">(</span><span class="n">UnaryOp</span><span class="p">,</span> <span class="n">BinaryOp</span><span class="p">))</span> <span class="ow">and</span> \
+       <span class="nb">isinstance</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="p">(</span><span class="n">UnaryOp</span><span class="p">,</span> <span class="n">BinaryOp</span><span class="p">)):</span>
+      <span class="n">prec</span> <span class="o">=</span> <span class="n">get_precedence</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">)</span>
+      <span class="n">parent_prec</span> <span class="o">=</span> <span class="n">get_precedence</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">op</span><span class="p">)</span>
+      <span class="n">is_first_child</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">UnaryOp</span><span class="p">)</span> <span class="ow">or</span> \
+                      <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">BinaryOp</span><span class="p">)</span> <span class="ow">and</span> <span class="n">node</span> <span class="ow">is</span> <span class="n">parent</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+      <span class="n">assoc_left</span> <span class="o">=</span> <span class="n">is_left_associative</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">op</span><span class="p">)</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">prec</span> <span class="o">&lt;</span> <span class="n">parent_prec</span><span class="p">)</span> <span class="ow">or</span> \
+         <span class="p">(</span><span class="n">prec</span> <span class="o">==</span> <span class="n">parent_prec</span> <span class="ow">and</span> <span class="p">(</span><span class="n">assoc_left</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">is_first_child</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">return</span> <span class="bp">False</span>
+
+  <span class="n">_CTYPE_TO_STR</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_bool</span><span class="p">:</span>       <span class="s">&quot;bool&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_char</span><span class="p">:</span>       <span class="s">&quot;char&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_wchar</span><span class="p">:</span>      <span class="s">&quot;wchar_t&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_byte</span><span class="p">:</span>       <span class="s">&quot;char&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_ubyte</span><span class="p">:</span>      <span class="s">&quot;unsigned char&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_short</span><span class="p">:</span>      <span class="s">&quot;short&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_ushort</span><span class="p">:</span>     <span class="s">&quot;unsigned short&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_int</span><span class="p">:</span>        <span class="s">&quot;int&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_uint</span><span class="p">:</span>       <span class="s">&quot;insigned int&quot;</span><span class="p">,</span>
+
+    <span class="c">## mbd: on my laptop, these types are ==:</span>
+    <span class="c">## [&#39;ssize_t&#39;, &#39;longlong&#39;, &#39;long&#39;]</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_long</span><span class="p">:</span>       <span class="s">&quot;long&quot;</span><span class="p">,</span>
+    <span class="c"># ct.c_ssize_t:    &quot;ssize_t&quot;,</span>
+    <span class="c"># ct.c_longlong:   &quot;long long&quot;,</span>
+
+    <span class="c">## [&#39;size_t&#39;, &#39;ulong&#39;, &#39;ulonglong&#39;]</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_size_t</span><span class="p">:</span>     <span class="s">&quot;size_t&quot;</span><span class="p">,</span>
+    <span class="c"># ct.c_ulong:      &quot;unsigned long&quot;,</span>
+    <span class="c"># ct.c_ulonglong:  &quot;unsigned long long&quot;,</span>
+
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_float</span><span class="p">:</span>      <span class="s">&quot;float&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_double</span><span class="p">:</span>     <span class="s">&quot;double&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_longdouble</span><span class="p">:</span> <span class="s">&quot;long double&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_char_p</span><span class="p">:</span>     <span class="s">&quot;char*&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_wchar_p</span><span class="p">:</span>    <span class="s">&quot;wchar_t*&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_void_p</span><span class="p">:</span>     <span class="s">&quot;void*&quot;</span><span class="p">,</span>
+    <span class="bp">None</span><span class="p">:</span>            <span class="s">&quot;void&quot;</span>
+  <span class="p">}</span>
+
+  <span class="k">def</span> <span class="nf">_ctype_to_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctype</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctype</span><span class="p">,</span> <span class="s">&#39;contents&#39;</span><span class="p">):</span>
+      <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">*&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ctype_to_str</span><span class="p">(</span> <span class="n">ctype</span><span class="o">.</span><span class="n">_type_</span> <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CTYPE_TO_STR</span><span class="p">[</span><span class="n">ctype</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+      <span class="k">pass</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Can&#39;t convert type </span><span class="si">%s</span><span class="s"> to a string.&quot;</span> <span class="o">%</span> <span class="n">ctype</span><span class="p">)</span>
+
+  <span class="c"># -------------------------------------------------------------------------</span>
+  <span class="c"># visitor methods</span>
+
+<div class="viewcode-block" id="CCodeGen.visit_FunctionDecl"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_FunctionDecl">[docs]</a>  <span class="k">def</span> <span class="nf">visit_FunctionDecl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="n">rettype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ctype_to_str</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">return_type</span><span class="p">)</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">params</span><span class="p">))</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">static</span><span class="p">:</span>
+      <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;static &quot;</span>
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">inline</span><span class="p">:</span>
+      <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;inline &quot;</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">(</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rettype</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">defn</span><span class="p">:</span>
+      <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot; </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_genblock</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">defn</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s</span>
+</div>
+<div class="viewcode-block" id="CCodeGen.visit_UnaryOp"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_UnaryOp">[docs]</a>  <span class="k">def</span> <span class="nf">visit_UnaryOp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">,</span> <span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">PostInc</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">PostDec</span><span class="p">)):</span>
+      <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">arg</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">arg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parentheses</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="o">%</span> <span class="n">s</span>
+</div>
+<div class="viewcode-block" id="CCodeGen.visit_BinaryOp"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_BinaryOp">[docs]</a>  <span class="k">def</span> <span class="nf">visit_BinaryOp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">ArrayRef</span><span class="p">):</span>
+      <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">[</span><span class="si">%s</span><span class="s">]&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parentheses</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="o">%</span> <span class="n">s</span>
+</div>
+<div class="viewcode-block" id="CCodeGen.visit_AugAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_AugAssign">[docs]</a>  <span class="k">def</span> <span class="nf">visit_AugAssign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">= </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="CCodeGen.visit_TernaryOp"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_TernaryOp">[docs]</a>  <span class="k">def</span> <span class="nf">visit_TernaryOp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> ? </span><span class="si">%s</span><span class="s"> : </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">cond</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">then</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">elze</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parentheses</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="o">%</span> <span class="n">s</span>
+</div>
+<div class="viewcode-block" id="CCodeGen.visit_Cast"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_Cast">[docs]</a>  <span class="k">def</span> <span class="nf">visit_Cast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="n">type_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ctype_to_str</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&quot;(</span><span class="si">%s</span><span class="s">) </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">type_str</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="CCodeGen.visit_Constant"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_Constant">[docs]</a>  <span class="k">def</span> <span class="nf">visit_Constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+      <span class="k">return</span> <span class="s">&quot;&#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="CCodeGen.visit_SymbolRef"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_SymbolRef">[docs]</a>  <span class="k">def</span> <span class="nf">visit_SymbolRef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
+      <span class="n">ty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ctype_to_str</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+      <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ty</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="CCodeGen.visit_Block"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_Block">[docs]</a>  <span class="k">def</span> <span class="nf">visit_Block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_genblock</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="CCodeGen.visit_Return"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_Return">[docs]</a>  <span class="k">def</span> <span class="nf">visit_Return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+      <span class="k">return</span> <span class="s">&quot;return </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="s">&quot;return&quot;</span>
+</div>
+<div class="viewcode-block" id="CCodeGen.visit_If"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_If">[docs]</a>  <span class="k">def</span> <span class="nf">visit_If</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="n">then</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_genblock</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">then</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">elze</span><span class="p">:</span>
+      <span class="n">elze</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_genblock</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">elze</span><span class="p">)</span>
+      <span class="k">return</span> <span class="s">&quot;if (</span><span class="si">%s</span><span class="s">) </span><span class="si">%s</span><span class="s"> else </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">cond</span><span class="p">,</span> <span class="n">then</span><span class="p">,</span> <span class="n">elze</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="s">&quot;if (</span><span class="si">%s</span><span class="s">) </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">cond</span><span class="p">,</span> <span class="n">then</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="CCodeGen.visit_While"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_While">[docs]</a>  <span class="k">def</span> <span class="nf">visit_While</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_genblock</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&quot;while (</span><span class="si">%s</span><span class="s">) </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">cond</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="CCodeGen.visit_DoWhile"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_DoWhile">[docs]</a>  <span class="k">def</span> <span class="nf">visit_DoWhile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_genblock</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&quot;do </span><span class="si">%s</span><span class="s"> while (</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">cond</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="CCodeGen.visit_For"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_For">[docs]</a>  <span class="k">def</span> <span class="nf">visit_For</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_genblock</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&quot;for (</span><span class="si">%s</span><span class="s">; </span><span class="si">%s</span><span class="s">; </span><span class="si">%s</span><span class="s">) </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">init</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">incr</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="CCodeGen.visit_FunctionCall"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_FunctionCall">[docs]</a>  <span class="k">def</span> <span class="nf">visit_FunctionCall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">args</span><span class="p">))</span>
+    <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">(</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="CCodeGen.visit_String"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_String">[docs]</a>  <span class="k">def</span> <span class="nf">visit_String</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">&#39;&quot;</span><span class="si">%s</span><span class="s">&quot;&#39;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span>
+</div>
+<div class="viewcode-block" id="CCodeGen.visit_CFile"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_CFile">[docs]</a>  <span class="k">def</span> <span class="nf">visit_CFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="n">stmts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_genblock</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="n">insert_curly_brackets</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">increase_indent</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&#39;// &lt;file: </span><span class="si">%s</span><span class="s">.</span><span class="si">%s</span><span class="s">&gt;</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">_ext</span><span class="p">,</span> <span class="n">stmts</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">ctree alpha documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../ctree.html" >ctree</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Michael Driscoll.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
