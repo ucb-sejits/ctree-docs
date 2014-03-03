@@ -169,28 +169,25 @@
       <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generic_visit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
 </div></div>
-<div class="viewcode-block" id="SetParamTypes"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.SetParamTypes">[docs]</a><span class="k">class</span> <span class="nc">SetParamTypes</span><span class="p">(</span><span class="n">NodeTransformer</span><span class="p">):</span>
+<div class="viewcode-block" id="SetTypeSignature"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.SetTypeSignature">[docs]</a><span class="k">class</span> <span class="nc">SetTypeSignature</span><span class="p">(</span><span class="n">NodeTransformer</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">  Sets the parameter types according to the given type signature.</span>
-<span class="sd">  For ctree FunctionDecl nodes, sets Param.type field.</span>
-<span class="sd">  For ast.FunctionDef nodes, sets arg.annotation field.</span>
-
-<span class="sd">  The target must have the same number of parameters as there</span>
-<span class="sd">  are entries in the type signature.</span>
+<span class="sd">  Sets the type signature of the target method/function.</span>
+<span class="sd">  For ctree FunctionDecl nodes, sets decl.return_type and arg.type fields.</span>
+<span class="sd">  For ast.FunctionDef nodes, sets def.returns and arg.annotation fields.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">typesig</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">typesig</span> <span class="o">=</span> <span class="n">typesig</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
-<div class="viewcode-block" id="SetParamTypes.visit_FunctionDecl"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.SetParamTypes.visit_FunctionDecl">[docs]</a>  <span class="k">def</span> <span class="nf">visit_FunctionDecl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<div class="viewcode-block" id="SetTypeSignature.visit_FunctionDecl"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.SetTypeSignature.visit_FunctionDecl">[docs]</a>  <span class="k">def</span> <span class="nf">visit_FunctionDecl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">:</span>
       <span class="n">node</span><span class="o">.</span><span class="n">return_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">typesig</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
       <span class="k">for</span> <span class="n">ty</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">typesig</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">node</span><span class="o">.</span><span class="n">params</span><span class="p">):</span>
         <span class="n">param</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">ty</span>
     <span class="k">return</span> <span class="n">node</span>
 </div>
-<div class="viewcode-block" id="SetParamTypes.visit_FunctionDef"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.SetParamTypes.visit_FunctionDef">[docs]</a>  <span class="k">def</span> <span class="nf">visit_FunctionDef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<div class="viewcode-block" id="SetTypeSignature.visit_FunctionDef"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.SetTypeSignature.visit_FunctionDef">[docs]</a>  <span class="k">def</span> <span class="nf">visit_FunctionDef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">:</span>
       <span class="n">node</span><span class="o">.</span><span class="n">returns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">typesig</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
       <span class="k">for</span> <span class="n">ty</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">typesig</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">node</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">args</span><span class="p">):</span>

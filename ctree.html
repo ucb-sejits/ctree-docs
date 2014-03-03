@@ -440,7 +440,7 @@ corresponding primitive types.</p>
 <p>Convert constructs with obvious C analogues.</p>
 <dl class="attribute">
 <dt id="ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP">
-<tt class="descname">PY_OP_TO_CTREE_OP</tt><em class="property"> = {&lt;class '_ast.Sub'&gt;: &lt;class 'ctree.c.nodes.Sub'&gt;, &lt;class '_ast.Mult'&gt;: &lt;class 'ctree.c.nodes.Mul'&gt;, &lt;class '_ast.Lt'&gt;: &lt;class 'ctree.c.nodes.Lt'&gt;, &lt;class '_ast.Add'&gt;: &lt;class 'ctree.c.nodes.Add'&gt;}</em><a class="headerlink" href="#ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">PY_OP_TO_CTREE_OP</tt><em class="property"> = {&lt;class '_ast.Lt'&gt;: &lt;class 'ctree.c.nodes.Lt'&gt;, &lt;class '_ast.Add'&gt;: &lt;class 'ctree.c.nodes.Add'&gt;, &lt;class '_ast.Sub'&gt;: &lt;class 'ctree.c.nodes.Sub'&gt;, &lt;class '_ast.Mult'&gt;: &lt;class 'ctree.c.nodes.Mul'&gt;}</em><a class="headerlink" href="#ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -519,22 +519,20 @@ yielding much cleaner python asts.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="ctree.transformations.SetParamTypes">
-<em class="property">class </em><tt class="descclassname">ctree.transformations.</tt><tt class="descname">SetParamTypes</tt><big>(</big><em>target</em>, <em>typesig</em><big>)</big><a class="reference internal" href="_modules/ctree/transformations.html#SetParamTypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.transformations.SetParamTypes" title="Permalink to this definition">¶</a></dt>
+<dt id="ctree.transformations.SetTypeSignature">
+<em class="property">class </em><tt class="descclassname">ctree.transformations.</tt><tt class="descname">SetTypeSignature</tt><big>(</big><em>target</em>, <em>typesig</em><big>)</big><a class="reference internal" href="_modules/ctree/transformations.html#SetTypeSignature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.transformations.SetTypeSignature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ast.NodeTransformer</span></tt></p>
-<p>Sets the parameter types according to the given type signature.
-For ctree FunctionDecl nodes, sets Param.type field.
-For ast.FunctionDef nodes, sets arg.annotation field.</p>
-<p>The target must have the same number of parameters as there
-are entries in the type signature.</p>
+<p>Sets the type signature of the target method/function.
+For ctree FunctionDecl nodes, sets decl.return_type and arg.type fields.
+For ast.FunctionDef nodes, sets def.returns and arg.annotation fields.</p>
 <dl class="method">
-<dt id="ctree.transformations.SetParamTypes.visit_FunctionDecl">
-<tt class="descname">visit_FunctionDecl</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/transformations.html#SetParamTypes.visit_FunctionDecl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.transformations.SetParamTypes.visit_FunctionDecl" title="Permalink to this definition">¶</a></dt>
+<dt id="ctree.transformations.SetTypeSignature.visit_FunctionDecl">
+<tt class="descname">visit_FunctionDecl</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/transformations.html#SetTypeSignature.visit_FunctionDecl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.transformations.SetTypeSignature.visit_FunctionDecl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="ctree.transformations.SetParamTypes.visit_FunctionDef">
-<tt class="descname">visit_FunctionDef</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/transformations.html#SetParamTypes.visit_FunctionDef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.transformations.SetParamTypes.visit_FunctionDef" title="Permalink to this definition">¶</a></dt>
+<dt id="ctree.transformations.SetTypeSignature.visit_FunctionDef">
+<tt class="descname">visit_FunctionDef</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/transformations.html#SetTypeSignature.visit_FunctionDef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.transformations.SetTypeSignature.visit_FunctionDef" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
