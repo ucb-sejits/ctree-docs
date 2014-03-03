@@ -131,10 +131,11 @@
 <div class="viewcode-block" id="get_precedence"><a class="viewcode-back" href="../../ctree.html#ctree.precedence.get_precedence">[docs]</a><span class="k">def</span> <span class="nf">get_precedence</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
   <span class="k">try</span><span class="p">:</span>
     <span class="n">pred</span> <span class="o">=</span> <span class="n">_EXPR_TO_PRECEDENCE</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">]</span>
+    <span class="c"># flip precedence so higher numbers mean higher precedence</span>
+    <span class="k">return</span> <span class="mi">20</span> <span class="o">-</span> <span class="n">pred</span>
   <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Unable to determine precedence for </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
-  <span class="c"># flip precedence so higher numbers mean higher precedence</span>
-  <span class="k">return</span> <span class="mi">20</span> <span class="o">-</span> <span class="n">pred</span>
+    <span class="k">pass</span>
+  <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Unable to determine precedence for </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
 </div>
 <span class="n">_PRECEDENCE_ASSOCIATES_LTR</span> <span class="o">=</span> <span class="p">{</span>
   <span class="mi">2</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
@@ -157,11 +158,11 @@
 <div class="viewcode-block" id="is_left_associative"><a class="viewcode-back" href="../../ctree.html#ctree.precedence.is_left_associative">[docs]</a><span class="k">def</span> <span class="nf">is_left_associative</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
   <span class="k">try</span><span class="p">:</span>
     <span class="n">pred</span> <span class="o">=</span> <span class="n">get_precedence</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-    <span class="n">ltr</span> <span class="o">=</span> <span class="n">_PRECEDENCE_ASSOCIATES_LTR</span><span class="p">[</span><span class="mi">20</span> <span class="o">-</span> <span class="n">pred</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">_PRECEDENCE_ASSOCIATES_LTR</span><span class="p">[</span><span class="mi">20</span> <span class="o">-</span> <span class="n">pred</span><span class="p">]</span>
   <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot determine if operator </span><span class="si">%s</span><span class="s"> (precedence </span><span class="si">%d</span><span class="s">) is left- or right-associative.&quot;</span> \
-      <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">pred</span><span class="p">))</span>
-  <span class="k">return</span> <span class="n">ltr</span></div>
+    <span class="k">pass</span>
+  <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot determine if operator </span><span class="si">%s</span><span class="s"> is left- or right-associative.&quot;</span> \
+    <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span></div>
 </pre></div>
 
           </div>
