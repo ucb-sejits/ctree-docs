@@ -52,6 +52,12 @@
 <span class="sd">AST nodes for C constructs.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
 <span class="kn">import</span> <span class="nn">ctypes</span> <span class="kn">as</span> <span class="nn">ct</span>
 <span class="kn">from</span> <span class="nn">ctree.ast</span> <span class="kn">import</span> <span class="n">CtreeNode</span><span class="p">,</span> <span class="n">File</span>
 
@@ -73,6 +79,40 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_ext</span> <span class="o">=</span> <span class="s">&quot;c&quot;</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="CFile.c_filename"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.CFile.c_filename">[docs]</a>  <span class="k">def</span> <span class="nf">c_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">.</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ext</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="CFile.bc_filename"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.CFile.bc_filename">[docs]</a>  <span class="k">def</span> <span class="nf">bc_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">.bc&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+</div>
+  <span class="k">def</span> <span class="nf">_compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">program_text</span><span class="p">,</span> <span class="n">compilation_dir</span><span class="p">):</span>
+    <span class="n">c_src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">compilation_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_filename</span><span class="p">())</span>
+    <span class="n">ll_bc_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">compilation_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bc_filename</span><span class="p">())</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;File for generated C: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">c_src_file</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;File for generated LLVM: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">ll_bc_file</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Generated C program: &lt;&lt;&lt;</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">&gt;&gt;&gt;&quot;</span> <span class="o">%</span> <span class="n">program_text</span><span class="p">)</span>
+
+    <span class="c"># write program text to C file</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">c_src_file</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">c_file</span><span class="p">:</span>
+      <span class="n">c_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">program_text</span><span class="p">)</span>
+
+    <span class="c"># call clang to generate LLVM bitcode file</span>
+    <span class="kn">import</span> <span class="nn">ctree</span>
+    <span class="n">CC</span> <span class="o">=</span> <span class="n">ctree</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;jit&#39;</span><span class="p">][</span><span class="s">&#39;CC&#39;</span><span class="p">]</span>
+    <span class="n">CFLAGS</span> <span class="o">=</span> <span class="n">ctree</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;jit&#39;</span><span class="p">][</span><span class="s">&#39;CFLAGS&#39;</span><span class="p">]</span>
+    <span class="n">compile_cmd</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> -emit-llvm </span><span class="si">%s</span><span class="s"> -o </span><span class="si">%s</span><span class="s"> -c </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">CC</span><span class="p">,</span> <span class="n">CFLAGS</span><span class="p">,</span> <span class="n">ll_bc_file</span><span class="p">,</span> <span class="n">c_src_file</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Compilation command: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">compile_cmd</span><span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">compile_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="c"># load llvm bitcode</span>
+    <span class="kn">import</span> <span class="nn">llvm.core</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ll_bc_file</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">bc</span><span class="p">:</span>
+      <span class="n">ll_module</span> <span class="o">=</span> <span class="n">llvm</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Module</span><span class="o">.</span><span class="n">from_bitcode</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Generated LLVM Program: &lt;&lt;&lt;</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">&gt;&gt;&gt;&quot;</span> <span class="o">%</span> <span class="n">ll_module</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ll_module</span>
 </div>
 <div class="viewcode-block" id="Statement"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Statement">[docs]</a><span class="k">class</span> <span class="nc">Statement</span><span class="p">(</span><span class="n">CNode</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;Section B.2.3 6.6.&quot;&quot;&quot;</span>

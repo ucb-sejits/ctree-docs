@@ -130,7 +130,14 @@
 
 <div class="viewcode-block" id="get_precedence"><a class="viewcode-back" href="../../ctree.html#ctree.precedence.get_precedence">[docs]</a><span class="k">def</span> <span class="nf">get_precedence</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
   <span class="k">try</span><span class="p">:</span>
-    <span class="n">pred</span> <span class="o">=</span> <span class="n">_EXPR_TO_PRECEDENCE</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="p">(</span><span class="n">UnaryOp</span><span class="p">,</span> <span class="n">BinaryOp</span><span class="p">)):</span>
+      <span class="n">op</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">TernaryOp</span><span class="p">):</span>
+      <span class="n">op</span> <span class="o">=</span> <span class="n">TernaryOp</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot determine operator for node </span><span class="si">%d</span><span class="s">.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
+
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">_EXPR_TO_PRECEDENCE</span><span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">__name__</span><span class="p">]</span>
     <span class="c"># flip precedence so higher numbers mean higher precedence</span>
     <span class="k">return</span> <span class="mi">20</span> <span class="o">-</span> <span class="n">pred</span>
   <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
