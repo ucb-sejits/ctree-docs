@@ -432,20 +432,6 @@ actual runtime arguments.</p>
 <div class="section" id="module-ctree.transformations">
 <span id="ctree-transformations-module"></span><h2>ctree.transformations module<a class="headerlink" href="#module-ctree.transformations" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="ctree.transformations.ConvertNumpyNdpointers">
-<em class="property">class </em><tt class="descclassname">ctree.transformations.</tt><tt class="descname">ConvertNumpyNdpointers</tt><a class="reference internal" href="_modules/ctree/transformations.html#ConvertNumpyNdpointers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.transformations.ConvertNumpyNdpointers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ast.NodeTransformer</span></tt></p>
-<p>Converts np.ctypeslib.ndpointer instance to the
-corresponding primitive types.</p>
-<p>For example: np.array(dtype=&#8217;float64&#8217;) -&gt; double*</p>
-<dl class="method">
-<dt id="ctree.transformations.ConvertNumpyNdpointers.visit_SymbolRef">
-<tt class="descname">visit_SymbolRef</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/transformations.html#ConvertNumpyNdpointers.visit_SymbolRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.transformations.ConvertNumpyNdpointers.visit_SymbolRef" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="ctree.transformations.FixUpParentPointers">
 <em class="property">class </em><tt class="descclassname">ctree.transformations.</tt><tt class="descname">FixUpParentPointers</tt><a class="reference internal" href="_modules/ctree/transformations.html#FixUpParentPointers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.transformations.FixUpParentPointers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ast.NodeTransformer</span></tt></p>
@@ -559,40 +545,47 @@ of the target file.</p>
 <div class="section" id="module-ctree.types">
 <span id="ctree-types-module"></span><h2>ctree.types module<a class="headerlink" href="#module-ctree.types" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="ctree.types.TypeFetcher">
-<em class="property">class </em><tt class="descclassname">ctree.types.</tt><tt class="descname">TypeFetcher</tt><a class="reference internal" href="_modules/ctree/types.html#TypeFetcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.TypeFetcher" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ast.NodeVisitor</span></tt></p>
-<p>Dynamically computes the type of the Expression.</p>
+<dt id="ctree.types.CtreeType">
+<em class="property">class </em><tt class="descclassname">ctree.types.</tt><tt class="descname">CtreeType</tt><a class="reference internal" href="_modules/ctree/types.html#CtreeType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.CtreeType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.ast.CtreeNode" title="ctree.ast.CtreeNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.ast.CtreeNode</span></tt></a></p>
 <dl class="method">
-<dt id="ctree.types.TypeFetcher.visit_BinaryOp">
-<tt class="descname">visit_BinaryOp</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/types.html#TypeFetcher.visit_BinaryOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.TypeFetcher.visit_BinaryOp" title="Permalink to this definition">¶</a></dt>
+<dt id="ctree.types.CtreeType.as_ctypes">
+<tt class="descname">as_ctypes</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/types.html#CtreeType.as_ctypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.CtreeType.as_ctypes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="ctree.types.TypeFetcher.visit_Constant">
-<tt class="descname">visit_Constant</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/types.html#TypeFetcher.visit_Constant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.TypeFetcher.visit_Constant" title="Permalink to this definition">¶</a></dt>
+<dt id="ctree.types.CtreeType.codegen">
+<tt class="descname">codegen</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/types.html#CtreeType.codegen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.CtreeType.codegen" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="ctree.types.TypeFetcher.visit_String">
-<tt class="descname">visit_String</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/types.html#TypeFetcher.visit_String"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.TypeFetcher.visit_String" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ctree.types.TypeFetcher.visit_SymbolRef">
-<tt class="descname">visit_SymbolRef</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/types.html#TypeFetcher.visit_SymbolRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.TypeFetcher.visit_SymbolRef" title="Permalink to this definition">¶</a></dt>
+<dt id="ctree.types.CtreeType.dotgen">
+<tt class="descname">dotgen</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/types.html#CtreeType.dotgen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.CtreeType.dotgen" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="function">
-<dt id="ctree.types.get_ctype">
-<tt class="descclassname">ctree.types.</tt><tt class="descname">get_ctype</tt><big>(</big><em>obj</em><big>)</big><a class="reference internal" href="_modules/ctree/types.html#get_ctype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.get_ctype" title="Permalink to this definition">¶</a></dt>
+<dl class="class">
+<dt id="ctree.types.CtreeTypeResolver">
+<em class="property">class </em><tt class="descclassname">ctree.types.</tt><tt class="descname">CtreeTypeResolver</tt><a class="reference internal" href="_modules/ctree/types.html#CtreeTypeResolver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.CtreeTypeResolver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<dl class="staticmethod">
+<dt id="ctree.types.CtreeTypeResolver.resolve">
+<em class="property">static </em><tt class="descname">resolve</tt><big>(</big><em>obj</em><big>)</big><a class="reference internal" href="_modules/ctree/types.html#CtreeTypeResolver.resolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.CtreeTypeResolver.resolve" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="ctree.types.TypeFetcher">
+<em class="property">class </em><tt class="descclassname">ctree.types.</tt><tt class="descname">TypeFetcher</tt><a class="reference internal" href="_modules/ctree/types.html#TypeFetcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.TypeFetcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ast.NodeVisitor</span></tt></p>
+<p>Dynamically computes the type of the Expression.</p>
+</dd></dl>
+
 <dl class="function">
-<dt id="ctree.types.pytype_to_ctype">
-<tt class="descclassname">ctree.types.</tt><tt class="descname">pytype_to_ctype</tt><big>(</big><em>pytype</em><big>)</big><a class="reference internal" href="_modules/ctree/types.html#pytype_to_ctype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.pytype_to_ctype" title="Permalink to this definition">¶</a></dt>
+<dt id="ctree.types.get_ctree_type">
+<tt class="descclassname">ctree.types.</tt><tt class="descname">get_ctree_type</tt><big>(</big><em>obj</em><big>)</big><a class="reference internal" href="_modules/ctree/types.html#get_ctree_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.get_ctree_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
