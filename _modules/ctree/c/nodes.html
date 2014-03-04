@@ -58,6 +58,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
+<span class="kn">import</span> <span class="nn">ctypes</span> <span class="kn">as</span> <span class="nn">ct</span>
 <span class="kn">from</span> <span class="nn">ctree.ast</span> <span class="kn">import</span> <span class="n">CtreeNode</span><span class="p">,</span> <span class="n">File</span>
 
 <div class="viewcode-block" id="CNode"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.CNode">[docs]</a><span class="k">class</span> <span class="nc">CNode</span><span class="p">(</span><span class="n">CtreeNode</span><span class="p">):</span>
@@ -115,8 +116,8 @@
 <div class="viewcode-block" id="Expression"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Expression">[docs]</a><span class="k">class</span> <span class="nc">Expression</span><span class="p">(</span><span class="n">CNode</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Expression.get_type"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Expression.get_type">[docs]</a>  <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">ctree.c.types</span> <span class="kn">import</span> <span class="n">CTypeFetcher</span>
-    <span class="k">return</span> <span class="n">CTypeFetcher</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">ctree.types</span> <span class="kn">import</span> <span class="n">TypeFetcher</span>
+    <span class="k">return</span> <span class="n">TypeFetcher</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 </div></div>
 <div class="viewcode-block" id="Return"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Return">[docs]</a><span class="k">class</span> <span class="nc">Return</span><span class="p">(</span><span class="n">Statement</span><span class="p">):</span>
@@ -249,9 +250,8 @@
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
 <div class="viewcode-block" id="FunctionDecl.get_type"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.FunctionDecl.get_type">[docs]</a>  <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">ctree.c.types</span> <span class="kn">import</span> <span class="n">FuncType</span>
     <span class="n">arg_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">get_ctype</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">FuncType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">return_type</span><span class="p">,</span> <span class="n">arg_types</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ct</span><span class="o">.</span><span class="n">CFUNCTYPE</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">return_type</span><span class="p">,</span> <span class="o">*</span><span class="n">arg_types</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="FunctionDecl.get_callable"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.FunctionDecl.get_callable">[docs]</a>  <span class="k">def</span> <span class="nf">get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">ctree.jit</span> <span class="kn">import</span> <span class="n">LazyTreeBuilder</span>

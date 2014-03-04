@@ -54,6 +54,7 @@
 <span class="kn">import</span> <span class="nn">tempfile</span>
 
 <span class="kn">import</span> <span class="nn">ctree</span>
+<span class="kn">import</span> <span class="nn">ctypes</span>
 <span class="kn">from</span> <span class="nn">ctree.ast</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">ctree.frontend</span> <span class="kn">import</span> <span class="n">get_ast</span>
@@ -95,7 +96,7 @@
     <span class="n">c_func_ptr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exec_engine</span><span class="o">.</span><span class="n">get_pointer_to_function</span><span class="p">(</span><span class="n">ll_function</span><span class="p">)</span>
 
     <span class="c"># cast c_func_ptr to python callable using ctypes</span>
-    <span class="n">cfunctype</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">get_type</span><span class="p">()</span><span class="o">.</span><span class="n">as_ctype</span><span class="p">()</span>
+    <span class="n">cfunctype</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">get_type</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">cfunctype</span><span class="p">(</span><span class="n">c_func_ptr</span><span class="p">)</span>
 
 </div></div>

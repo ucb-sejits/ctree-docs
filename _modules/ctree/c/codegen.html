@@ -52,11 +52,10 @@
 <span class="sd">Code generator for C constructs.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">ctypes</span> <span class="kn">as</span> <span class="nn">ct</span>
 <span class="kn">from</span> <span class="nn">ctree.ast</span> <span class="kn">import</span> <span class="n">CtreeNode</span>
-<span class="kn">from</span> <span class="nn">ctree.types</span> <span class="kn">import</span> <span class="n">get_ctree_type</span>
 <span class="kn">from</span> <span class="nn">ctree.codegen</span> <span class="kn">import</span> <span class="n">CodeGenVisitor</span>
 <span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">ctree.c.types</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">ctree.precedence</span> <span class="kn">import</span> <span class="o">*</span>
 
 
@@ -85,10 +84,51 @@
         <span class="k">return</span> <span class="bp">True</span>
     <span class="k">return</span> <span class="bp">False</span>
 
+  <span class="n">_CTYPE_TO_STR</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_bool</span><span class="p">:</span>       <span class="s">&quot;bool&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_char</span><span class="p">:</span>       <span class="s">&quot;char&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_wchar</span><span class="p">:</span>      <span class="s">&quot;wchar_t&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_byte</span><span class="p">:</span>       <span class="s">&quot;char&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_ubyte</span><span class="p">:</span>      <span class="s">&quot;unsigned char&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_short</span><span class="p">:</span>      <span class="s">&quot;short&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_ushort</span><span class="p">:</span>     <span class="s">&quot;unsigned short&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_int</span><span class="p">:</span>        <span class="s">&quot;int&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_uint</span><span class="p">:</span>       <span class="s">&quot;insigned int&quot;</span><span class="p">,</span>
+
+    <span class="c">## mbd: on my laptop, these types are ==:</span>
+    <span class="c">## [&#39;ssize_t&#39;, &#39;longlong&#39;, &#39;long&#39;]</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_long</span><span class="p">:</span>       <span class="s">&quot;long&quot;</span><span class="p">,</span>
+    <span class="c"># ct.c_ssize_t:    &quot;ssize_t&quot;,</span>
+    <span class="c"># ct.c_longlong:   &quot;long long&quot;,</span>
+
+    <span class="c">## [&#39;size_t&#39;, &#39;ulong&#39;, &#39;ulonglong&#39;]</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_size_t</span><span class="p">:</span>     <span class="s">&quot;size_t&quot;</span><span class="p">,</span>
+    <span class="c"># ct.c_ulong:      &quot;unsigned long&quot;,</span>
+    <span class="c"># ct.c_ulonglong:  &quot;unsigned long long&quot;,</span>
+
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_float</span><span class="p">:</span>      <span class="s">&quot;float&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_double</span><span class="p">:</span>     <span class="s">&quot;double&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_longdouble</span><span class="p">:</span> <span class="s">&quot;long double&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_char_p</span><span class="p">:</span>     <span class="s">&quot;char*&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_wchar_p</span><span class="p">:</span>    <span class="s">&quot;wchar_t*&quot;</span><span class="p">,</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">c_void_p</span><span class="p">:</span>     <span class="s">&quot;void*&quot;</span><span class="p">,</span>
+    <span class="bp">None</span><span class="p">:</span>            <span class="s">&quot;void&quot;</span>
+  <span class="p">}</span>
+
+  <span class="k">def</span> <span class="nf">_ctype_to_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctype</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctype</span><span class="p">,</span> <span class="s">&#39;contents&#39;</span><span class="p">):</span>
+      <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">*&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ctype_to_str</span><span class="p">(</span> <span class="n">ctype</span><span class="o">.</span><span class="n">_type_</span> <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CTYPE_TO_STR</span><span class="p">[</span><span class="n">ctype</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+      <span class="k">pass</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Can&#39;t convert type </span><span class="si">%s</span><span class="s"> to a string.&quot;</span> <span class="o">%</span> <span class="n">ctype</span><span class="p">)</span>
+
   <span class="c"># -------------------------------------------------------------------------</span>
   <span class="c"># visitor methods</span>
 
 <div class="viewcode-block" id="CCodeGen.visit_FunctionDecl"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_FunctionDecl">[docs]</a>  <span class="k">def</span> <span class="nf">visit_FunctionDecl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="n">rettype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ctype_to_str</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">return_type</span><span class="p">)</span>
     <span class="n">params</span> <span class="o">=</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">params</span><span class="p">))</span>
     <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
     <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">kernel</span><span class="p">:</span>
@@ -97,7 +137,7 @@
       <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;static &quot;</span>
     <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">inline</span><span class="p">:</span>
       <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;inline &quot;</span>
-    <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">(</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">return_type</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">(</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rettype</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">defn</span><span class="p">:</span>
       <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot; </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_genblock</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">defn</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">s</span>
@@ -124,7 +164,8 @@
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parentheses</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="o">%</span> <span class="n">s</span>
 </div>
 <div class="viewcode-block" id="CCodeGen.visit_Cast"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_Cast">[docs]</a>  <span class="k">def</span> <span class="nf">visit_Cast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s">&quot;(</span><span class="si">%s</span><span class="s">) </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+    <span class="n">type_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ctype_to_str</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&quot;(</span><span class="si">%s</span><span class="s">) </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">type_str</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="CCodeGen.visit_Constant"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_Constant">[docs]</a>  <span class="k">def</span> <span class="nf">visit_Constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -137,7 +178,7 @@
     <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">_global</span><span class="p">:</span>
       <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;__global &quot;</span>
     <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
-      <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+      <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ctype_to_str</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
     <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="CCodeGen.visit_Block"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_Block">[docs]</a>  <span class="k">def</span> <span class="nf">visit_Block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
@@ -178,28 +219,7 @@
 </div>
 <div class="viewcode-block" id="CCodeGen.visit_CFile"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_CFile">[docs]</a>  <span class="k">def</span> <span class="nf">visit_CFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
     <span class="n">stmts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_genblock</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="n">insert_curly_brackets</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">increase_indent</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-    <span class="k">return</span> <span class="s">&#39;// &lt;file: </span><span class="si">%s</span><span class="s">&gt;</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(),</span> <span class="n">stmts</span><span class="p">)</span>
-</div>
-<div class="viewcode-block" id="CCodeGen.visit_Void"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_Void">[docs]</a>  <span class="k">def</span> <span class="nf">visit_Void</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>   <span class="k">return</span> <span class="s">&quot;void&quot;</span></div>
-<div class="viewcode-block" id="CCodeGen.visit_Char"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_Char">[docs]</a>  <span class="k">def</span> <span class="nf">visit_Char</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>   <span class="k">return</span> <span class="s">&quot;char&quot;</span></div>
-<div class="viewcode-block" id="CCodeGen.visit_UChar"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_UChar">[docs]</a>  <span class="k">def</span> <span class="nf">visit_UChar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>  <span class="k">return</span> <span class="s">&quot;unsigned char&quot;</span></div>
-<div class="viewcode-block" id="CCodeGen.visit_Short"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_Short">[docs]</a>  <span class="k">def</span> <span class="nf">visit_Short</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>  <span class="k">return</span> <span class="s">&quot;short&quot;</span></div>
-<div class="viewcode-block" id="CCodeGen.visit_UShort"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_UShort">[docs]</a>  <span class="k">def</span> <span class="nf">visit_UShort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span> <span class="k">return</span> <span class="s">&quot;unsigned short&quot;</span></div>
-<div class="viewcode-block" id="CCodeGen.visit_Int"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_Int">[docs]</a>  <span class="k">def</span> <span class="nf">visit_Int</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>    <span class="k">return</span> <span class="s">&quot;int&quot;</span></div>
-<div class="viewcode-block" id="CCodeGen.visit_UInt"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_UInt">[docs]</a>  <span class="k">def</span> <span class="nf">visit_UInt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>   <span class="k">return</span> <span class="s">&quot;unsigned int&quot;</span></div>
-<div class="viewcode-block" id="CCodeGen.visit_Long"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_Long">[docs]</a>  <span class="k">def</span> <span class="nf">visit_Long</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>   <span class="k">return</span> <span class="s">&quot;long&quot;</span></div>
-<div class="viewcode-block" id="CCodeGen.visit_ULong"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_ULong">[docs]</a>  <span class="k">def</span> <span class="nf">visit_ULong</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>  <span class="k">return</span> <span class="s">&quot;unsigned long&quot;</span></div>
-<div class="viewcode-block" id="CCodeGen.visit_Float"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_Float">[docs]</a>  <span class="k">def</span> <span class="nf">visit_Float</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>  <span class="k">return</span> <span class="s">&quot;float&quot;</span></div>
-<div class="viewcode-block" id="CCodeGen.visit_Double"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_Double">[docs]</a>  <span class="k">def</span> <span class="nf">visit_Double</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span> <span class="k">return</span> <span class="s">&quot;double&quot;</span></div>
-<div class="viewcode-block" id="CCodeGen.visit_LongDouble"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_LongDouble">[docs]</a>  <span class="k">def</span> <span class="nf">visit_LongDouble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span> <span class="k">return</span> <span class="s">&quot;long double&quot;</span>
-</div>
-<div class="viewcode-block" id="CCodeGen.visit_Ptr"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_Ptr">[docs]</a>  <span class="k">def</span> <span class="nf">visit_Ptr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="n">base</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">base_type</span><span class="o">.</span><span class="n">codegen</span><span class="p">()</span>
-    <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">*&quot;</span> <span class="o">%</span> <span class="n">base</span>
-</div>
-<div class="viewcode-block" id="CCodeGen.visit_NdPointer"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_NdPointer">[docs]</a>  <span class="k">def</span> <span class="nf">visit_NdPointer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="n">inner_type</span> <span class="o">=</span> <span class="n">get_ctree_type</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">ptr</span><span class="o">.</span><span class="n">_dtype_</span><span class="p">)</span>
-    <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">Ptr</span><span class="p">(</span><span class="n">inner_type</span><span class="p">)</span><span class="o">.</span><span class="n">codegen</span><span class="p">()</span></div></div>
+    <span class="k">return</span> <span class="s">&#39;// &lt;file: </span><span class="si">%s</span><span class="s">&gt;</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(),</span> <span class="n">stmts</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

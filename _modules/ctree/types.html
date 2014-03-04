@@ -48,47 +48,137 @@
           <div class="body">
             
   <h1>Source code for ctree.types</h1><div class="highlight"><pre>
-<span class="kn">import</span> <span class="nn">abc</span>
-
-<span class="kn">from</span> <span class="nn">ctree.ast</span> <span class="kn">import</span> <span class="n">CtreeNode</span>
 <span class="kn">from</span> <span class="nn">ctree.visitors</span> <span class="kn">import</span> <span class="n">NodeVisitor</span>
+<span class="kn">from</span> <span class="nn">ctree.analyses</span> <span class="kn">import</span> <span class="n">DeclFinder</span>
+<span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="o">*</span>
 
-<div class="viewcode-block" id="CtreeType"><a class="viewcode-back" href="../../ctree.html#ctree.types.CtreeType">[docs]</a><span class="k">class</span> <span class="nc">CtreeType</span><span class="p">(</span><span class="n">CtreeNode</span><span class="p">):</span>
-<div class="viewcode-block" id="CtreeType.codegen"><a class="viewcode-back" href="../../ctree.html#ctree.types.CtreeType.codegen">[docs]</a>  <span class="k">def</span> <span class="nf">codegen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> should override codegen()&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
-</div>
-<div class="viewcode-block" id="CtreeType.as_ctypes"><a class="viewcode-back" href="../../ctree.html#ctree.types.CtreeType.as_ctypes">[docs]</a>  <span class="k">def</span> <span class="nf">as_ctypes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> should override as_ctypes()&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
-</div>
-<div class="viewcode-block" id="CtreeType.dotgen"><a class="viewcode-back" href="../../ctree.html#ctree.types.CtreeType.dotgen">[docs]</a>  <span class="k">def</span> <span class="nf">dotgen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> should override dotgen()&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
-</div>
-  <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">ctypes</span> <span class="kn">import</span> <span class="o">*</span>
 
-  <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
-
-</div>
 <div class="viewcode-block" id="TypeFetcher"><a class="viewcode-back" href="../../ctree.html#ctree.types.TypeFetcher">[docs]</a><span class="k">class</span> <span class="nc">TypeFetcher</span><span class="p">(</span><span class="n">NodeVisitor</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Dynamically computes the type of the Expression.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
-  <span class="k">pass</span>
+<div class="viewcode-block" id="TypeFetcher.visit_String"><a class="viewcode-back" href="../../ctree.html#ctree.types.TypeFetcher.visit_String">[docs]</a>  <span class="k">def</span> <span class="nf">visit_String</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">c_char_p</span>
 </div>
-<div class="viewcode-block" id="CtreeTypeResolver"><a class="viewcode-back" href="../../ctree.html#ctree.types.CtreeTypeResolver">[docs]</a><span class="k">class</span> <span class="nc">CtreeTypeResolver</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+<div class="viewcode-block" id="TypeFetcher.visit_SymbolRef"><a class="viewcode-back" href="../../ctree.html#ctree.types.TypeFetcher.visit_SymbolRef">[docs]</a>  <span class="k">def</span> <span class="nf">visit_SymbolRef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="c">#decl = DeclFinder().find(node)</span>
+      <span class="c">#return decl.get_type()</span>
+      <span class="k">return</span> <span class="s">&quot;??&quot;</span>
+</div>
+<div class="viewcode-block" id="TypeFetcher.visit_Constant"><a class="viewcode-back" href="../../ctree.html#ctree.types.TypeFetcher.visit_Constant">[docs]</a>  <span class="k">def</span> <span class="nf">visit_Constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">if</span>   <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>   <span class="k">return</span> <span class="n">c_char</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>   <span class="k">return</span> <span class="n">c_long</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span> <span class="k">return</span> <span class="n">c_double</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot determine type for Constant of type </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> \
+                      <span class="nb">type</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">__class__</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TypeFetcher.visit_BinaryOp"><a class="viewcode-back" href="../../ctree.html#ctree.types.TypeFetcher.visit_BinaryOp">[docs]</a>  <span class="k">def</span> <span class="nf">visit_BinaryOp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="n">lhs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+    <span class="n">rhs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">,</span> <span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">Add</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Sub</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Mul</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Div</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Mod</span><span class="p">,</span>
+                            <span class="n">Op</span><span class="o">.</span><span class="n">BitAnd</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitOr</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitXor</span><span class="p">,</span>
+                            <span class="n">Op</span><span class="o">.</span><span class="n">BitShL</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitShR</span><span class="p">)):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_usual_arithmetic_convert</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">,</span> <span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">Lt</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Gt</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">LtE</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">GtE</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Eq</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">NotEq</span><span class="p">,</span>
+                              <span class="n">Op</span><span class="o">.</span><span class="n">And</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Or</span><span class="p">)):</span>
+      <span class="k">return</span> <span class="n">c_int</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Comma</span><span class="p">):</span>
+      <span class="k">return</span> <span class="n">rhs</span>
+    <span class="k">elif</span> <span class="n">ininstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">ArrayRef</span><span class="p">):</span>
+      <span class="k">return</span> <span class="n">lhs</span><span class="o">.</span><span class="n">base</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot determine return type of (</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">).&quot;</span> <span class="o">%</span> \
+        <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">lhs</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">rhs</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
+</div>
   <span class="nd">@staticmethod</span>
-  <span class="nd">@abc.abstractmethod</span>
-<div class="viewcode-block" id="CtreeTypeResolver.resolve"><a class="viewcode-back" href="../../ctree.html#ctree.types.CtreeTypeResolver.resolve">[docs]</a>  <span class="k">def</span> <span class="nf">resolve</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">_usual_arithmetic_convert</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the return type of an arithmetic operator applied to arguments of</span>
+<span class="sd">    the built-in numeric types.</span>
+<span class="sd">    See C89 6.2.5.1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span>   <span class="n">t0</span> <span class="o">==</span> <span class="n">c_longdouble</span> <span class="ow">or</span> <span class="n">t1</span> <span class="o">==</span> <span class="n">c_longdouble</span><span class="p">:</span> <span class="k">return</span> <span class="n">c_longdouble</span>
+    <span class="k">elif</span> <span class="n">t0</span> <span class="o">==</span> <span class="n">c_double</span>     <span class="ow">or</span> <span class="n">t1</span> <span class="o">==</span> <span class="n">c_double</span><span class="p">:</span>     <span class="k">return</span> <span class="n">c_double</span>
+    <span class="k">elif</span> <span class="n">t0</span> <span class="o">==</span> <span class="n">c_float</span>      <span class="ow">or</span> <span class="n">t1</span> <span class="o">==</span> <span class="n">c_float</span><span class="p">:</span>      <span class="k">return</span> <span class="n">c_float</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">t0</span><span class="p">,</span> <span class="n">t1</span> <span class="o">=</span> <span class="n">TypeFetcher</span><span class="o">.</span><span class="n">_integer_promote</span><span class="p">(</span><span class="n">t0</span><span class="p">),</span> <span class="n">TypeFetcher</span><span class="o">.</span><span class="n">_integer_promote</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span>
+      <span class="k">if</span>   <span class="n">t0</span> <span class="o">==</span> <span class="n">c_ulong</span> <span class="ow">or</span> <span class="n">t1</span> <span class="o">==</span> <span class="n">c_ulong</span><span class="p">:</span> <span class="k">return</span> <span class="n">c_ulong</span>
+      <span class="k">elif</span> <span class="n">t0</span> <span class="o">==</span> <span class="n">c_long</span>  <span class="ow">or</span> <span class="n">t1</span> <span class="o">==</span> <span class="n">c_long</span> <span class="p">:</span> <span class="k">return</span> <span class="n">c_long</span>
+      <span class="k">elif</span> <span class="n">t0</span> <span class="o">==</span> <span class="n">c_uint</span>  <span class="ow">or</span> <span class="n">t1</span> <span class="o">==</span> <span class="n">c_uint</span> <span class="p">:</span> <span class="k">return</span> <span class="n">c_uint</span>
+      <span class="k">elif</span> <span class="n">t0</span> <span class="o">==</span> <span class="n">c_int</span>   <span class="ow">or</span> <span class="n">t1</span> <span class="o">==</span> <span class="n">c_int</span>  <span class="p">:</span> <span class="k">return</span> <span class="n">c_int</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Failed to apply usual arith conversion (c89 6.2.1.5) to types: </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> \
+                        <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">t0</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
+
+  <span class="nd">@staticmethod</span>
+  <span class="k">def</span> <span class="nf">_integer_promote</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Promote small types to integers accd to c89 6.2.1.1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="p">(</span><span class="n">c_int</span><span class="p">,</span> <span class="n">c_uint</span><span class="p">,</span> <span class="n">c_long</span><span class="p">,</span> <span class="n">c_ulong</span><span class="p">)):</span>
+      <span class="k">return</span> <span class="n">t</span>
+    <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="p">(</span><span class="n">c_char</span><span class="p">,</span> <span class="n">c_ubyte</span><span class="p">,</span> <span class="n">c_short</span><span class="p">,</span> <span class="n">c_ushort</span><span class="p">)):</span>
+      <span class="k">return</span> <span class="n">c_int</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot promote type </span><span class="si">%s</span><span class="s"> to an integer-type.&quot;</span> <span class="o">%</span> <span class="n">t</span><span class="p">)</span>
+
+
+<span class="c"># ---------------------------------------------------------------------------</span>
+<span class="c"># numpy-specific stuff</span>
+
+<span class="c"># FIXME we need an extensible way to register types for optional packages</span>
+<span class="c"># like numpy</span>
+</div>
+<span class="n">_PYTYPE_TO_CTYPE</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nb">int</span><span class="p">:</span>   <span class="n">c_long</span><span class="p">,</span>
+  <span class="nb">float</span><span class="p">:</span> <span class="n">c_double</span><span class="p">,</span>
+  <span class="nb">str</span><span class="p">:</span>   <span class="n">c_char_p</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">try</span><span class="p">:</span>
+  <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+  <span class="n">_NUMPY_DTYPE_TO_CTYPE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s">&#39;float64&#39;</span><span class="p">):</span> <span class="n">c_double</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s">&#39;float32&#39;</span><span class="p">):</span> <span class="n">c_float</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s">&#39;int64&#39;</span><span class="p">):</span>   <span class="n">c_long</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s">&#39;int32&#39;</span><span class="p">):</span>   <span class="n">c_int</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>          <span class="n">c_char_p</span><span class="p">,</span>
+    <span class="c"># TODO add the rest</span>
+  <span class="p">}</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+  <span class="n">_NUMPY_DTYPE_TO_CTYPE</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="pytype_to_ctype"><a class="viewcode-back" href="../../ctree.html#ctree.types.pytype_to_ctype">[docs]</a><span class="k">def</span> <span class="nf">pytype_to_ctype</span><span class="p">(</span><span class="n">pytype</span><span class="p">):</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">_PYTYPE_TO_CTYPE</span><span class="p">[</span><span class="n">pytype</span><span class="p">]</span>
+  <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
     <span class="k">pass</span>
-</div></div>
-<div class="viewcode-block" id="get_ctree_type"><a class="viewcode-back" href="../../ctree.html#ctree.types.get_ctree_type">[docs]</a><span class="k">def</span> <span class="nf">get_ctree_type</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-  <span class="kn">from</span> <span class="nn">ctree.c.types</span> <span class="kn">import</span> <span class="n">CTypeResolver</span><span class="p">,</span> <span class="n">NumpyTypeResolver</span>
-  <span class="k">for</span> <span class="n">resolver</span> <span class="ow">in</span> <span class="p">[</span><span class="n">CTypeResolver</span><span class="p">(),</span> <span class="n">NumpyTypeResolver</span><span class="p">()]:</span>
-    <span class="n">ty</span> <span class="o">=</span> <span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">ty</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
-      <span class="k">return</span> <span class="n">ty</span>
-  <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Unable to resolve type for </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="nb">repr</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span></div>
+
+  <span class="k">try</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">_NUMPY_DTYPE_TO_CTYPE</span><span class="p">[</span><span class="n">pytype</span><span class="p">]</span>
+  <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+  <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot determine ctype for Python object: </span><span class="si">%s</span><span class="s"> (type </span><span class="si">%s</span><span class="s">).&quot;</span> <span class="o">%</span> \
+    <span class="p">(</span><span class="n">pytype</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">pytype</span><span class="p">)))</span>
+
+</div>
+<div class="viewcode-block" id="get_ctype"><a class="viewcode-back" href="../../ctree.html#ctree.types.get_ctype">[docs]</a><span class="k">def</span> <span class="nf">get_ctype</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+  <span class="c"># check for numpy types</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">numpy</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+      <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ctypeslib</span><span class="o">.</span><span class="n">as_ctypes</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span>
+  <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+  <span class="k">return</span> <span class="n">pytype_to_ctype</span><span class="p">(</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="p">)</span></div>
 </pre></div>
 
           </div>
