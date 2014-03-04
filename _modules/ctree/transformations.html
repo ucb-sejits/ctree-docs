@@ -48,6 +48,7 @@
           <div class="body">
             
   <h1>Source code for ctree.transformations</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">ast</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">ctypes</span> <span class="kn">as</span> <span class="nn">ct</span>
@@ -101,11 +102,13 @@
       <span class="k">return</span> <span class="n">Return</span><span class="p">()</span>
 </div>
 <div class="viewcode-block" id="PyBasicConversions.visit_If"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.PyBasicConversions.visit_If">[docs]</a>  <span class="k">def</span> <span class="nf">visit_If</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">If</span><span class="p">)</span>
-    <span class="n">cond</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">test</span><span class="p">)</span>
-    <span class="n">then</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">]</span>
-    <span class="n">elze</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">orelse</span><span class="p">]</span> <span class="ow">or</span> <span class="bp">None</span>
-    <span class="k">return</span> <span class="n">If</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">then</span><span class="p">,</span> <span class="n">elze</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">If</span><span class="p">):</span>
+      <span class="n">cond</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">test</span><span class="p">)</span>
+      <span class="n">then</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">]</span>
+      <span class="n">elze</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">orelse</span><span class="p">]</span> <span class="ow">or</span> <span class="bp">None</span>
+      <span class="k">return</span> <span class="n">If</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">then</span><span class="p">,</span> <span class="n">elze</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generic_visit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="PyBasicConversions.visit_IfExp"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.PyBasicConversions.visit_IfExp">[docs]</a>  <span class="k">def</span> <span class="nf">visit_IfExp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
     <span class="n">cond</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">test</span><span class="p">)</span>
@@ -131,6 +134,8 @@
     <span class="k">return</span> <span class="n">FunctionCall</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="PyBasicConversions.visit_FunctionDef"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.PyBasicConversions.visit_FunctionDef">[docs]</a>  <span class="k">def</span> <span class="nf">visit_FunctionDef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">ast</span><span class="o">.</span><span class="n">get_docstring</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+      <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">args</span><span class="p">]</span>
     <span class="n">defn</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">FunctionDecl</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">returns</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">defn</span><span class="p">)</span>
@@ -155,45 +160,6 @@
     <span class="k">return</span> <span class="n">node</span>
 
 </div></div>
-<div class="viewcode-block" id="StripPythonDocstrings"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.StripPythonDocstrings">[docs]</a><span class="k">class</span> <span class="nc">StripPythonDocstrings</span><span class="p">(</span><span class="n">NodeTransformer</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">  Remove docstrings like this one from classes and method defs.</span>
-<span class="sd">  &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="StripPythonDocstrings.visit_FunctionDef"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.StripPythonDocstrings.visit_FunctionDef">[docs]</a>  <span class="k">def</span> <span class="nf">visit_FunctionDef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">ast</span><span class="o">.</span><span class="n">get_docstring</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
-      <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generic_visit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-</div>
-<div class="viewcode-block" id="StripPythonDocstrings.visit_ClassDef"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.StripPythonDocstrings.visit_ClassDef">[docs]</a>  <span class="k">def</span> <span class="nf">visit_ClassDef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">ast</span><span class="o">.</span><span class="n">get_docstring</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
-      <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generic_visit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-</div></div>
-<div class="viewcode-block" id="SetTypeSignature"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.SetTypeSignature">[docs]</a><span class="k">class</span> <span class="nc">SetTypeSignature</span><span class="p">(</span><span class="n">NodeTransformer</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">  Sets the type signature of the target method/function.</span>
-<span class="sd">  For ctree FunctionDecl nodes, sets decl.return_type and arg.type fields.</span>
-<span class="sd">  For ast.FunctionDef nodes, sets def.returns and arg.annotation fields.</span>
-<span class="sd">  &quot;&quot;&quot;</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">typesig</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">typesig</span> <span class="o">=</span> <span class="n">typesig</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
-
-<div class="viewcode-block" id="SetTypeSignature.visit_FunctionDecl"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.SetTypeSignature.visit_FunctionDecl">[docs]</a>  <span class="k">def</span> <span class="nf">visit_FunctionDecl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">:</span>
-      <span class="n">node</span><span class="o">.</span><span class="n">return_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">typesig</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-      <span class="k">for</span> <span class="n">ty</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">typesig</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">node</span><span class="o">.</span><span class="n">params</span><span class="p">):</span>
-        <span class="n">param</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">ty</span>
-    <span class="k">return</span> <span class="n">node</span>
-</div>
-<div class="viewcode-block" id="SetTypeSignature.visit_FunctionDef"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.SetTypeSignature.visit_FunctionDef">[docs]</a>  <span class="k">def</span> <span class="nf">visit_FunctionDef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">:</span>
-      <span class="n">node</span><span class="o">.</span><span class="n">returns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">typesig</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-      <span class="k">for</span> <span class="n">ty</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">typesig</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">node</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">args</span><span class="p">):</span>
-        <span class="n">arg</span><span class="o">.</span><span class="n">annotation</span> <span class="o">=</span> <span class="n">ty</span>
-    <span class="k">return</span> <span class="n">node</span>
-</div></div>
 <div class="viewcode-block" id="ConvertNumpyNdpointers"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.ConvertNumpyNdpointers">[docs]</a><span class="k">class</span> <span class="nc">ConvertNumpyNdpointers</span><span class="p">(</span><span class="n">NodeTransformer</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Converts np.ctypeslib.ndpointer instance to the</span>
@@ -208,7 +174,19 @@
     <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="s">&#39;_dtype_&#39;</span><span class="p">):</span>
       <span class="n">node</span><span class="o">.</span><span class="n">ctype</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span>
       <span class="n">node</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">ctype</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">node</span></div></div>
+    <span class="k">return</span> <span class="n">node</span>
+
+</div></div>
+<div class="viewcode-block" id="ResolveGeneratedPathRefs"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.ResolveGeneratedPathRefs">[docs]</a><span class="k">class</span> <span class="nc">ResolveGeneratedPathRefs</span><span class="p">(</span><span class="n">NodeTransformer</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Converts any instances of ctree.ast.GeneratedPathRef into strings containing the absolute path</span>
+<span class="sd">  of the target file.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compilation_dir</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">compilation_dir</span> <span class="o">=</span> <span class="n">compilation_dir</span>
+
+<div class="viewcode-block" id="ResolveGeneratedPathRefs.visit_GeneratedPathRef"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.ResolveGeneratedPathRefs.visit_GeneratedPathRef">[docs]</a>  <span class="k">def</span> <span class="nf">visit_GeneratedPathRef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">String</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compilation_dir</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">get_filename</span><span class="p">()))</span></div></div>
 </pre></div>
 
           </div>

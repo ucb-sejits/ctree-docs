@@ -67,6 +67,11 @@
 <em class="property">class </em><tt class="descclassname">ctree.cpp.codegen.</tt><tt class="descname">CppCodeGen</tt><big>(</big><em>indent=0</em><big>)</big><a class="reference internal" href="_modules/ctree/cpp/codegen.html#CppCodeGen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.cpp.codegen.CppCodeGen" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ctree.html#ctree.codegen.CodeGenVisitor" title="ctree.codegen.CodeGenVisitor"><tt class="xref py py-class docutils literal"><span class="pre">ctree.codegen.CodeGenVisitor</span></tt></a></p>
 <p>Visitor to generate C preprocessor directives.</p>
+<dl class="method">
+<dt id="ctree.cpp.codegen.CppCodeGen.visit_CppInclude">
+<tt class="descname">visit_CppInclude</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/cpp/codegen.html#CppCodeGen.visit_CppInclude"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.cpp.codegen.CppCodeGen.visit_CppInclude" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
@@ -78,12 +83,24 @@
 <em class="property">class </em><tt class="descclassname">ctree.cpp.dotgen.</tt><tt class="descname">CppDotGen</tt><a class="reference internal" href="_modules/ctree/cpp/dotgen.html#CppDotGen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.cpp.dotgen.CppDotGen" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ctree.html#ctree.dotgen.DotGenVisitor" title="ctree.dotgen.DotGenVisitor"><tt class="xref py py-class docutils literal"><span class="pre">ctree.dotgen.DotGenVisitor</span></tt></a></p>
 <p>Visitor to generator DOT.</p>
+<dl class="method">
+<dt id="ctree.cpp.dotgen.CppDotGen.label_CppInclude">
+<tt class="descname">label_CppInclude</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/cpp/dotgen.html#CppDotGen.label_CppInclude"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.cpp.dotgen.CppDotGen.label_CppInclude" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
 <div class="section" id="module-ctree.cpp.nodes">
 <span id="ctree-cpp-nodes-module"></span><h2>ctree.cpp.nodes module<a class="headerlink" href="#module-ctree.cpp.nodes" title="Permalink to this headline">¶</a></h2>
 <p>C preprocessor nodes supported by ctree.</p>
+<dl class="class">
+<dt id="ctree.cpp.nodes.CppInclude">
+<em class="property">class </em><tt class="descclassname">ctree.cpp.nodes.</tt><tt class="descname">CppInclude</tt><big>(</big><em>target=''</em>, <em>angled_brackets=True</em><big>)</big><a class="reference internal" href="_modules/ctree/cpp/nodes.html#CppInclude"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.cpp.nodes.CppInclude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.cpp.nodes.CppNode" title="ctree.cpp.nodes.CppNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.cpp.nodes.CppNode</span></tt></a></p>
+<p>Represents #include &lt;foo.h&gt;.</p>
+</dd></dl>
+
 <dl class="class">
 <dt id="ctree.cpp.nodes.CppNode">
 <em class="property">class </em><tt class="descclassname">ctree.cpp.nodes.</tt><tt class="descname">CppNode</tt><a class="reference internal" href="_modules/ctree/cpp/nodes.html#CppNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.cpp.nodes.CppNode" title="Permalink to this definition">¶</a></dt>

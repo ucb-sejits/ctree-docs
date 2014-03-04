@@ -306,13 +306,8 @@
 <dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.CNode" title="ctree.c.nodes.CNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.CNode</span></tt></a>, <a class="reference internal" href="ctree.html#ctree.ast.File" title="ctree.ast.File"><tt class="xref py py-class docutils literal"><span class="pre">ctree.ast.File</span></tt></a></p>
 <p>Represents a .c file.</p>
 <dl class="method">
-<dt id="ctree.c.nodes.CFile.bc_filename">
-<tt class="descname">bc_filename</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#CFile.bc_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.CFile.bc_filename" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ctree.c.nodes.CFile.c_filename">
-<tt class="descname">c_filename</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#CFile.c_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.CFile.c_filename" title="Permalink to this definition">¶</a></dt>
+<dt id="ctree.c.nodes.CFile.get_bc_filename">
+<tt class="descname">get_bc_filename</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#CFile.get_bc_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.CFile.get_bc_filename" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -425,8 +420,18 @@
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="ctree.c.nodes.FunctionDecl.set_kernel">
+<tt class="descname">set_kernel</tt><big>(</big><em>value=True</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#FunctionDecl.set_kernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.FunctionDecl.set_kernel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="ctree.c.nodes.FunctionDecl.set_static">
 <tt class="descname">set_static</tt><big>(</big><em>value=True</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#FunctionDecl.set_static"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.FunctionDecl.set_static" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.nodes.FunctionDecl.set_typesig">
+<tt class="descname">set_typesig</tt><big>(</big><em>typesig</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#FunctionDecl.set_typesig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.FunctionDecl.set_typesig" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -756,7 +761,7 @@
 
 <dl class="class">
 <dt id="ctree.c.nodes.String">
-<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">String</tt><big>(</big><em>value=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#String"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.String" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">String</tt><big>(</big><em>*values</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#String"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.String" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Literal" title="ctree.c.nodes.Literal"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Literal</span></tt></a></p>
 <p>Cite me.</p>
 </dd></dl>
@@ -779,6 +784,11 @@
 <dl class="method">
 <dt id="ctree.c.nodes.SymbolRef.get_ctype">
 <tt class="descname">get_ctype</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#SymbolRef.get_ctype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.SymbolRef.get_ctype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ctree.c.nodes.SymbolRef.set_global">
+<tt class="descname">set_global</tt><big>(</big><em>value=True</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#SymbolRef.set_global"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.SymbolRef.set_global" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

@@ -62,7 +62,16 @@
 </div>
 <div class="viewcode-block" id="CppNode.dotgen"><a class="viewcode-back" href="../../../ctree.cpp.html#ctree.cpp.nodes.CppNode.dotgen">[docs]</a>  <span class="k">def</span> <span class="nf">dotgen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">ctree.cpp.dotgen</span> <span class="kn">import</span> <span class="n">CppDotGen</span>
-    <span class="k">return</span> <span class="n">CppDotGen</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+    <span class="k">return</span> <span class="n">CppDotGen</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</div>
+  <span class="k">def</span> <span class="nf">_requires_semicolon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="CppInclude"><a class="viewcode-back" href="../../../ctree.cpp.html#ctree.cpp.nodes.CppInclude">[docs]</a><span class="k">class</span> <span class="nc">CppInclude</span><span class="p">(</span><span class="n">CppNode</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Represents #include &lt;foo.h&gt;.&quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">angled_brackets</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">angled_brackets</span> <span class="o">=</span> <span class="n">angled_brackets</span></div>
 </pre></div>
 
           </div>

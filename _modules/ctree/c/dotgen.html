@@ -67,14 +67,20 @@
     <span class="k">return</span> <span class="n">s</span>
 </div>
 <div class="viewcode-block" id="CDotGen.label_FunctionDecl"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.dotgen.CDotGen.label_FunctionDecl">[docs]</a>  <span class="k">def</span> <span class="nf">label_FunctionDecl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s">&quot;name: </span><span class="si">%s</span><span class="se">\n</span><span class="s">return_type: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> \
-      <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">return_type</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;name: </span><span class="si">%s</span><span class="se">\n</span><span class="s">return_type: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">return_type</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">static</span><span class="p">:</span>
+      <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">static&quot;</span>
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">inline</span><span class="p">:</span>
+      <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">inline&quot;</span>
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">kernel</span><span class="p">:</span>
+      <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">__kernel&quot;</span>
+    <span class="k">return</span> <span class="n">s</span>
 </div>
 <div class="viewcode-block" id="CDotGen.label_Constant"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.dotgen.CDotGen.label_Constant">[docs]</a>  <span class="k">def</span> <span class="nf">label_Constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
     <span class="k">return</span> <span class="s">&quot;value: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span>
 </div>
 <div class="viewcode-block" id="CDotGen.label_String"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.dotgen.CDotGen.label_String">[docs]</a>  <span class="k">def</span> <span class="nf">label_String</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s">&quot;value: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">return</span> <span class="s">&#39;values: &quot;</span><span class="si">%s</span><span class="s">&quot;&#39;</span> <span class="o">%</span> <span class="s">&#39;&quot; &quot;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="CDotGen.label_CFile"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.dotgen.CDotGen.label_CFile">[docs]</a>  <span class="k">def</span> <span class="nf">label_CFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
     <span class="k">return</span> <span class="s">&quot;name: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span></div></div>

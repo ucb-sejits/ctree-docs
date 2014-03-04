@@ -51,7 +51,6 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
 
 <span class="kn">import</span> <span class="nn">ctree</span>
@@ -63,6 +62,7 @@
 
 <span class="kn">import</span> <span class="nn">llvm.core</span> <span class="kn">as</span> <span class="nn">ll</span>
 
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 <div class="viewcode-block" id="JitModule"><a class="viewcode-back" href="../../ctree.html#ctree.jit.JitModule">[docs]</a><span class="k">class</span> <span class="nc">JitModule</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -104,11 +104,14 @@
   <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  A function backed by generated code.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c_ast</span><span class="p">,</span> <span class="n">entry_point_name</span><span class="p">):</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c_ast</span><span class="p">,</span> <span class="p">(</span><span class="n">File</span><span class="p">,</span> <span class="n">Project</span><span class="p">)),</span> \
-      <span class="s">&quot;_ConcreteSpecializedFunction expected a File or Project where it got a </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">c_ast</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">c_ast</span><span class="o">.</span><span class="n">get_root</span><span class="p">()</span><span class="o">.</span><span class="n">codegen</span><span class="p">()</span>
-    <span class="n">entry_point</span> <span class="o">=</span> <span class="n">c_ast</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">FunctionDecl</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">entry_point_name</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">entry_point_name</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">Project</span><span class="p">),</span> \
+      <span class="s">&quot;Expected a Project but it got a </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">project</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="bp">None</span><span class="p">,</span> \
+      <span class="s">&quot;Expected null project.parent, but got: </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">codegen</span><span class="p">()</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Full LLVM program is: &lt;&lt;&lt;</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">&gt;&gt;&gt;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">ll_module</span><span class="p">)</span>
+    <span class="n">entry_point</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">FunctionDecl</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">entry_point_name</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">get_callable</span><span class="p">(</span><span class="n">entry_point</span><span class="p">)</span>
 
   <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -172,15 +175,10 @@
 
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_functions</span><span class="p">[</span><span class="n">program_config</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
-<div class="viewcode-block" id="LazySpecializedFunction.tune"><a class="viewcode-back" href="../../ctree.html#ctree.jit.LazySpecializedFunction.tune">[docs]</a>  <span class="k">def</span> <span class="nf">tune</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="c"># TODO here&#39;s the tuning hook!</span>
-    <span class="k">for</span> <span class="n">program_config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_tuning_config</span><span class="p">():</span>
-      <span class="k">pass</span>
-
 
   <span class="c"># =====================================================</span>
   <span class="c"># Methods to be overridden by the user</span>
-</div>
+
 <div class="viewcode-block" id="LazySpecializedFunction.transform"><a class="viewcode-back" href="../../ctree.html#ctree.jit.LazySpecializedFunction.transform">[docs]</a>  <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">program_config</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert the AST &#39;tree&#39; into a C AST, optionally taking advantage of the</span>

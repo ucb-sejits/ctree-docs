@@ -67,6 +67,11 @@
 <em class="property">class </em><tt class="descclassname">ctree.ocl.codegen.</tt><tt class="descname">OclCodeGen</tt><big>(</big><em>indent=0</em><big>)</big><a class="reference internal" href="_modules/ctree/ocl/codegen.html#OclCodeGen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ocl.codegen.OclCodeGen" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ctree.html#ctree.codegen.CodeGenVisitor" title="ctree.codegen.CodeGenVisitor"><tt class="xref py py-class docutils literal"><span class="pre">ctree.codegen.CodeGenVisitor</span></tt></a></p>
 <p>Visitor to generate OpenCL code.</p>
+<dl class="method">
+<dt id="ctree.ocl.codegen.OclCodeGen.visit_OclFile">
+<tt class="descname">visit_OclFile</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/ocl/codegen.html#OclCodeGen.visit_OclFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ocl.codegen.OclCodeGen.visit_OclFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
@@ -84,6 +89,13 @@
 <div class="section" id="module-ctree.ocl.nodes">
 <span id="ctree-ocl-nodes-module"></span><h2>ctree.ocl.nodes module<a class="headerlink" href="#module-ctree.ocl.nodes" title="Permalink to this headline">¶</a></h2>
 <p>OpenCL nodes supported by ctree.</p>
+<dl class="class">
+<dt id="ctree.ocl.nodes.OclFile">
+<em class="property">class </em><tt class="descclassname">ctree.ocl.nodes.</tt><tt class="descname">OclFile</tt><big>(</big><em>name='generated'</em>, <em>body=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="_modules/ctree/ocl/nodes.html#OclFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ocl.nodes.OclFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ctree.ocl.nodes.OclNode" title="ctree.ocl.nodes.OclNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.ocl.nodes.OclNode</span></tt></a>, <a class="reference internal" href="ctree.html#ctree.ast.File" title="ctree.ast.File"><tt class="xref py py-class docutils literal"><span class="pre">ctree.ast.File</span></tt></a></p>
+<p>Represents a .cl file.</p>
+</dd></dl>
+
 <dl class="class">
 <dt id="ctree.ocl.nodes.OclNode">
 <em class="property">class </em><tt class="descclassname">ctree.ocl.nodes.</tt><tt class="descname">OclNode</tt><a class="reference internal" href="_modules/ctree/ocl/nodes.html#OclNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ocl.nodes.OclNode" title="Permalink to this definition">¶</a></dt>
