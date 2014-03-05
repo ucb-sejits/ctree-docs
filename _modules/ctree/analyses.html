@@ -49,60 +49,63 @@
             
   <h1>Source code for ctree.analyses</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">ctree.visitors</span> <span class="kn">import</span> <span class="n">NodeVisitor</span>
-<span class="kn">from</span> <span class="nn">ctree.ast</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">ctree.node</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="o">*</span>
 
+
 <div class="viewcode-block" id="DeclFinder"><a class="viewcode-back" href="../../ctree.html#ctree.analyses.DeclFinder">[docs]</a><span class="k">class</span> <span class="nc">DeclFinder</span><span class="p">(</span><span class="n">NodeVisitor</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">  Returns the first use of a particular symbol.</span>
-<span class="sd">  &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the first use of a particular symbol.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="DeclFinder.find"><a class="viewcode-back" href="../../ctree.html#ctree.analyses.DeclFinder.find">[docs]</a>  <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="p">(</span><span class="n">SymbolRef</span><span class="p">)),</span> \
-      <span class="s">&quot;DeclFinder only works on SymbolRefs for now.&quot;</span>
+<div class="viewcode-block" id="DeclFinder.find"><a class="viewcode-back" href="../../ctree.html#ctree.analyses.DeclFinder.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">SymbolRef</span><span class="p">),</span> \
+            <span class="s">&quot;DeclFinder only works on SymbolRefs for now.&quot;</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">decl</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decl</span> <span class="o">=</span> <span class="bp">None</span>
 
-    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">decl</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">,</span> \
-      <span class="s">&quot;Couldn&#39;t find declaration for symbol </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="n">node</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">decl</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">decl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">,</span> \
+            <span class="s">&quot;Couldn&#39;t find declaration for symbol </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="n">node</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">decl</span>
 
 </div></div>
 <div class="viewcode-block" id="AstValidationError"><a class="viewcode-back" href="../../ctree.html#ctree.analyses.AstValidationError">[docs]</a><span class="k">class</span> <span class="nc">AstValidationError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-  <span class="k">pass</span>
+    <span class="k">pass</span>
 
 </div>
 <div class="viewcode-block" id="VerifyOnlyCtreeNodes"><a class="viewcode-back" href="../../ctree.html#ctree.analyses.VerifyOnlyCtreeNodes">[docs]</a><span class="k">class</span> <span class="nc">VerifyOnlyCtreeNodes</span><span class="p">(</span><span class="n">NodeVisitor</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">  Checks that every node in the tree is an instance of</span>
-<span class="sd">  ctree.nodes.common.CtreeNode. Raises an exception if a bad node</span>
-<span class="sd">  is found.</span>
-<span class="sd">  &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="VerifyOnlyCtreeNodes.visit"><a class="viewcode-back" href="../../ctree.html#ctree.analyses.VerifyOnlyCtreeNodes.visit">[docs]</a>  <span class="k">def</span> <span class="nf">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">CtreeNode</span><span class="p">):</span>
-      <span class="k">raise</span> <span class="n">AstValidationError</span><span class="p">(</span><span class="s">&quot;Expected a pure C ast, but found a non-CtreeNode: </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="n">node</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">generic_visit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks that every node in the tree is an instance of</span>
+<span class="sd">    ctree.nodes.common.CtreeNode. Raises an exception if a bad node</span>
+<span class="sd">    is found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="VerifyOnlyCtreeNodes.visit"><a class="viewcode-back" href="../../ctree.html#ctree.analyses.VerifyOnlyCtreeNodes.visit">[docs]</a>    <span class="k">def</span> <span class="nf">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">CtreeNode</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">AstValidationError</span><span class="p">(</span><span class="s">&quot;Expected a pure C ast, but found a non-CtreeNode: </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="n">node</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generic_visit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
 
 </div></div>
 <div class="viewcode-block" id="VerifyParentPointers"><a class="viewcode-back" href="../../ctree.html#ctree.analyses.VerifyParentPointers">[docs]</a><span class="k">class</span> <span class="nc">VerifyParentPointers</span><span class="p">(</span><span class="n">NodeVisitor</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">  Checks that parent pointers are set correctly, and throws</span>
-<span class="sd">  an AstValidationError if they&#39;re not.</span>
-<span class="sd">  &quot;&quot;&quot;</span>
-  <span class="k">def</span> <span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">parent</span> <span class="o">!=</span> <span class="n">parent</span><span class="p">:</span>
-      <span class="k">raise</span> <span class="n">AstValidationError</span><span class="p">(</span><span class="s">&quot;Expect parent of </span><span class="si">%s</span><span class="s"> to be </span><span class="si">%s</span><span class="s">, but got </span><span class="si">%s</span><span class="s"> instead.&quot;</span> <span class="o">%</span> \
-        <span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">child</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks that parent pointers are set correctly, and throws</span>
+<span class="sd">    an AstValidationError if they&#39;re not.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="VerifyParentPointers.generic_visit"><a class="viewcode-back" href="../../ctree.html#ctree.analyses.VerifyParentPointers.generic_visit">[docs]</a>  <span class="k">def</span> <span class="nf">generic_visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">fieldname</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">iter_fields</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
-      <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">grandchild</span> <span class="ow">in</span> <span class="n">child</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">_check</span><span class="p">(</span><span class="n">grandchild</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">grandchild</span><span class="p">)</span>
-      <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AST</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_check</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span></div></div>
+    <span class="k">def</span> <span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">parent</span> <span class="o">!=</span> <span class="n">parent</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">AstValidationError</span><span class="p">(</span><span class="s">&quot;Expect parent of </span><span class="si">%s</span><span class="s"> to be </span><span class="si">%s</span><span class="s">, but got </span><span class="si">%s</span><span class="s"> instead.&quot;</span> <span class="o">%</span>
+                                     <span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">child</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+
+<div class="viewcode-block" id="VerifyParentPointers.generic_visit"><a class="viewcode-back" href="../../ctree.html#ctree.analyses.VerifyParentPointers.generic_visit">[docs]</a>    <span class="k">def</span> <span class="nf">generic_visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">fieldname</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">iter_fields</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">grandchild</span> <span class="ow">in</span> <span class="n">child</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_check</span><span class="p">(</span><span class="n">grandchild</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">grandchild</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AST</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_check</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

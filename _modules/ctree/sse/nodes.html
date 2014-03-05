@@ -52,17 +52,21 @@
 <span class="sd">SSE vector nodes supported by ctree.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">ctree.ast</span> <span class="kn">import</span> <span class="n">CtreeNode</span>
+<span class="kn">from</span> <span class="nn">ctree.node</span> <span class="kn">import</span> <span class="n">CtreeNode</span>
+
 
 <div class="viewcode-block" id="SSENode"><a class="viewcode-back" href="../../../ctree.sse.html#ctree.sse.nodes.SSENode">[docs]</a><span class="k">class</span> <span class="nc">SSENode</span><span class="p">(</span><span class="n">CtreeNode</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Base class for all SSE nodes supported by ctree.&quot;&quot;&quot;</span>
-<div class="viewcode-block" id="SSENode.codegen"><a class="viewcode-back" href="../../../ctree.sse.html#ctree.sse.nodes.SSENode.codegen">[docs]</a>  <span class="k">def</span> <span class="nf">codegen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">ctree.sse.codegen</span> <span class="kn">import</span> <span class="n">SseCodeGen</span>
-    <span class="k">return</span> <span class="n">SseCodeGen</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Base class for all SSE nodes supported by ctree.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SSENode.codegen"><a class="viewcode-back" href="../../../ctree.sse.html#ctree.sse.nodes.SSENode.codegen">[docs]</a>    <span class="k">def</span> <span class="nf">codegen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">ctree.sse.codegen</span> <span class="kn">import</span> <span class="n">SseCodeGen</span>
+
+        <span class="k">return</span> <span class="n">SseCodeGen</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="SSENode.dotgen"><a class="viewcode-back" href="../../../ctree.sse.html#ctree.sse.nodes.SSENode.dotgen">[docs]</a>  <span class="k">def</span> <span class="nf">dotgen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">ctree.sse.dotgen</span> <span class="kn">import</span> <span class="n">SseDotGen</span>
-    <span class="k">return</span> <span class="n">SseDotGen</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="SSENode.dotgen"><a class="viewcode-back" href="../../../ctree.sse.html#ctree.sse.nodes.SSENode.dotgen">[docs]</a>    <span class="k">def</span> <span class="nf">dotgen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">ctree.sse.dotgen</span> <span class="kn">import</span> <span class="n">SseDotGen</span>
+
+        <span class="k">return</span> <span class="n">SseDotGen</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

@@ -121,7 +121,7 @@
 <dl class="exception">
 <dt id="ctree.analyses.AstValidationError">
 <em class="property">exception </em><tt class="descclassname">ctree.analyses.</tt><tt class="descname">AstValidationError</tt><a class="reference internal" href="_modules/ctree/analyses.html#AstValidationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.analyses.AstValidationError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.Exception</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
 </dd></dl>
 
 <dl class="class">
@@ -164,160 +164,8 @@ an AstValidationError if they&#8217;re not.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-ctree.ast">
-<span id="ctree-ast-module"></span><h2>ctree.ast module<a class="headerlink" href="#module-ctree.ast" title="Permalink to this headline">¶</a></h2>
-<p>Defines the hierarchy of AST nodes.</p>
-<dl class="class">
-<dt id="ctree.ast.CommonCodeGen">
-<em class="property">class </em><tt class="descclassname">ctree.ast.</tt><tt class="descname">CommonCodeGen</tt><big>(</big><em>indent=0</em><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#CommonCodeGen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.CommonCodeGen" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ctree.codegen.CodeGenVisitor" title="ctree.codegen.CodeGenVisitor"><tt class="xref py py-class docutils literal"><span class="pre">ctree.codegen.CodeGenVisitor</span></tt></a></p>
-<p>Manages conversion of all common nodes to txt.</p>
-<dl class="method">
-<dt id="ctree.ast.CommonCodeGen.visit_File">
-<tt class="descname">visit_File</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#CommonCodeGen.visit_File"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.CommonCodeGen.visit_File" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ctree.ast.CommonCodeGen.visit_GeneratedPathRef">
-<tt class="descname">visit_GeneratedPathRef</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#CommonCodeGen.visit_GeneratedPathRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.CommonCodeGen.visit_GeneratedPathRef" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ctree.ast.CommonDotGen">
-<em class="property">class </em><tt class="descclassname">ctree.ast.</tt><tt class="descname">CommonDotGen</tt><a class="reference internal" href="_modules/ctree/ast.html#CommonDotGen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.CommonDotGen" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ctree.dotgen.DotGenVisitor" title="ctree.dotgen.DotGenVisitor"><tt class="xref py py-class docutils literal"><span class="pre">ctree.dotgen.DotGenVisitor</span></tt></a></p>
-<p>Manages coversion of all common nodes to dot.</p>
-<dl class="method">
-<dt id="ctree.ast.CommonDotGen.label_GeneratedPathRef">
-<tt class="descname">label_GeneratedPathRef</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#CommonDotGen.label_GeneratedPathRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.CommonDotGen.label_GeneratedPathRef" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ctree.ast.CommonNode">
-<em class="property">class </em><tt class="descclassname">ctree.ast.</tt><tt class="descname">CommonNode</tt><a class="reference internal" href="_modules/ctree/ast.html#CommonNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.CommonNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ctree.ast.CtreeNode" title="ctree.ast.CtreeNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.ast.CtreeNode</span></tt></a></p>
-<p>Miscellaneous IR nodes.</p>
-<dl class="method">
-<dt id="ctree.ast.CommonNode.codegen">
-<tt class="descname">codegen</tt><big>(</big><em>indent=0</em><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#CommonNode.codegen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.CommonNode.codegen" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ctree.ast.CtreeNode">
-<em class="property">class </em><tt class="descclassname">ctree.ast.</tt><tt class="descname">CtreeNode</tt><a class="reference internal" href="_modules/ctree/ast.html#CtreeNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.CtreeNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">_ast.AST</span></tt></p>
-<p>Base class for all AST nodes in ctree.</p>
-<dl class="method">
-<dt id="ctree.ast.CtreeNode.codegen">
-<tt class="descname">codegen</tt><big>(</big><em>indent=0</em><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#CtreeNode.codegen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.CtreeNode.codegen" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ctree.ast.CtreeNode.find">
-<tt class="descname">find</tt><big>(</big><em>node_class</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#CtreeNode.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.CtreeNode.find" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns one node of type &#8216;node_class&#8217; whose attributes
-match those specified in kwargs, or None if no nodes
-can be found.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ctree.ast.CtreeNode.find_all">
-<tt class="descname">find_all</tt><big>(</big><em>node_class</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#CtreeNode.find_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.CtreeNode.find_all" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a generator that yields all nodes of type
-&#8216;node_class&#8217; type whose attributes match those specified
-in kwargs. For example, all FunctionDecls with name &#8216;fib&#8217;
-can be accessed via:
-&gt;&gt;&gt; my_ast.find_all(FunctionDecl, name=&#8221;fib&#8221;)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ctree.ast.CtreeNode.find_if">
-<tt class="descname">find_if</tt><big>(</big><em>pred</em><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#CtreeNode.find_if"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.CtreeNode.find_if" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all nodes satisfying the given predicate,
-or None if no satisfactory nodes are found. The search
-starts from the current node.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ctree.ast.CtreeNode.get_root">
-<tt class="descname">get_root</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#CtreeNode.get_root"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.CtreeNode.get_root" title="Permalink to this definition">¶</a></dt>
-<dd><p>Traverse the parent pointer list to find the eldest
-parent without a parent, aka the root.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ctree.ast.CtreeNode.insert_after">
-<tt class="descname">insert_after</tt><big>(</big><em>younger_sibling</em><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#CtreeNode.insert_after"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.CtreeNode.insert_after" title="Permalink to this definition">¶</a></dt>
-<dd><p>Insert the given node just before &#8216;self&#8217; in the current scope. Requires
-that &#8216;self&#8217; be contained in a list.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ctree.ast.CtreeNode.insert_before">
-<tt class="descname">insert_before</tt><big>(</big><em>older_sibling</em><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#CtreeNode.insert_before"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.CtreeNode.insert_before" title="Permalink to this definition">¶</a></dt>
-<dd><p>Insert the given node just before &#8216;self&#8217; in the current scope. Requires
-that &#8216;self&#8217; be contained in a list.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ctree.ast.CtreeNode.replace">
-<tt class="descname">replace</tt><big>(</big><em>new_node</em><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#CtreeNode.replace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.CtreeNode.replace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Replace the current node with &#8216;new_node&#8217;.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ctree.ast.File">
-<em class="property">class </em><tt class="descclassname">ctree.ast.</tt><tt class="descname">File</tt><big>(</big><em>name='generated'</em>, <em>body=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#File"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.File" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ctree.ast.CommonNode" title="ctree.ast.CommonNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.ast.CommonNode</span></tt></a></p>
-<p>Holds a list of statements.</p>
-<dl class="method">
-<dt id="ctree.ast.File.codegen">
-<tt class="descname">codegen</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#File.codegen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.File.codegen" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert this substree into program text (a string).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ctree.ast.File.get_filename">
-<tt class="descname">get_filename</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#File.get_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.File.get_filename" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ctree.ast.File.get_generated_path_ref">
-<tt class="descname">get_generated_path_ref</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#File.get_generated_path_ref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.File.get_generated_path_ref" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an object that can resolve the full file path at compile time.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ctree.ast.GeneratedPathRef">
-<em class="property">class </em><tt class="descclassname">ctree.ast.</tt><tt class="descname">GeneratedPathRef</tt><big>(</big><em>target_file=None</em><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#GeneratedPathRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.GeneratedPathRef" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ctree.ast.CommonNode" title="ctree.ast.CommonNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.ast.CommonNode</span></tt></a></p>
-<p>Represents a path to a generated file.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="ctree.ast.Project">
-<em class="property">class </em><tt class="descclassname">ctree.ast.</tt><tt class="descname">Project</tt><big>(</big><em>files=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#Project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.Project" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ctree.ast.CommonNode" title="ctree.ast.CommonNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.ast.CommonNode</span></tt></a></p>
-<p>Holds a list files.</p>
-<dl class="method">
-<dt id="ctree.ast.Project.codegen">
-<tt class="descname">codegen</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/ast.html#Project.codegen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ast.Project.codegen" title="Permalink to this definition">¶</a></dt>
-<dd><p>Code generates each file in the project and links their
-bytecode together to get the master bytecode file.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="ctree-ast-module">
+<h2>ctree.ast module<a class="headerlink" href="#ctree-ast-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-ctree.codegen">
 <span id="ctree-codegen-module"></span><h2>ctree.codegen module<a class="headerlink" href="#module-ctree.codegen" title="Permalink to this headline">¶</a></h2>
@@ -377,7 +225,7 @@ or code object).</p>
 <dl class="class">
 <dt id="ctree.jit.JitModule">
 <em class="property">class </em><tt class="descclassname">ctree.jit.</tt><tt class="descname">JitModule</tt><a class="reference internal" href="_modules/ctree/jit.html#JitModule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.jit.JitModule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Manages compilation of multiple ASTs.</p>
 <dl class="method">
 <dt id="ctree.jit.JitModule.get_callable">
@@ -390,7 +238,7 @@ or code object).</p>
 <dl class="class">
 <dt id="ctree.jit.LazySpecializedFunction">
 <em class="property">class </em><tt class="descclassname">ctree.jit.</tt><tt class="descname">LazySpecializedFunction</tt><big>(</big><em>py_ast</em>, <em>entry_point_name</em><big>)</big><a class="reference internal" href="_modules/ctree/jit.html#LazySpecializedFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.jit.LazySpecializedFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>A callable object that will produce executable
 code just-in-time.</p>
 <dl class="method">
@@ -418,6 +266,8 @@ actual runtime arguments.</p>
 </div>
 <div class="section" id="module-ctree.precedence">
 <span id="ctree-precedence-module"></span><h2>ctree.precedence module<a class="headerlink" href="#module-ctree.precedence" title="Permalink to this headline">¶</a></h2>
+<p>Utilities for determining precedence in C, with the goal of minimizing the
+number of parentheses in the generated code.</p>
 <dl class="function">
 <dt id="ctree.precedence.get_precedence">
 <tt class="descclassname">ctree.precedence.</tt><tt class="descname">get_precedence</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/precedence.html#get_precedence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.precedence.get_precedence" title="Permalink to this definition">¶</a></dt>
@@ -450,7 +300,7 @@ actual runtime arguments.</p>
 <p>Convert constructs with obvious C analogues.</p>
 <dl class="attribute">
 <dt id="ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP">
-<tt class="descname">PY_OP_TO_CTREE_OP</tt><em class="property"> = {&lt;class '_ast.Lt'&gt;: &lt;class 'ctree.c.nodes.Lt'&gt;, &lt;class '_ast.Add'&gt;: &lt;class 'ctree.c.nodes.Add'&gt;, &lt;class '_ast.Sub'&gt;: &lt;class 'ctree.c.nodes.Sub'&gt;, &lt;class '_ast.Mult'&gt;: &lt;class 'ctree.c.nodes.Mul'&gt;}</em><a class="headerlink" href="#ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">PY_OP_TO_CTREE_OP</tt><em class="property"> = {&lt;class '_ast.Mult'&gt;: &lt;class 'ctree.c.nodes.Mul'&gt;, &lt;class '_ast.Sub'&gt;: &lt;class 'ctree.c.nodes.Sub'&gt;, &lt;class '_ast.Add'&gt;: &lt;class 'ctree.c.nodes.Add'&gt;, &lt;class '_ast.Lt'&gt;: &lt;class 'ctree.c.nodes.Lt'&gt;}</em><a class="headerlink" href="#ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -532,7 +382,7 @@ yielding much cleaner python asts.</p>
 <dt id="ctree.transformations.ResolveGeneratedPathRefs">
 <em class="property">class </em><tt class="descclassname">ctree.transformations.</tt><tt class="descname">ResolveGeneratedPathRefs</tt><big>(</big><em>compilation_dir</em><big>)</big><a class="reference internal" href="_modules/ctree/transformations.html#ResolveGeneratedPathRefs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.transformations.ResolveGeneratedPathRefs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ast.NodeTransformer</span></tt></p>
-<p>Converts any instances of ctree.ast.GeneratedPathRef into strings containing the absolute path
+<p>Converts any instances of ctree.node.GeneratedPathRef into strings containing the absolute path
 of the target file.</p>
 <dl class="method">
 <dt id="ctree.transformations.ResolveGeneratedPathRefs.visit_GeneratedPathRef">
@@ -547,7 +397,7 @@ of the target file.</p>
 <dl class="class">
 <dt id="ctree.types.CtreeType">
 <em class="property">class </em><tt class="descclassname">ctree.types.</tt><tt class="descname">CtreeType</tt><a class="reference internal" href="_modules/ctree/types.html#CtreeType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.CtreeType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ctree.ast.CtreeNode" title="ctree.ast.CtreeNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.ast.CtreeNode</span></tt></a></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.node.CtreeNode</span></tt></p>
 <dl class="method">
 <dt id="ctree.types.CtreeType.as_ctypes">
 <tt class="descname">as_ctypes</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/types.html#CtreeType.as_ctypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.CtreeType.as_ctypes" title="Permalink to this definition">¶</a></dt>
@@ -555,7 +405,7 @@ of the target file.</p>
 
 <dl class="method">
 <dt id="ctree.types.CtreeType.codegen">
-<tt class="descname">codegen</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/types.html#CtreeType.codegen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.CtreeType.codegen" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">codegen</tt><big>(</big><em>indent=0</em><big>)</big><a class="reference internal" href="_modules/ctree/types.html#CtreeType.codegen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.CtreeType.codegen" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -568,7 +418,7 @@ of the target file.</p>
 <dl class="class">
 <dt id="ctree.types.CtreeTypeResolver">
 <em class="property">class </em><tt class="descclassname">ctree.types.</tt><tt class="descname">CtreeTypeResolver</tt><a class="reference internal" href="_modules/ctree/types.html#CtreeTypeResolver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.CtreeTypeResolver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <dl class="staticmethod">
 <dt id="ctree.types.CtreeTypeResolver.resolve">
 <em class="property">static </em><tt class="descname">resolve</tt><big>(</big><em>obj</em><big>)</big><a class="reference internal" href="_modules/ctree/types.html#CtreeTypeResolver.resolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.CtreeTypeResolver.resolve" title="Permalink to this definition">¶</a></dt>
@@ -594,7 +444,7 @@ of the target file.</p>
 <dl class="class">
 <dt id="ctree.util.DotManager">
 <em class="property">class </em><tt class="descclassname">ctree.util.</tt><tt class="descname">DotManager</tt><a class="reference internal" href="_modules/ctree/util.html#DotManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.util.DotManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>take ast and return an ipython image file</p>
 <dl class="staticmethod">
 <dt id="ctree.util.DotManager.dot_ast_to_image">
@@ -616,7 +466,7 @@ of the target file.</p>
 <dl class="class">
 <dt id="ctree.util.Timer">
 <em class="property">class </em><tt class="descclassname">ctree.util.</tt><tt class="descname">Timer</tt><a class="reference internal" href="_modules/ctree/util.html#Timer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.util.Timer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Context manager for timing sections of code.</p>
 <dl class="method">
 <dt id="ctree.util.Timer.dict">
@@ -628,13 +478,14 @@ of the target file.</p>
 </div>
 <div class="section" id="module-ctree.visitors">
 <span id="ctree-visitors-module"></span><h2>ctree.visitors module<a class="headerlink" href="#module-ctree.visitors" title="Permalink to this headline">¶</a></h2>
+<p>For now, just use visitors defined by Python&#8217;s AST library.</p>
 </div>
 <div class="section" id="module-ctree">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ctree" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ctree.Counter">
 <em class="property">class </em><tt class="descclassname">ctree.</tt><tt class="descname">Counter</tt><a class="reference internal" href="_modules/ctree.html#Counter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.Counter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Tracks events, reports counts upon garbage collections.</p>
 <dl class="method">
 <dt id="ctree.Counter.log">
@@ -663,7 +514,7 @@ of the target file.</p>
 <li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-ctree.analyses">ctree.analyses module</a></li>
-<li><a class="reference internal" href="#module-ctree.ast">ctree.ast module</a></li>
+<li><a class="reference internal" href="#ctree-ast-module">ctree.ast module</a></li>
 <li><a class="reference internal" href="#module-ctree.codegen">ctree.codegen module</a></li>
 <li><a class="reference internal" href="#module-ctree.dotgen">ctree.dotgen module</a></li>
 <li><a class="reference internal" href="#module-ctree.frontend">ctree.frontend module</a></li>

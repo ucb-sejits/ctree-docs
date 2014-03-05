@@ -54,15 +54,17 @@
 
 <span class="kn">from</span> <span class="nn">ctree.codegen</span> <span class="kn">import</span> <span class="n">CodeGenVisitor</span>
 
+
 <div class="viewcode-block" id="CppCodeGen"><a class="viewcode-back" href="../../../ctree.cpp.html#ctree.cpp.codegen.CppCodeGen">[docs]</a><span class="k">class</span> <span class="nc">CppCodeGen</span><span class="p">(</span><span class="n">CodeGenVisitor</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">  Visitor to generate C preprocessor directives.</span>
-<span class="sd">  &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="CppCodeGen.visit_CppInclude"><a class="viewcode-back" href="../../../ctree.cpp.html#ctree.cpp.codegen.CppCodeGen.visit_CppInclude">[docs]</a>  <span class="k">def</span> <span class="nf">visit_CppInclude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">angled_brackets</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s">&quot;#include &lt;</span><span class="si">%s</span><span class="s">&gt;&quot;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">target</span>
-    <span class="k">else</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s">&#39;#include &quot;</span><span class="si">%s</span><span class="s">&quot;&#39;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">target</span></div></div>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Visitor to generate C preprocessor directives.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="CppCodeGen.visit_CppInclude"><a class="viewcode-back" href="../../../ctree.cpp.html#ctree.cpp.codegen.CppCodeGen.visit_CppInclude">[docs]</a>    <span class="k">def</span> <span class="nf">visit_CppInclude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">angled_brackets</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;#include &lt;</span><span class="si">%s</span><span class="s">&gt;&quot;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">target</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&#39;#include &quot;</span><span class="si">%s</span><span class="s">&quot;&#39;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">target</span></div></div>
 </pre></div>
 
           </div>

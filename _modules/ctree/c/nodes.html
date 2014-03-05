@@ -56,373 +56,580 @@
 <span class="kn">import</span> <span class="nn">subprocess</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
+
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">ctree.ast</span> <span class="kn">import</span> <span class="n">CtreeNode</span><span class="p">,</span> <span class="n">File</span>
+<span class="kn">from</span> <span class="nn">ctree.node</span> <span class="kn">import</span> <span class="n">CtreeNode</span><span class="p">,</span> <span class="n">File</span>
+
 
 <div class="viewcode-block" id="CNode"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.CNode">[docs]</a><span class="k">class</span> <span class="nc">CNode</span><span class="p">(</span><span class="n">CtreeNode</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Base class for all C nodes in ctree.&quot;&quot;&quot;</span>
-<div class="viewcode-block" id="CNode.codegen"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.CNode.codegen">[docs]</a>  <span class="k">def</span> <span class="nf">codegen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">ctree.c.codegen</span> <span class="kn">import</span> <span class="n">CCodeGen</span>
-    <span class="k">return</span> <span class="n">CCodeGen</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Base class for all C nodes in ctree.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="CNode.codegen"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.CNode.codegen">[docs]</a>    <span class="k">def</span> <span class="nf">codegen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">ctree.c.codegen</span> <span class="kn">import</span> <span class="n">CCodeGen</span>
+
+        <span class="k">return</span> <span class="n">CCodeGen</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </div>
-  <span class="k">def</span> <span class="nf">_to_dot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">ctree.c.dotgen</span> <span class="kn">import</span> <span class="n">CDotGen</span>
-    <span class="k">return</span> <span class="n">CDotGen</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_to_dot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">ctree.c.dotgen</span> <span class="kn">import</span> <span class="n">CDotGen</span>
+
+        <span class="k">return</span> <span class="n">CDotGen</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 </div>
 <div class="viewcode-block" id="CFile"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.CFile">[docs]</a><span class="k">class</span> <span class="nc">CFile</span><span class="p">(</span><span class="n">CNode</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Represents a .c file.&quot;&quot;&quot;</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;generated&quot;</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="p">[]):</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_ext</span> <span class="o">=</span> <span class="s">&quot;c&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Represents a .c file.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="CFile.get_bc_filename"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.CFile.get_bc_filename">[docs]</a>  <span class="k">def</span> <span class="nf">get_bc_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">.bc&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;generated&quot;</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CFile</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ext</span> <span class="o">=</span> <span class="s">&quot;c&quot;</span>
+
+<div class="viewcode-block" id="CFile.get_bc_filename"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.CFile.get_bc_filename">[docs]</a>    <span class="k">def</span> <span class="nf">get_bc_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">.bc&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
 </div>
-  <span class="k">def</span> <span class="nf">_compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">program_text</span><span class="p">,</span> <span class="n">compilation_dir</span><span class="p">):</span>
-    <span class="n">c_src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">compilation_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_filename</span><span class="p">())</span>
-    <span class="n">ll_bc_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">compilation_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_bc_filename</span><span class="p">())</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;File for generated C: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">c_src_file</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;File for generated LLVM: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">ll_bc_file</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Generated C program: &lt;&lt;&lt;</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">&gt;&gt;&gt;&quot;</span> <span class="o">%</span> <span class="n">program_text</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">program_text</span><span class="p">,</span> <span class="n">compilation_dir</span><span class="p">):</span>
+        <span class="n">c_src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">compilation_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_filename</span><span class="p">())</span>
+        <span class="n">ll_bc_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">compilation_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_bc_filename</span><span class="p">())</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;File for generated C: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">c_src_file</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;File for generated LLVM: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">ll_bc_file</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Generated C program: &lt;&lt;&lt;</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">&gt;&gt;&gt;&quot;</span> <span class="o">%</span> <span class="n">program_text</span><span class="p">)</span>
 
-    <span class="c"># write program text to C file</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">c_src_file</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">c_file</span><span class="p">:</span>
-      <span class="n">c_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">program_text</span><span class="p">)</span>
+        <span class="c"># write program text to C file</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">c_src_file</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">c_file</span><span class="p">:</span>
+            <span class="n">c_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">program_text</span><span class="p">)</span>
 
-    <span class="c"># call clang to generate LLVM bitcode file</span>
-    <span class="kn">import</span> <span class="nn">ctree</span>
-    <span class="n">CC</span> <span class="o">=</span> <span class="n">ctree</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;jit&#39;</span><span class="p">][</span><span class="s">&#39;CC&#39;</span><span class="p">]</span>
-    <span class="n">CFLAGS</span> <span class="o">=</span> <span class="n">ctree</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;jit&#39;</span><span class="p">][</span><span class="s">&#39;CFLAGS&#39;</span><span class="p">]</span>
-    <span class="n">compile_cmd</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> -emit-llvm </span><span class="si">%s</span><span class="s"> -o </span><span class="si">%s</span><span class="s"> -c </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">CC</span><span class="p">,</span> <span class="n">CFLAGS</span><span class="p">,</span> <span class="n">ll_bc_file</span><span class="p">,</span> <span class="n">c_src_file</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Compilation command: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">compile_cmd</span><span class="p">)</span>
-    <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">compile_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="c"># call clang to generate LLVM bitcode file</span>
+        <span class="kn">import</span> <span class="nn">ctree</span>
 
-    <span class="c"># load llvm bitcode</span>
-    <span class="kn">import</span> <span class="nn">llvm.core</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ll_bc_file</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">bc</span><span class="p">:</span>
-      <span class="n">ll_module</span> <span class="o">=</span> <span class="n">llvm</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Module</span><span class="o">.</span><span class="n">from_bitcode</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Generated LLVM Program: &lt;&lt;&lt;</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">&gt;&gt;&gt;&quot;</span> <span class="o">%</span> <span class="n">ll_module</span><span class="p">)</span>
+        <span class="n">CC</span> <span class="o">=</span> <span class="n">ctree</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;jit&#39;</span><span class="p">,</span> <span class="s">&#39;CC&#39;</span><span class="p">)</span>
+        <span class="n">CFLAGS</span> <span class="o">=</span> <span class="n">ctree</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;jit&#39;</span><span class="p">,</span> <span class="s">&#39;CFLAGS&#39;</span><span class="p">)</span>
+        <span class="n">compile_cmd</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> -emit-llvm </span><span class="si">%s</span><span class="s"> -o </span><span class="si">%s</span><span class="s"> -c </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">CC</span><span class="p">,</span> <span class="n">CFLAGS</span><span class="p">,</span> <span class="n">ll_bc_file</span><span class="p">,</span> <span class="n">c_src_file</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Compilation command: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">compile_cmd</span><span class="p">)</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">compile_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">ll_module</span>
+        <span class="c"># load llvm bitcode</span>
+        <span class="kn">import</span> <span class="nn">llvm.core</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ll_bc_file</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">bc</span><span class="p">:</span>
+            <span class="n">ll_module</span> <span class="o">=</span> <span class="n">llvm</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Module</span><span class="o">.</span><span class="n">from_bitcode</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Generated LLVM Program: &lt;&lt;&lt;</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">&gt;&gt;&gt;&quot;</span> <span class="o">%</span> <span class="n">ll_module</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ll_module</span>
+
 </div>
 <div class="viewcode-block" id="Statement"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Statement">[docs]</a><span class="k">class</span> <span class="nc">Statement</span><span class="p">(</span><span class="n">CNode</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Section B.2.3 6.6.&quot;&quot;&quot;</span>
-  <span class="k">pass</span>
+    <span class="sd">&quot;&quot;&quot;Section B.2.3 6.6.&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
 
 </div>
 <div class="viewcode-block" id="Expression"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Expression">[docs]</a><span class="k">class</span> <span class="nc">Expression</span><span class="p">(</span><span class="n">CNode</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Expression.get_type"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Expression.get_type">[docs]</a>  <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">ctree.c.types</span> <span class="kn">import</span> <span class="n">CTypeFetcher</span>
-    <span class="k">return</span> <span class="n">CTypeFetcher</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Expression.get_type"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Expression.get_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">ctree.c.types</span> <span class="kn">import</span> <span class="n">CTypeFetcher</span>
+
+        <span class="k">return</span> <span class="n">CTypeFetcher</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 </div></div>
 <div class="viewcode-block" id="Return"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Return">[docs]</a><span class="k">class</span> <span class="nc">Return</span><span class="p">(</span><span class="n">Statement</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Section B.2.3 6.6.6 line 4.&quot;&quot;&quot;</span>
-  <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;value&#39;</span><span class="p">]</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Section B.2.3 6.6.6 line 4.&quot;&quot;&quot;</span>
+    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;value&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Return</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
 </div>
 <div class="viewcode-block" id="If"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.If">[docs]</a><span class="k">class</span> <span class="nc">If</span><span class="p">(</span><span class="n">Statement</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
-  <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;cond&#39;</span><span class="p">,</span> <span class="s">&#39;then&#39;</span><span class="p">,</span> <span class="s">&#39;elze&#39;</span><span class="p">]</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cond</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">then</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">elze</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">cond</span> <span class="o">=</span> <span class="n">cond</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">then</span> <span class="o">=</span> <span class="n">then</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">elze</span> <span class="o">=</span> <span class="n">elze</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
+    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;cond&#39;</span><span class="p">,</span> <span class="s">&#39;then&#39;</span><span class="p">,</span> <span class="s">&#39;elze&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cond</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">then</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">elze</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cond</span> <span class="o">=</span> <span class="n">cond</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">then</span> <span class="o">=</span> <span class="n">then</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elze</span> <span class="o">=</span> <span class="n">elze</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">If</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
 </div>
 <div class="viewcode-block" id="While"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.While">[docs]</a><span class="k">class</span> <span class="nc">While</span><span class="p">(</span><span class="n">Statement</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
-  <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;cond&#39;</span><span class="p">,</span> <span class="s">&#39;body&#39;</span><span class="p">]</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cond</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="p">[]):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">cond</span> <span class="o">=</span> <span class="n">cond</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
+    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;cond&#39;</span><span class="p">,</span> <span class="s">&#39;body&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cond</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cond</span> <span class="o">=</span> <span class="n">cond</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">While</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
 </div>
 <div class="viewcode-block" id="DoWhile"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.DoWhile">[docs]</a><span class="k">class</span> <span class="nc">DoWhile</span><span class="p">(</span><span class="n">Statement</span><span class="p">):</span>
-  <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;body&#39;</span><span class="p">,</span> <span class="s">&#39;cond&#39;</span><span class="p">]</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="p">[],</span> <span class="n">cond</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">cond</span> <span class="o">=</span> <span class="n">cond</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;body&#39;</span><span class="p">,</span> <span class="s">&#39;cond&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="p">[],</span> <span class="n">cond</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cond</span> <span class="o">=</span> <span class="n">cond</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DoWhile</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
 </div>
 <div class="viewcode-block" id="For"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.For">[docs]</a><span class="k">class</span> <span class="nc">For</span><span class="p">(</span><span class="n">Statement</span><span class="p">):</span>
-  <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;init&#39;</span><span class="p">,</span> <span class="s">&#39;test&#39;</span><span class="p">,</span> <span class="s">&#39;incr&#39;</span><span class="p">,</span> <span class="s">&#39;body&#39;</span><span class="p">]</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">incr</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="o">=</span> <span class="n">init</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">test</span> <span class="o">=</span> <span class="n">test</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">incr</span> <span class="o">=</span> <span class="n">incr</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;init&#39;</span><span class="p">,</span> <span class="s">&#39;test&#39;</span><span class="p">,</span> <span class="s">&#39;incr&#39;</span><span class="p">,</span> <span class="s">&#39;body&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">incr</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="o">=</span> <span class="n">init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test</span> <span class="o">=</span> <span class="n">test</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">incr</span> <span class="o">=</span> <span class="n">incr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">For</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
 </div>
 <div class="viewcode-block" id="FunctionCall"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.FunctionCall">[docs]</a><span class="k">class</span> <span class="nc">FunctionCall</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
-  <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;func&#39;</span><span class="p">,</span> <span class="s">&#39;args&#39;</span><span class="p">]</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[]):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
+    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;func&#39;</span><span class="p">,</span> <span class="s">&#39;args&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FunctionCall</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
 </div>
-<span class="k">class</span> <span class="nc">ArrayRef</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
-  <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;base&#39;</span><span class="p">,</span> <span class="s">&#39;offset&#39;</span><span class="p">]</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
-
 <div class="viewcode-block" id="Literal"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Literal">[docs]</a><span class="k">class</span> <span class="nc">Literal</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
-  <span class="k">pass</span>
+    <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
 </div>
 <div class="viewcode-block" id="Constant"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Constant">[docs]</a><span class="k">class</span> <span class="nc">Constant</span><span class="p">(</span><span class="n">Literal</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Section B.1.4 6.1.3.&quot;&quot;&quot;</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Section B.1.4 6.1.3.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Constant</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
 </div>
 <div class="viewcode-block" id="Block"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Block">[docs]</a><span class="k">class</span> <span class="nc">Block</span><span class="p">(</span><span class="n">Statement</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
-  <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;body&#39;</span><span class="p">]</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="p">[]):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
+    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;body&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Block</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
 </div>
 <div class="viewcode-block" id="String"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.String">[docs]</a><span class="k">class</span> <span class="nc">String</span><span class="p">(</span><span class="n">Literal</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">values</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">values</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
 </div>
 <div class="viewcode-block" id="SymbolRef"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.SymbolRef">[docs]</a><span class="k">class</span> <span class="nc">SymbolRef</span><span class="p">(</span><span class="n">Literal</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ctype</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a new symbol with the given name. If a declaration</span>
-<span class="sd">    type is specified, the symbol is considered a declaration</span>
-<span class="sd">    and unparsed with the type.</span>
+    <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
 
-<span class="sd">    The ctype field is used when the ctype used to do Python</span>
-<span class="sd">    type-checking differs from the type declared at the C level.</span>
-<span class="sd">    This arises in the case of Numpy arrays where ctypes checks</span>
-<span class="sd">    against a np.ctypeslib.ndpointer, but the C code can have</span>
-<span class="sd">    a basic &quot;double*&quot; type (or something equivalent).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">ctype</span> <span class="o">=</span> <span class="n">ctype</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_global</span> <span class="o">=</span> <span class="bp">False</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ctype</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new symbol with the given name. If a declaration</span>
+<span class="sd">        type is specified, the symbol is considered a declaration</span>
+<span class="sd">        and unparsed with the type.</span>
 
-<div class="viewcode-block" id="SymbolRef.get_ctype"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.SymbolRef.get_ctype">[docs]</a>  <span class="k">def</span> <span class="nf">get_ctype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctype</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span>
+<span class="sd">        The ctype field is used when the ctype used to do Python</span>
+<span class="sd">        type-checking differs from the type declared at the C level.</span>
+<span class="sd">        This arises in the case of Numpy arrays where ctypes checks</span>
+<span class="sd">        against a np.ctypeslib.ndpointer, but the C code can have</span>
+<span class="sd">        a basic &quot;double*&quot; type (or something equivalent).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ctype</span> <span class="o">=</span> <span class="n">ctype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_global</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SymbolRef</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SymbolRef.get_ctype"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.SymbolRef.get_ctype">[docs]</a>    <span class="k">def</span> <span class="nf">get_ctype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctype</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span>
 </div>
-<div class="viewcode-block" id="SymbolRef.set_global"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.SymbolRef.set_global">[docs]</a>  <span class="k">def</span> <span class="nf">set_global</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_global</span> <span class="o">=</span> <span class="n">value</span>
-    <span class="k">return</span> <span class="bp">self</span>
+<div class="viewcode-block" id="SymbolRef.set_global"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.SymbolRef.set_global">[docs]</a>    <span class="k">def</span> <span class="nf">set_global</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_global</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="bp">self</span>
 
 </div></div>
 <div class="viewcode-block" id="FunctionDecl"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.FunctionDecl">[docs]</a><span class="k">class</span> <span class="nc">FunctionDecl</span><span class="p">(</span><span class="n">Statement</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
-  <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;params&#39;</span><span class="p">,</span> <span class="s">&#39;defn&#39;</span><span class="p">]</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">[],</span> <span class="n">defn</span><span class="o">=</span><span class="p">[]):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">return_type</span> <span class="o">=</span> <span class="n">return_type</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">defn</span> <span class="o">=</span> <span class="n">defn</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">inline</span> <span class="o">=</span> <span class="bp">False</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">static</span> <span class="o">=</span> <span class="bp">False</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="bp">False</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
+    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;params&#39;</span><span class="p">,</span> <span class="s">&#39;defn&#39;</span><span class="p">]</span>
 
-<div class="viewcode-block" id="FunctionDecl.get_type"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.FunctionDecl.get_type">[docs]</a>  <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">ctree.c.types</span> <span class="kn">import</span> <span class="n">FuncType</span>
-    <span class="n">arg_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">get_ctype</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">FuncType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">return_type</span><span class="p">,</span> <span class="n">arg_types</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">[],</span> <span class="n">defn</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_type</span> <span class="o">=</span> <span class="n">return_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defn</span> <span class="o">=</span> <span class="n">defn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inline</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">static</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FunctionDecl</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="FunctionDecl.get_type"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.FunctionDecl.get_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">ctree.c.types</span> <span class="kn">import</span> <span class="n">FuncType</span>
+
+        <span class="n">arg_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">get_ctype</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">FuncType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">return_type</span><span class="p">,</span> <span class="n">arg_types</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="FunctionDecl.get_callable"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.FunctionDecl.get_callable">[docs]</a>  <span class="k">def</span> <span class="nf">get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">ctree.jit</span> <span class="kn">import</span> <span class="n">LazyTreeBuilder</span>
-    <span class="k">return</span> <span class="n">LazyTreeBuilder</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+<div class="viewcode-block" id="FunctionDecl.get_callable"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.FunctionDecl.get_callable">[docs]</a>    <span class="k">def</span> <span class="nf">get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">ctree.jit</span> <span class="kn">import</span> <span class="n">LazyTreeBuilder</span>
+
+        <span class="k">return</span> <span class="n">LazyTreeBuilder</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="FunctionDecl.set_inline"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.FunctionDecl.set_inline">[docs]</a>  <span class="k">def</span> <span class="nf">set_inline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">inline</span> <span class="o">=</span> <span class="n">value</span>
-    <span class="k">return</span> <span class="bp">self</span>
+<div class="viewcode-block" id="FunctionDecl.set_inline"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.FunctionDecl.set_inline">[docs]</a>    <span class="k">def</span> <span class="nf">set_inline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inline</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="bp">self</span>
 </div>
-<div class="viewcode-block" id="FunctionDecl.set_static"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.FunctionDecl.set_static">[docs]</a>  <span class="k">def</span> <span class="nf">set_static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">static</span> <span class="o">=</span> <span class="n">value</span>
-    <span class="k">return</span> <span class="bp">self</span>
+<div class="viewcode-block" id="FunctionDecl.set_static"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.FunctionDecl.set_static">[docs]</a>    <span class="k">def</span> <span class="nf">set_static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">static</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="bp">self</span>
 </div>
-<div class="viewcode-block" id="FunctionDecl.set_kernel"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.FunctionDecl.set_kernel">[docs]</a>  <span class="k">def</span> <span class="nf">set_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="n">value</span>
-    <span class="k">return</span> <span class="bp">self</span>
+<div class="viewcode-block" id="FunctionDecl.set_kernel"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.FunctionDecl.set_kernel">[docs]</a>    <span class="k">def</span> <span class="nf">set_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="bp">self</span>
 </div>
-<div class="viewcode-block" id="FunctionDecl.set_typesig"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.FunctionDecl.set_typesig">[docs]</a>  <span class="k">def</span> <span class="nf">set_typesig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typesig</span><span class="p">):</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">typesig</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">return_type</span> <span class="o">=</span> <span class="n">typesig</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">sym</span><span class="p">,</span> <span class="n">ty</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">typesig</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-      <span class="n">sym</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">ty</span>
-    <span class="k">return</span> <span class="bp">self</span>
+<div class="viewcode-block" id="FunctionDecl.set_typesig"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.FunctionDecl.set_typesig">[docs]</a>    <span class="k">def</span> <span class="nf">set_typesig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typesig</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">typesig</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_type</span> <span class="o">=</span> <span class="n">typesig</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">sym</span><span class="p">,</span> <span class="n">ty</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">typesig</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+            <span class="n">sym</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">ty</span>
+        <span class="k">return</span> <span class="bp">self</span>
 
 </div></div>
 <div class="viewcode-block" id="UnaryOp"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.UnaryOp">[docs]</a><span class="k">class</span> <span class="nc">UnaryOp</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
-  <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;arg&#39;</span><span class="p">]</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">arg</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">op</span> <span class="o">=</span> <span class="n">op</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="n">arg</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
+    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;arg&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">arg</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">op</span> <span class="o">=</span> <span class="n">op</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="n">arg</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UnaryOp</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
 </div>
 <div class="viewcode-block" id="BinaryOp"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BinaryOp">[docs]</a><span class="k">class</span> <span class="nc">BinaryOp</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
-  <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;left&#39;</span><span class="p">,</span> <span class="s">&#39;right&#39;</span><span class="p">]</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">op</span> <span class="o">=</span> <span class="n">op</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
+    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;left&#39;</span><span class="p">,</span> <span class="s">&#39;right&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">op</span> <span class="o">=</span> <span class="n">op</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BinaryOp</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
 </div>
 <div class="viewcode-block" id="AugAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.AugAssign">[docs]</a><span class="k">class</span> <span class="nc">AugAssign</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
-  <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;target&#39;</span><span class="p">,</span> <span class="s">&#39;value&#39;</span><span class="p">]</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">op</span> <span class="o">=</span> <span class="n">op</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
+    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;target&#39;</span><span class="p">,</span> <span class="s">&#39;value&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">op</span> <span class="o">=</span> <span class="n">op</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AugAssign</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
 </div>
 <div class="viewcode-block" id="TernaryOp"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.TernaryOp">[docs]</a><span class="k">class</span> <span class="nc">TernaryOp</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
-  <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;cond&#39;</span><span class="p">,</span> <span class="s">&#39;then&#39;</span><span class="p">,</span> <span class="s">&#39;elze&#39;</span><span class="p">]</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cond</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">then</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">elze</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">cond</span> <span class="o">=</span> <span class="n">cond</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">then</span> <span class="o">=</span> <span class="n">then</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">elze</span> <span class="o">=</span> <span class="n">elze</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
+    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;cond&#39;</span><span class="p">,</span> <span class="s">&#39;then&#39;</span><span class="p">,</span> <span class="s">&#39;elze&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cond</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">then</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">elze</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cond</span> <span class="o">=</span> <span class="n">cond</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">then</span> <span class="o">=</span> <span class="n">then</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elze</span> <span class="o">=</span> <span class="n">elze</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TernaryOp</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
 </div>
 <div class="viewcode-block" id="Cast"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Cast">[docs]</a><span class="k">class</span> <span class="nc">Cast</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
-   <span class="sd">&quot;&quot;&quot;doc&quot;&quot;&quot;</span>
-   <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;value&#39;</span><span class="p">]</span>
-   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctype</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-     <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">ctype</span>
-     <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
-     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;doc&quot;&quot;&quot;</span>
+    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;value&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctype</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">ctype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Cast</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
 </div>
 <div class="viewcode-block" id="Op"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op">[docs]</a><span class="k">class</span> <span class="nc">Op</span><span class="p">:</span>
-  <span class="k">class</span> <span class="nc">_Op</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_str</span>
+    <span class="k">class</span> <span class="nc">_Op</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_str</span>
 
-<div class="viewcode-block" id="Op.PreInc"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.PreInc">[docs]</a>  <span class="k">class</span> <span class="nc">PreInc</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>   <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;++&quot;</span></div>
-<div class="viewcode-block" id="Op.PreDec"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.PreDec">[docs]</a>  <span class="k">class</span> <span class="nc">PreDec</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>   <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;--&quot;</span></div>
-<div class="viewcode-block" id="Op.PostInc"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.PostInc">[docs]</a>  <span class="k">class</span> <span class="nc">PostInc</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>  <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;++&quot;</span></div>
-<div class="viewcode-block" id="Op.PostDec"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.PostDec">[docs]</a>  <span class="k">class</span> <span class="nc">PostDec</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>  <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;--&quot;</span></div>
-<div class="viewcode-block" id="Op.Ref"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Ref">[docs]</a>  <span class="k">class</span> <span class="nc">Ref</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>      <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&amp;&quot;</span></div>
-<div class="viewcode-block" id="Op.Deref"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Deref">[docs]</a>  <span class="k">class</span> <span class="nc">Deref</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>    <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;*&quot;</span></div>
-<div class="viewcode-block" id="Op.SizeOf"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.SizeOf">[docs]</a>  <span class="k">class</span> <span class="nc">SizeOf</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>   <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;sizeof&quot;</span></div>
-<div class="viewcode-block" id="Op.Add"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Add">[docs]</a>  <span class="k">class</span> <span class="nc">Add</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>      <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;+&quot;</span></div>
-<div class="viewcode-block" id="Op.AddUnary"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.AddUnary">[docs]</a>  <span class="k">class</span> <span class="nc">AddUnary</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span> <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;+&quot;</span></div>
-<div class="viewcode-block" id="Op.Sub"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Sub">[docs]</a>  <span class="k">class</span> <span class="nc">Sub</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>      <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;-&quot;</span></div>
-<div class="viewcode-block" id="Op.SubUnary"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.SubUnary">[docs]</a>  <span class="k">class</span> <span class="nc">SubUnary</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span> <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;-&quot;</span></div>
-<div class="viewcode-block" id="Op.Mul"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Mul">[docs]</a>  <span class="k">class</span> <span class="nc">Mul</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>      <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;*&quot;</span></div>
-<div class="viewcode-block" id="Op.Div"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Div">[docs]</a>  <span class="k">class</span> <span class="nc">Div</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>      <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;/&quot;</span></div>
-<div class="viewcode-block" id="Op.Mod"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Mod">[docs]</a>  <span class="k">class</span> <span class="nc">Mod</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>      <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;%&quot;</span></div>
-<div class="viewcode-block" id="Op.Gt"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Gt">[docs]</a>  <span class="k">class</span> <span class="nc">Gt</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>       <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&gt;&quot;</span></div>
-<div class="viewcode-block" id="Op.Lt"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Lt">[docs]</a>  <span class="k">class</span> <span class="nc">Lt</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>       <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&lt;&quot;</span></div>
-<div class="viewcode-block" id="Op.GtE"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.GtE">[docs]</a>  <span class="k">class</span> <span class="nc">GtE</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>      <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&gt;=&quot;</span></div>
-<div class="viewcode-block" id="Op.LtE"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.LtE">[docs]</a>  <span class="k">class</span> <span class="nc">LtE</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>      <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&lt;=&quot;</span></div>
-<div class="viewcode-block" id="Op.Eq"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Eq">[docs]</a>  <span class="k">class</span> <span class="nc">Eq</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>       <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;==&quot;</span></div>
-<div class="viewcode-block" id="Op.NotEq"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.NotEq">[docs]</a>  <span class="k">class</span> <span class="nc">NotEq</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>    <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;!=&quot;</span></div>
-<div class="viewcode-block" id="Op.BitAnd"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.BitAnd">[docs]</a>  <span class="k">class</span> <span class="nc">BitAnd</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>   <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&amp;&quot;</span></div>
-<div class="viewcode-block" id="Op.BitOr"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.BitOr">[docs]</a>  <span class="k">class</span> <span class="nc">BitOr</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>    <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;|&quot;</span></div>
-<div class="viewcode-block" id="Op.BitNot"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.BitNot">[docs]</a>  <span class="k">class</span> <span class="nc">BitNot</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>   <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;~&quot;</span></div>
-<div class="viewcode-block" id="Op.BitShL"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.BitShL">[docs]</a>  <span class="k">class</span> <span class="nc">BitShL</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>   <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&lt;&lt;&quot;</span></div>
-<div class="viewcode-block" id="Op.BitShR"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.BitShR">[docs]</a>  <span class="k">class</span> <span class="nc">BitShR</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>   <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&gt;&gt;&quot;</span></div>
-<div class="viewcode-block" id="Op.BitXor"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.BitXor">[docs]</a>  <span class="k">class</span> <span class="nc">BitXor</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>   <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;^&quot;</span></div>
-<div class="viewcode-block" id="Op.And"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.And">[docs]</a>  <span class="k">class</span> <span class="nc">And</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>      <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&amp;&amp;&quot;</span></div>
-<div class="viewcode-block" id="Op.Or"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Or">[docs]</a>  <span class="k">class</span> <span class="nc">Or</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>       <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;||&quot;</span></div>
-<div class="viewcode-block" id="Op.Not"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Not">[docs]</a>  <span class="k">class</span> <span class="nc">Not</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>      <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;!&quot;</span></div>
-<div class="viewcode-block" id="Op.Comma"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Comma">[docs]</a>  <span class="k">class</span> <span class="nc">Comma</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>    <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;,&quot;</span></div>
-<div class="viewcode-block" id="Op.Dot"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Dot">[docs]</a>  <span class="k">class</span> <span class="nc">Dot</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>      <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;.&quot;</span></div>
-<div class="viewcode-block" id="Op.Arrow"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Arrow">[docs]</a>  <span class="k">class</span> <span class="nc">Arrow</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>    <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;-&gt;&quot;</span></div>
-<div class="viewcode-block" id="Op.Assign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Assign">[docs]</a>  <span class="k">class</span> <span class="nc">Assign</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>   <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;=&quot;</span></div>
-<div class="viewcode-block" id="Op.ArrayRef"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.ArrayRef">[docs]</a>  <span class="k">class</span> <span class="nc">ArrayRef</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span> <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;??&quot;</span>
+<div class="viewcode-block" id="Op.PreInc"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.PreInc">[docs]</a>    <span class="k">class</span> <span class="nc">PreInc</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;++&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.PreDec"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.PreDec">[docs]</a>    <span class="k">class</span> <span class="nc">PreDec</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;--&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.PostInc"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.PostInc">[docs]</a>    <span class="k">class</span> <span class="nc">PostInc</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;++&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.PostDec"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.PostDec">[docs]</a>    <span class="k">class</span> <span class="nc">PostDec</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;--&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.Ref"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Ref">[docs]</a>    <span class="k">class</span> <span class="nc">Ref</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&amp;&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.Deref"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Deref">[docs]</a>    <span class="k">class</span> <span class="nc">Deref</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;*&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.SizeOf"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.SizeOf">[docs]</a>    <span class="k">class</span> <span class="nc">SizeOf</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;sizeof&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.Add"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Add">[docs]</a>    <span class="k">class</span> <span class="nc">Add</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;+&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.AddUnary"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.AddUnary">[docs]</a>    <span class="k">class</span> <span class="nc">AddUnary</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;+&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.Sub"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Sub">[docs]</a>    <span class="k">class</span> <span class="nc">Sub</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;-&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.SubUnary"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.SubUnary">[docs]</a>    <span class="k">class</span> <span class="nc">SubUnary</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;-&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.Mul"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Mul">[docs]</a>    <span class="k">class</span> <span class="nc">Mul</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;*&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.Div"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Div">[docs]</a>    <span class="k">class</span> <span class="nc">Div</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;/&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.Mod"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Mod">[docs]</a>    <span class="k">class</span> <span class="nc">Mod</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;%&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.Gt"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Gt">[docs]</a>    <span class="k">class</span> <span class="nc">Gt</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&gt;&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.Lt"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Lt">[docs]</a>    <span class="k">class</span> <span class="nc">Lt</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&lt;&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.GtE"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.GtE">[docs]</a>    <span class="k">class</span> <span class="nc">GtE</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&gt;=&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.LtE"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.LtE">[docs]</a>    <span class="k">class</span> <span class="nc">LtE</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&lt;=&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.Eq"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Eq">[docs]</a>    <span class="k">class</span> <span class="nc">Eq</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;==&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.NotEq"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.NotEq">[docs]</a>    <span class="k">class</span> <span class="nc">NotEq</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;!=&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.BitAnd"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.BitAnd">[docs]</a>    <span class="k">class</span> <span class="nc">BitAnd</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&amp;&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.BitOr"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.BitOr">[docs]</a>    <span class="k">class</span> <span class="nc">BitOr</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;|&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.BitNot"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.BitNot">[docs]</a>    <span class="k">class</span> <span class="nc">BitNot</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;~&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.BitShL"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.BitShL">[docs]</a>    <span class="k">class</span> <span class="nc">BitShL</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&lt;&lt;&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.BitShR"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.BitShR">[docs]</a>    <span class="k">class</span> <span class="nc">BitShR</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&gt;&gt;&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.BitXor"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.BitXor">[docs]</a>    <span class="k">class</span> <span class="nc">BitXor</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;^&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.And"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.And">[docs]</a>    <span class="k">class</span> <span class="nc">And</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;&amp;&amp;&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.Or"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Or">[docs]</a>    <span class="k">class</span> <span class="nc">Or</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;||&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.Not"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Not">[docs]</a>    <span class="k">class</span> <span class="nc">Not</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;!&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.Comma"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Comma">[docs]</a>    <span class="k">class</span> <span class="nc">Comma</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;,&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.Dot"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Dot">[docs]</a>    <span class="k">class</span> <span class="nc">Dot</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;.&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.Arrow"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Arrow">[docs]</a>    <span class="k">class</span> <span class="nc">Arrow</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;-&gt;&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.Assign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.Assign">[docs]</a>    <span class="k">class</span> <span class="nc">Assign</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;=&quot;</span>
+</div>
+<div class="viewcode-block" id="Op.ArrayRef"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Op.ArrayRef">[docs]</a>    <span class="k">class</span> <span class="nc">ArrayRef</span><span class="p">(</span><span class="n">_Op</span><span class="p">):</span>
+        <span class="n">_c_str</span> <span class="o">=</span> <span class="s">&quot;??&quot;</span>
 
 
 <span class="c"># ---------------------------------------------------------------------------</span>
 <span class="c"># factory routines for building UnaryOps, BinaryOps, etc.</span>
 </div></div>
-<div class="viewcode-block" id="PreInc"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.PreInc">[docs]</a><span class="k">def</span> <span class="nf">PreInc</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>  <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">PreInc</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span></div>
-<div class="viewcode-block" id="PreDec"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.PreDec">[docs]</a><span class="k">def</span> <span class="nf">PreDec</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>  <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">PreDec</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span></div>
-<div class="viewcode-block" id="PostInc"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.PostInc">[docs]</a><span class="k">def</span> <span class="nf">PostInc</span><span class="p">(</span><span class="n">a</span><span class="p">):</span> <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">PostInc</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span></div>
-<div class="viewcode-block" id="PostDec"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.PostDec">[docs]</a><span class="k">def</span> <span class="nf">PostDec</span><span class="p">(</span><span class="n">a</span><span class="p">):</span> <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">PostDec</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span></div>
-<div class="viewcode-block" id="BitNot"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitNot">[docs]</a><span class="k">def</span> <span class="nf">BitNot</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>  <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">BitNot</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Not"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Not">[docs]</a><span class="k">def</span> <span class="nf">Not</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>     <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">Not</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Ref"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Ref">[docs]</a><span class="k">def</span> <span class="nf">Ref</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>     <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">Ref</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Deref"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Deref">[docs]</a><span class="k">def</span> <span class="nf">Deref</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>   <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">Deref</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span></div>
-<div class="viewcode-block" id="SizeOf"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.SizeOf">[docs]</a><span class="k">def</span> <span class="nf">SizeOf</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>  <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">SizeOf</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span>
+<div class="viewcode-block" id="PreInc"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.PreInc">[docs]</a><span class="k">def</span> <span class="nf">PreInc</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">PreInc</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span>
+
 </div>
-<div class="viewcode-block" id="Add"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Add">[docs]</a><span class="k">def</span> <span class="nf">Add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-  <span class="k">if</span> <span class="n">b</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Add</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
-  <span class="k">else</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">AddUnary</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span>
+<div class="viewcode-block" id="PreDec"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.PreDec">[docs]</a><span class="k">def</span> <span class="nf">PreDec</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">PreDec</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span>
+
 </div>
-<div class="viewcode-block" id="Sub"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Sub">[docs]</a><span class="k">def</span> <span class="nf">Sub</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-  <span class="k">if</span> <span class="n">b</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Sub</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
-  <span class="k">else</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">SubUnary</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span>
+<div class="viewcode-block" id="PostInc"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.PostInc">[docs]</a><span class="k">def</span> <span class="nf">PostInc</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">PostInc</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span>
+
 </div>
-<div class="viewcode-block" id="Mul"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Mul">[docs]</a><span class="k">def</span> <span class="nf">Mul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Mul</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Div"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Div">[docs]</a><span class="k">def</span> <span class="nf">Div</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Div</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Mod"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Mod">[docs]</a><span class="k">def</span> <span class="nf">Mod</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Mod</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Gt"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Gt">[docs]</a><span class="k">def</span> <span class="nf">Gt</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>     <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Gt</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Lt"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Lt">[docs]</a><span class="k">def</span> <span class="nf">Lt</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>     <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Lt</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="GtE"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.GtE">[docs]</a><span class="k">def</span> <span class="nf">GtE</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">GtE</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="LtE"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.LtE">[docs]</a><span class="k">def</span> <span class="nf">LtE</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">LtE</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Eq"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Eq">[docs]</a><span class="k">def</span> <span class="nf">Eq</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>     <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Eq</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="NotEq"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.NotEq">[docs]</a><span class="k">def</span> <span class="nf">NotEq</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>  <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">NotEq</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="BitAnd"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitAnd">[docs]</a><span class="k">def</span> <span class="nf">BitAnd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span> <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitAnd</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="BitOr"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitOr">[docs]</a><span class="k">def</span> <span class="nf">BitOr</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>  <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitOr</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="BitShL"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitShL">[docs]</a><span class="k">def</span> <span class="nf">BitShL</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span> <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitShL</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="BitShR"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitShR">[docs]</a><span class="k">def</span> <span class="nf">BitShR</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span> <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitShR</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="BitXor"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitXor">[docs]</a><span class="k">def</span> <span class="nf">BitXor</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span> <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitXor</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="And"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.And">[docs]</a><span class="k">def</span> <span class="nf">And</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">And</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Or"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Or">[docs]</a><span class="k">def</span> <span class="nf">Or</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>     <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Or</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Comma"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Comma">[docs]</a><span class="k">def</span> <span class="nf">Comma</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>  <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Comma</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Dot"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Dot">[docs]</a><span class="k">def</span> <span class="nf">Dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Dot</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Arrow"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Arrow">[docs]</a><span class="k">def</span> <span class="nf">Arrow</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>  <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Arrow</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Assign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Assign">[docs]</a><span class="k">def</span> <span class="nf">Assign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span> <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Assign</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="ArrayRef"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.ArrayRef">[docs]</a><span class="k">def</span> <span class="nf">ArrayRef</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span> <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">ArrayRef</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+<div class="viewcode-block" id="PostDec"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.PostDec">[docs]</a><span class="k">def</span> <span class="nf">PostDec</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">PostDec</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span>
+
 </div>
-<div class="viewcode-block" id="AddAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.AddAssign">[docs]</a><span class="k">def</span> <span class="nf">AddAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>    <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Add</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="SubAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.SubAssign">[docs]</a><span class="k">def</span> <span class="nf">SubAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>    <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Sub</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="MulAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.MulAssign">[docs]</a><span class="k">def</span> <span class="nf">MulAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>    <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Mul</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="DivAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.DivAssign">[docs]</a><span class="k">def</span> <span class="nf">DivAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>    <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Div</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="ModAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.ModAssign">[docs]</a><span class="k">def</span> <span class="nf">ModAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>    <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Mod</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="BitXorAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitXorAssign">[docs]</a><span class="k">def</span> <span class="nf">BitXorAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span> <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitXor</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="BitAndAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitAndAssign">[docs]</a><span class="k">def</span> <span class="nf">BitAndAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span> <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitAnd</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="BitOrAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitOrAssign">[docs]</a><span class="k">def</span> <span class="nf">BitOrAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>  <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitOr</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="BitShLAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitShLAssign">[docs]</a><span class="k">def</span> <span class="nf">BitShLAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span> <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitShL</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
-<div class="viewcode-block" id="BitShRAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitShRAssign">[docs]</a><span class="k">def</span> <span class="nf">BitShRAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span> <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitShR</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
+<div class="viewcode-block" id="BitNot"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitNot">[docs]</a><span class="k">def</span> <span class="nf">BitNot</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">BitNot</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Not"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Not">[docs]</a><span class="k">def</span> <span class="nf">Not</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">Not</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Ref"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Ref">[docs]</a><span class="k">def</span> <span class="nf">Ref</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">Ref</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Deref"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Deref">[docs]</a><span class="k">def</span> <span class="nf">Deref</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">Deref</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="SizeOf"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.SizeOf">[docs]</a><span class="k">def</span> <span class="nf">SizeOf</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">SizeOf</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Add"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Add">[docs]</a><span class="k">def</span> <span class="nf">Add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Add</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">AddUnary</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Sub"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Sub">[docs]</a><span class="k">def</span> <span class="nf">Sub</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Sub</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">UnaryOp</span><span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">SubUnary</span><span class="p">(),</span> <span class="n">a</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Mul"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Mul">[docs]</a><span class="k">def</span> <span class="nf">Mul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Mul</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Div"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Div">[docs]</a><span class="k">def</span> <span class="nf">Div</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Div</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Mod"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Mod">[docs]</a><span class="k">def</span> <span class="nf">Mod</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Mod</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Gt"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Gt">[docs]</a><span class="k">def</span> <span class="nf">Gt</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Gt</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Lt"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Lt">[docs]</a><span class="k">def</span> <span class="nf">Lt</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Lt</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="GtE"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.GtE">[docs]</a><span class="k">def</span> <span class="nf">GtE</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">GtE</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="LtE"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.LtE">[docs]</a><span class="k">def</span> <span class="nf">LtE</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">LtE</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Eq"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Eq">[docs]</a><span class="k">def</span> <span class="nf">Eq</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Eq</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="NotEq"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.NotEq">[docs]</a><span class="k">def</span> <span class="nf">NotEq</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">NotEq</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="BitAnd"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitAnd">[docs]</a><span class="k">def</span> <span class="nf">BitAnd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitAnd</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="BitOr"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitOr">[docs]</a><span class="k">def</span> <span class="nf">BitOr</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitOr</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="BitShL"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitShL">[docs]</a><span class="k">def</span> <span class="nf">BitShL</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitShL</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="BitShR"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitShR">[docs]</a><span class="k">def</span> <span class="nf">BitShR</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitShR</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="BitXor"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitXor">[docs]</a><span class="k">def</span> <span class="nf">BitXor</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitXor</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="And"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.And">[docs]</a><span class="k">def</span> <span class="nf">And</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">And</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Or"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Or">[docs]</a><span class="k">def</span> <span class="nf">Or</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Or</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Comma"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Comma">[docs]</a><span class="k">def</span> <span class="nf">Comma</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Comma</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Dot"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Dot">[docs]</a><span class="k">def</span> <span class="nf">Dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Dot</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Arrow"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Arrow">[docs]</a><span class="k">def</span> <span class="nf">Arrow</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Arrow</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Assign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Assign">[docs]</a><span class="k">def</span> <span class="nf">Assign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Assign</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="ArrayRef"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.ArrayRef">[docs]</a><span class="k">def</span> <span class="nf">ArrayRef</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">ArrayRef</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="AddAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.AddAssign">[docs]</a><span class="k">def</span> <span class="nf">AddAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Add</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="SubAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.SubAssign">[docs]</a><span class="k">def</span> <span class="nf">SubAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Sub</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="MulAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.MulAssign">[docs]</a><span class="k">def</span> <span class="nf">MulAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Mul</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="DivAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.DivAssign">[docs]</a><span class="k">def</span> <span class="nf">DivAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Div</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="ModAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.ModAssign">[docs]</a><span class="k">def</span> <span class="nf">ModAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">Mod</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="BitXorAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitXorAssign">[docs]</a><span class="k">def</span> <span class="nf">BitXorAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitXor</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="BitAndAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitAndAssign">[docs]</a><span class="k">def</span> <span class="nf">BitAndAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitAnd</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="BitOrAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitOrAssign">[docs]</a><span class="k">def</span> <span class="nf">BitOrAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitOr</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="BitShLAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitShLAssign">[docs]</a><span class="k">def</span> <span class="nf">BitShLAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitShL</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="BitShRAssign"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.BitShRAssign">[docs]</a><span class="k">def</span> <span class="nf">BitShRAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">AugAssign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitShR</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span></div>
 </pre></div>
 
           </div>

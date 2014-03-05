@@ -378,7 +378,7 @@
 <dl class="class">
 <dt id="ctree.c.nodes.CFile">
 <em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">CFile</tt><big>(</big><em>name='generated'</em>, <em>body=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#CFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.CFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.CNode" title="ctree.c.nodes.CNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.CNode</span></tt></a>, <a class="reference internal" href="ctree.html#ctree.ast.File" title="ctree.ast.File"><tt class="xref py py-class docutils literal"><span class="pre">ctree.ast.File</span></tt></a></p>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.CNode" title="ctree.c.nodes.CNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.CNode</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">ctree.node.File</span></tt></p>
 <p>Represents a .c file.</p>
 <dl class="method">
 <dt id="ctree.c.nodes.CFile.get_bc_filename">
@@ -390,7 +390,7 @@
 <dl class="class">
 <dt id="ctree.c.nodes.CNode">
 <em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">CNode</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#CNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.CNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ctree.html#ctree.ast.CtreeNode" title="ctree.ast.CtreeNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.ast.CtreeNode</span></tt></a></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.node.CtreeNode</span></tt></p>
 <p>Base class for all C nodes in ctree.</p>
 <dl class="method">
 <dt id="ctree.c.nodes.CNode.codegen">
@@ -578,8 +578,7 @@
 <dl class="class">
 <dt id="ctree.c.nodes.Op">
 <em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Op</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
-<dl class="class">
+<dd><dl class="class">
 <dt id="ctree.c.nodes.Op.Add">
 <em class="property">class </em><tt class="descname">Add</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#Op.Add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Op.Add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes._Op</span></tt></p>
