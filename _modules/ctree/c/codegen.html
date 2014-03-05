@@ -52,7 +52,7 @@
 <span class="sd">Code generator for C constructs.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">ctree.node</span> <span class="kn">import</span> <span class="n">CtreeNode</span>
+<span class="kn">from</span> <span class="nn">ctree.nodes</span> <span class="kn">import</span> <span class="n">CtreeNode</span>
 <span class="kn">from</span> <span class="nn">ctree.types</span> <span class="kn">import</span> <span class="n">get_ctree_type</span>
 <span class="kn">from</span> <span class="nn">ctree.codegen</span> <span class="kn">import</span> <span class="n">CodeGenVisitor</span>
 <span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="o">*</span>
@@ -64,7 +64,6 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Manages generation of C code.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">def</span> <span class="nf">_requires_parentheses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return True if the current precedence is less than the</span>
@@ -105,9 +104,9 @@
 </div>
 <div class="viewcode-block" id="CCodeGen.visit_UnaryOp"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_UnaryOp">[docs]</a>    <span class="k">def</span> <span class="nf">visit_UnaryOp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">,</span> <span class="p">(</span><span class="n">Op</span><span class="o">.</span><span class="n">PostInc</span><span class="p">,</span> <span class="n">Op</span><span class="o">.</span><span class="n">PostDec</span><span class="p">)):</span>
-            <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">arg</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">arg</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">arg</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">arg</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parentheses</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="o">%</span> <span class="n">s</span>
 </div>
 <div class="viewcode-block" id="CCodeGen.visit_BinaryOp"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_BinaryOp">[docs]</a>    <span class="k">def</span> <span class="nf">visit_BinaryOp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
@@ -138,7 +137,7 @@
         <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">_global</span><span class="p">:</span>
             <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;__global &quot;</span>
         <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
-            <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span>
         <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="CCodeGen.visit_Block"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_Block">[docs]</a>    <span class="k">def</span> <span class="nf">visit_Block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
@@ -223,7 +222,10 @@
 </div>
 <div class="viewcode-block" id="CCodeGen.visit_NdPointer"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_NdPointer">[docs]</a>    <span class="k">def</span> <span class="nf">visit_NdPointer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="n">inner_type</span> <span class="o">=</span> <span class="n">get_ctree_type</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">ptr</span><span class="o">.</span><span class="n">_dtype_</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">Ptr</span><span class="p">(</span><span class="n">inner_type</span><span class="p">)</span><span class="o">.</span><span class="n">codegen</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">Ptr</span><span class="p">(</span><span class="n">inner_type</span><span class="p">)</span><span class="o">.</span><span class="n">codegen</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="CCodeGen.visit_FILE"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_FILE">[docs]</a>    <span class="k">def</span> <span class="nf">visit_FILE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;FILE&quot;</span></div></div>
 </pre></div>
 
           </div>

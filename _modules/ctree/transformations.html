@@ -52,7 +52,7 @@
 <span class="kn">import</span> <span class="nn">ast</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 
-<span class="kn">from</span> <span class="nn">ctree.node</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">ctree.nodes</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">ctree.types</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">ctree.visitors</span> <span class="kn">import</span> <span class="n">NodeTransformer</span>
@@ -164,7 +164,7 @@
 </div></div>
 <div class="viewcode-block" id="ResolveGeneratedPathRefs"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.ResolveGeneratedPathRefs">[docs]</a><span class="k">class</span> <span class="nc">ResolveGeneratedPathRefs</span><span class="p">(</span><span class="n">NodeTransformer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Converts any instances of ctree.node.GeneratedPathRef into strings containing the absolute path</span>
+<span class="sd">    Converts any instances of ctree.nodes.GeneratedPathRef into strings containing the absolute path</span>
 <span class="sd">    of the target file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 

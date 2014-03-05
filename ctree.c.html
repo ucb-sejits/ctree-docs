@@ -113,6 +113,11 @@
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="ctree.c.codegen.CCodeGen.visit_FILE">
+<tt class="descname">visit_FILE</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_FILE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_FILE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="ctree.c.codegen.CCodeGen.visit_Float">
 <tt class="descname">visit_Float</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/c/codegen.html#CCodeGen.visit_Float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.codegen.CCodeGen.visit_Float" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -378,7 +383,7 @@
 <dl class="class">
 <dt id="ctree.c.nodes.CFile">
 <em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">CFile</tt><big>(</big><em>name='generated'</em>, <em>body=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#CFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.CFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.CNode" title="ctree.c.nodes.CNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.CNode</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">ctree.node.File</span></tt></p>
+<dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.CNode" title="ctree.c.nodes.CNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.CNode</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">ctree.nodes.File</span></tt></p>
 <p>Represents a .c file.</p>
 <dl class="method">
 <dt id="ctree.c.nodes.CFile.get_bc_filename">
@@ -390,7 +395,7 @@
 <dl class="class">
 <dt id="ctree.c.nodes.CNode">
 <em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">CNode</tt><a class="reference internal" href="_modules/ctree/c/nodes.html#CNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.CNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.node.CtreeNode</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.nodes.CtreeNode</span></tt></p>
 <p>Base class for all C nodes in ctree.</p>
 <dl class="method">
 <dt id="ctree.c.nodes.CNode.codegen">
@@ -401,7 +406,7 @@
 
 <dl class="class">
 <dt id="ctree.c.nodes.Cast">
-<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Cast</tt><big>(</big><em>ctype=None</em>, <em>value=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Cast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Cast" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">Cast</tt><big>(</big><em>type=None</em>, <em>value=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#Cast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.Cast" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Expression" title="ctree.c.nodes.Expression"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Expression</span></tt></a></p>
 <p>doc</p>
 </dd></dl>
@@ -853,9 +858,14 @@
 
 <dl class="class">
 <dt id="ctree.c.nodes.SymbolRef">
-<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">SymbolRef</tt><big>(</big><em>name=None</em>, <em>type=None</em>, <em>ctype=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#SymbolRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.SymbolRef" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ctree.c.nodes.</tt><tt class="descname">SymbolRef</tt><big>(</big><em>name=None</em>, <em>type=None</em>, <em>_global=False</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#SymbolRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.SymbolRef" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ctree.c.nodes.Literal" title="ctree.c.nodes.Literal"><tt class="xref py py-class docutils literal"><span class="pre">ctree.c.nodes.Literal</span></tt></a></p>
 <p>Cite me.</p>
+<dl class="method">
+<dt id="ctree.c.nodes.SymbolRef.copy">
+<tt class="descname">copy</tt><big>(</big><em>declare=False</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#SymbolRef.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.SymbolRef.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="ctree.c.nodes.SymbolRef.get_ctype">
 <tt class="descname">get_ctype</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#SymbolRef.get_ctype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.SymbolRef.get_ctype" title="Permalink to this definition">¶</a></dt>
@@ -865,6 +875,12 @@
 <dt id="ctree.c.nodes.SymbolRef.set_global">
 <tt class="descname">set_global</tt><big>(</big><em>value=True</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#SymbolRef.set_global"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.SymbolRef.set_global" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="ctree.c.nodes.SymbolRef.unique">
+<em class="property">classmethod </em><tt class="descname">unique</tt><big>(</big><em>name='name'</em>, <em>type=None</em><big>)</big><a class="reference internal" href="_modules/ctree/c/nodes.html#SymbolRef.unique"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.c.nodes.SymbolRef.unique" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory for making unique symbols.</p>
+</dd></dl>
 
 </dd></dl>
 
