@@ -145,7 +145,11 @@
 </div>
 <div class="viewcode-block" id="PyBasicConversions.visit_arg"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.PyBasicConversions.visit_arg">[docs]</a>    <span class="k">def</span> <span class="nf">visit_arg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">SymbolRef</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">arg</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">annotation</span><span class="p">)</span>
-
+</div>
+<div class="viewcode-block" id="PyBasicConversions.visit_Assign"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.PyBasicConversions.visit_Assign">[docs]</a>    <span class="k">def</span> <span class="nf">visit_Assign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="nb">dir</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">targets</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="nb">exit</span><span class="p">()</span>
 </div></div>
 <div class="viewcode-block" id="FixUpParentPointers"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.FixUpParentPointers">[docs]</a><span class="k">class</span> <span class="nc">FixUpParentPointers</span><span class="p">(</span><span class="n">NodeTransformer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
