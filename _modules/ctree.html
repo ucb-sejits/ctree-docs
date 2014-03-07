@@ -47,6 +47,11 @@
           <div class="body">
             
   <h1>Source code for ctree</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The ctree package</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 
 <span class="c"># ---------------------------------------------------------------------------</span>
@@ -62,46 +67,47 @@
 
 <span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">LOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 
 <span class="c"># ---------------------------------------------------------------------------</span>
 <span class="c"># configuration file parsing</span>
 
+<span class="c"># pylint disable=import-error</span>
 <span class="k">try</span><span class="p">:</span>
-  <span class="c"># python 3</span>
-  <span class="kn">import</span> <span class="nn">configparser</span>
+    <span class="c"># python 2</span>
+    <span class="kn">import</span> <span class="nn">ConfigParser</span> <span class="kn">as</span> <span class="nn">configparser</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-  <span class="c"># python 2</span>
-  <span class="kn">import</span> <span class="nn">ConfigParser</span> <span class="kn">as</span> <span class="nn">configparser</span>
+    <span class="c"># python 3</span>
+    <span class="kn">import</span> <span class="nn">configparser</span>
+<span class="c"># pylint enable=import-error</span>
 
 <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">getcwd</span>
 
-<span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
-<span class="n">default_cfg_file_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)),</span> <span class="s">&quot;defaults.cfg&quot;</span><span class="p">)</span>
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;reading default configuration from: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">default_cfg_file_path</span><span class="p">)</span>
+<span class="n">CONFIG</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+<span class="n">DEFAULT_CFG_FILE_PATH</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)),</span> <span class="s">&quot;defaults.cfg&quot;</span><span class="p">)</span>
+<span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;reading default configuration from: </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">DEFAULT_CFG_FILE_PATH</span><span class="p">)</span>
 
-<span class="n">config</span><span class="o">.</span><span class="n">readfp</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">default_cfg_file_path</span><span class="p">),</span> <span class="n">filename</span><span class="o">=</span><span class="s">&quot;defaults.cfg&quot;</span><span class="p">)</span>
+<span class="n">CONFIG</span><span class="o">.</span><span class="n">readfp</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">DEFAULT_CFG_FILE_PATH</span><span class="p">),</span> <span class="n">filename</span><span class="o">=</span><span class="s">&quot;defaults.cfg&quot;</span><span class="p">)</span>
 
-<span class="n">cfg_paths</span> <span class="o">=</span> <span class="p">[</span>
+<span class="n">CFG_PATHS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s">&#39;~/.ctree.cfg&#39;</span><span class="p">),</span>
     <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s">&quot;.ctree.cfg&quot;</span><span class="p">),</span>
 <span class="p">]</span>
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;checking for config files at: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">cfg_paths</span><span class="p">)</span>
+<span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;checking for config files at: </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">CFG_PATHS</span><span class="p">)</span>
 
-<span class="n">found</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">cfg_paths</span><span class="p">)</span>
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;found config files: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">found</span><span class="p">)</span>
+<span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;found config files: </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">CFG_PATHS</span><span class="p">))</span>
 
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-  <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span> <span class="k">as</span> <span class="n">Memfile</span>
+    <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span> <span class="k">as</span> <span class="n">Memfile</span>
 <span class="k">else</span><span class="p">:</span>
-  <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span> <span class="k">as</span> <span class="n">Memfile</span>
+    <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span> <span class="k">as</span> <span class="n">Memfile</span>
 
-<span class="n">configfile</span> <span class="o">=</span> <span class="n">Memfile</span><span class="p">()</span>
-<span class="n">config</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">configfile</span><span class="p">)</span>
-<span class="n">config_txt</span> <span class="o">=</span> <span class="n">configfile</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;using configuration:</span><span class="se">\n</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">config_txt</span><span class="p">)</span>
-<span class="n">configfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">CONFIGFILE</span> <span class="o">=</span> <span class="n">Memfile</span><span class="p">()</span>
+<span class="n">CONFIG</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">CONFIGFILE</span><span class="p">)</span>
+<span class="n">CONFIG_TXT</span> <span class="o">=</span> <span class="n">CONFIGFILE</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+<span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;using configuration:</span><span class="se">\n</span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">CONFIG_TXT</span><span class="p">)</span>
+<span class="n">CONFIGFILE</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 
 <span class="c"># ---------------------------------------------------------------------------</span>
@@ -118,17 +124,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">Counter</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Counter.log"><a class="viewcode-back" href="../ctree.html#ctree.Counter.log">[docs]</a>    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;record a single named event&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span><span class="p">[</span><span class="n">event_str</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 </div>
 <div class="viewcode-block" id="Counter.report"><a class="viewcode-back" href="../ctree.html#ctree.Counter.report">[docs]</a>    <span class="k">def</span> <span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">kvs</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">kv</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">kvs</span> <span class="o">+=</span> <span class="s">&quot;  </span><span class="si">%s</span><span class="s">: </span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">kv</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;execution statistics: &lt;&lt;&lt;</span><span class="se">\n</span><span class="si">%s</span><span class="s">&gt;&gt;&gt;&quot;</span> <span class="o">%</span> <span class="n">kvs</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;send a counter report of all named events to the log&quot;&quot;&quot;</span>
+        <span class="n">key_values_string</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key_value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">key_values_string</span> <span class="o">+=</span> <span class="s">&quot;  </span><span class="si">%s</span><span class="s">: </span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">key_value</span>
+        <span class="n">LOG</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;execution statistics: &lt;&lt;&lt;</span><span class="se">\n</span><span class="si">%s</span><span class="s">&gt;&gt;&gt;&quot;</span><span class="p">,</span> <span class="n">key_values_string</span><span class="p">)</span>
 
 </div></div>
-<span class="n">stats</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
-<span class="n">atexit</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">report</span><span class="p">)</span>
+<span class="n">STATS</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+<span class="n">atexit</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">STATS</span><span class="o">.</span><span class="n">report</span><span class="p">)</span>
 </pre></div>
 
           </div>

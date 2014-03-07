@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="ctree alpha documentation" href="index.html" />
     <link rel="next" title="ctree.c package" href="ctree.c.html" />
-    <link rel="prev" title="ctree documentation" href="index.html" /> 
+    <link rel="prev" title="Welcome to the ctree documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -41,7 +41,7 @@
           <a href="ctree.c.html" title="ctree.c package"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="ctree documentation"
+          <a href="index.html" title="Welcome to the ctree documentation"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">ctree alpha documentation</a> &raquo;</li> 
       </ul>
@@ -118,10 +118,12 @@
 </div>
 <div class="section" id="module-ctree.analyses">
 <span id="ctree-analyses-module"></span><h2>ctree.analyses module<a class="headerlink" href="#module-ctree.analyses" title="Permalink to this headline">¶</a></h2>
+<p>validation of ast trees</p>
 <dl class="exception">
 <dt id="ctree.analyses.AstValidationError">
 <em class="property">exception </em><tt class="descclassname">ctree.analyses.</tt><tt class="descname">AstValidationError</tt><a class="reference internal" href="_modules/ctree/analyses.html#AstValidationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.analyses.AstValidationError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.Exception</span></tt></p>
+<p>Exception for non C nodes in an AST</p>
 </dd></dl>
 
 <dl class="class">
@@ -132,7 +134,8 @@
 <dl class="method">
 <dt id="ctree.analyses.DeclFinder.find">
 <tt class="descname">find</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/ctree/analyses.html#DeclFinder.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.analyses.DeclFinder.find" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>look for a declaration of a symbol ref</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -164,11 +167,9 @@ an AstValidationError if they&#8217;re not.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="ctree-ast-module">
-<h2>ctree.ast module<a class="headerlink" href="#ctree-ast-module" title="Permalink to this headline">¶</a></h2>
-</div>
 <div class="section" id="module-ctree.codegen">
 <span id="ctree-codegen-module"></span><h2>ctree.codegen module<a class="headerlink" href="#module-ctree.codegen" title="Permalink to this headline">¶</a></h2>
+<p>base class for generating code appropriate to the selected backend</p>
 <dl class="class">
 <dt id="ctree.codegen.CodeGenVisitor">
 <em class="property">class </em><tt class="descclassname">ctree.codegen.</tt><tt class="descname">CodeGenVisitor</tt><big>(</big><em>indent=0</em><big>)</big><a class="reference internal" href="_modules/ctree/codegen.html#CodeGenVisitor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.codegen.CodeGenVisitor" title="Permalink to this definition">¶</a></dt>
@@ -210,6 +211,7 @@ such a routine exists (much like the visit_XXX routines).</p>
 </div>
 <div class="section" id="module-ctree.frontend">
 <span id="ctree-frontend-module"></span><h2>ctree.frontend module<a class="headerlink" href="#module-ctree.frontend" title="Permalink to this headline">¶</a></h2>
+<p>helper for getting properly formatted ast from arbitrary python object</p>
 <dl class="function">
 <dt id="ctree.frontend.get_ast">
 <tt class="descclassname">ctree.frontend.</tt><tt class="descname">get_ast</tt><big>(</big><em>obj</em><big>)</big><a class="reference internal" href="_modules/ctree/frontend.html#get_ast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.frontend.get_ast" title="Permalink to this definition">¶</a></dt>
@@ -222,6 +224,7 @@ or code object).</p>
 </div>
 <div class="section" id="module-ctree.jit">
 <span id="ctree-jit-module"></span><h2>ctree.jit module<a class="headerlink" href="#module-ctree.jit" title="Permalink to this headline">¶</a></h2>
+<p>just in time utilities</p>
 <dl class="class">
 <dt id="ctree.jit.JitModule">
 <em class="property">class </em><tt class="descclassname">ctree.jit.</tt><tt class="descname">JitModule</tt><a class="reference internal" href="_modules/ctree/jit.html#JitModule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.jit.JitModule" title="Permalink to this definition">¶</a></dt>
@@ -229,7 +232,7 @@ or code object).</p>
 <p>Manages compilation of multiple ASTs.</p>
 <dl class="method">
 <dt id="ctree.jit.JitModule.get_callable">
-<tt class="descname">get_callable</tt><big>(</big><em>tree</em><big>)</big><a class="reference internal" href="_modules/ctree/jit.html#JitModule.get_callable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.jit.JitModule.get_callable" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_callable</tt><big>(</big><em>entry_point_name</em>, <em>entry_point_typesig</em><big>)</big><a class="reference internal" href="_modules/ctree/jit.html#JitModule.get_callable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.jit.JitModule.get_callable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a python callable that dispatches to the requested C function.</p>
 </dd></dl>
 
@@ -281,6 +284,7 @@ number of parentheses in the generated code.</p>
 </div>
 <div class="section" id="module-ctree.transformations">
 <span id="ctree-transformations-module"></span><h2>ctree.transformations module<a class="headerlink" href="#module-ctree.transformations" title="Permalink to this headline">¶</a></h2>
+<p>A set of basic transformers for python asts</p>
 <dl class="class">
 <dt id="ctree.transformations.FixUpParentPointers">
 <em class="property">class </em><tt class="descclassname">ctree.transformations.</tt><tt class="descname">FixUpParentPointers</tt><a class="reference internal" href="_modules/ctree/transformations.html#FixUpParentPointers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.transformations.FixUpParentPointers" title="Permalink to this definition">¶</a></dt>
@@ -441,39 +445,10 @@ of the target file.</p>
 </div>
 <div class="section" id="module-ctree.util">
 <span id="ctree-util-module"></span><h2>ctree.util module<a class="headerlink" href="#module-ctree.util" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="ctree.util.DotManager">
-<em class="property">class </em><tt class="descclassname">ctree.util.</tt><tt class="descname">DotManager</tt><a class="reference internal" href="_modules/ctree/util.html#DotManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.util.DotManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
-<p>take ast and return an ipython image file</p>
-<dl class="staticmethod">
-<dt id="ctree.util.DotManager.dot_ast_to_image">
-<em class="property">static </em><tt class="descname">dot_ast_to_image</tt><big>(</big><em>ast_node</em><big>)</big><a class="reference internal" href="_modules/ctree/util.html#DotManager.dot_ast_to_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.util.DotManager.dot_ast_to_image" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="ctree.util.singleton">
+<tt class="descclassname">ctree.util.</tt><tt class="descname">singleton</tt><big>(</big><em>cls</em><big>)</big><a class="reference internal" href="_modules/ctree/util.html#singleton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.util.singleton" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="staticmethod">
-<dt id="ctree.util.DotManager.dot_text_to_image">
-<em class="property">static </em><tt class="descname">dot_text_to_image</tt><big>(</big><em>text</em><big>)</big><a class="reference internal" href="_modules/ctree/util.html#DotManager.dot_text_to_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.util.DotManager.dot_text_to_image" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="staticmethod">
-<dt id="ctree.util.DotManager.run_dot">
-<em class="property">static </em><tt class="descname">run_dot</tt><big>(</big><em>code</em>, <em>options=</em>, <span class="optional">[</span><span class="optional">]</span><em>format='png'</em><big>)</big><a class="reference internal" href="_modules/ctree/util.html#DotManager.run_dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.util.DotManager.run_dot" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ctree.util.Timer">
-<em class="property">class </em><tt class="descclassname">ctree.util.</tt><tt class="descname">Timer</tt><a class="reference internal" href="_modules/ctree/util.html#Timer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.util.Timer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
-<p>Context manager for timing sections of code.</p>
-<dl class="method">
-<dt id="ctree.util.Timer.dict">
-<tt class="descname">dict</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/util.html#Timer.dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.util.Timer.dict" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
 
 </div>
 <div class="section" id="module-ctree.visitors">
@@ -482,6 +457,7 @@ of the target file.</p>
 </div>
 <div class="section" id="module-ctree">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ctree" title="Permalink to this headline">¶</a></h2>
+<p>The ctree package</p>
 <dl class="class">
 <dt id="ctree.Counter">
 <em class="property">class </em><tt class="descclassname">ctree.</tt><tt class="descname">Counter</tt><a class="reference internal" href="_modules/ctree.html#Counter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.Counter" title="Permalink to this definition">¶</a></dt>
@@ -490,12 +466,14 @@ of the target file.</p>
 <dl class="method">
 <dt id="ctree.Counter.log">
 <tt class="descname">log</tt><big>(</big><em>event_str</em><big>)</big><a class="reference internal" href="_modules/ctree.html#Counter.log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.Counter.log" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>record a single named event</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ctree.Counter.report">
 <tt class="descname">report</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree.html#Counter.report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.Counter.report" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>send a counter report of all named events to the log</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -514,7 +492,6 @@ of the target file.</p>
 <li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-ctree.analyses">ctree.analyses module</a></li>
-<li><a class="reference internal" href="#ctree-ast-module">ctree.ast module</a></li>
 <li><a class="reference internal" href="#module-ctree.codegen">ctree.codegen module</a></li>
 <li><a class="reference internal" href="#module-ctree.dotgen">ctree.dotgen module</a></li>
 <li><a class="reference internal" href="#module-ctree.frontend">ctree.frontend module</a></li>
@@ -531,7 +508,7 @@ of the target file.</p>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
-                        title="previous chapter">ctree documentation</a></p>
+                        title="previous chapter">Welcome to the ctree documentation</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="ctree.c.html"
                         title="next chapter">ctree.c package</a></p>
@@ -570,7 +547,7 @@ of the target file.</p>
           <a href="ctree.c.html" title="ctree.c package"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="ctree documentation"
+          <a href="index.html" title="Welcome to the ctree documentation"
              >previous</a> |</li>
         <li><a href="index.html">ctree alpha documentation</a> &raquo;</li> 
       </ul>

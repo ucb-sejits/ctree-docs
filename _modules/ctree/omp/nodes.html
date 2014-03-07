@@ -85,16 +85,16 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;clauses&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clauses</span><span class="o">=</span><span class="p">[]):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clauses</span> <span class="o">=</span> <span class="n">clauses</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clauses</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clauses</span> <span class="o">=</span> <span class="n">clauses</span> <span class="k">if</span> <span class="n">clauses</span> <span class="k">else</span> <span class="p">[]</span>
 
 </div>
 <div class="viewcode-block" id="OmpParallelFor"><a class="viewcode-back" href="../../../ctree.omp.html#ctree.omp.nodes.OmpParallelFor">[docs]</a><span class="k">class</span> <span class="nc">OmpParallelFor</span><span class="p">(</span><span class="n">OmpNode</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; #pragma omp parallel for ... &quot;&quot;&quot;</span>
     <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;clauses&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clauses</span><span class="o">=</span><span class="p">[]):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clauses</span> <span class="o">=</span> <span class="n">clauses</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clauses</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clauses</span> <span class="o">=</span> <span class="n">clauses</span> <span class="k">if</span> <span class="n">clauses</span> <span class="k">else</span> <span class="p">[]</span>
 
 </div>
 <div class="viewcode-block" id="OmpClause"><a class="viewcode-back" href="../../../ctree.omp.html#ctree.omp.nodes.OmpClause">[docs]</a><span class="k">class</span> <span class="nc">OmpClause</span><span class="p">(</span><span class="n">OmpNode</span><span class="p">):</span>
