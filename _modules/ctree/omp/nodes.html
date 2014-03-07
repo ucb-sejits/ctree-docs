@@ -72,7 +72,6 @@
 </div>
 <div class="viewcode-block" id="OmpNode.dotgen"><a class="viewcode-back" href="../../../ctree.omp.html#ctree.omp.nodes.OmpNode.dotgen">[docs]</a>    <span class="k">def</span> <span class="nf">dotgen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">ctree.omp.dotgen</span> <span class="kn">import</span> <span class="n">OmpDotGen</span>
-
         <span class="k">return</span> <span class="n">OmpDotGen</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </div>
     <span class="k">def</span> <span class="nf">_requires_semicolon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -95,6 +94,11 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clauses</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clauses</span> <span class="o">=</span> <span class="n">clauses</span> <span class="k">if</span> <span class="n">clauses</span> <span class="k">else</span> <span class="p">[]</span>
+</div>
+<div class="viewcode-block" id="OmpIvDep"><a class="viewcode-back" href="../../../ctree.omp.html#ctree.omp.nodes.OmpIvDep">[docs]</a><span class="k">class</span> <span class="nc">OmpIvDep</span><span class="p">(</span><span class="n">OmpNode</span><span class="p">):</span>
+  <span class="n">_field</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;clauses&#39;</span><span class="p">]</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clauses</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">clauses</span> <span class="o">=</span> <span class="n">clauses</span>
 
 </div>
 <div class="viewcode-block" id="OmpClause"><a class="viewcode-back" href="../../../ctree.omp.html#ctree.omp.nodes.OmpClause">[docs]</a><span class="k">class</span> <span class="nc">OmpClause</span><span class="p">(</span><span class="n">OmpNode</span><span class="p">):</span>
