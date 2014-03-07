@@ -114,7 +114,7 @@
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ll_bc_file</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">bc</span><span class="p">:</span>
             <span class="n">ll_module</span> <span class="o">=</span> <span class="n">llvm</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Module</span><span class="o">.</span><span class="n">from_bitcode</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Generated LLVM Program: &lt;&lt;&lt;</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">&gt;&gt;&gt;&quot;</span><span class="p">,</span> <span class="n">ll_module</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Generated LLVM Program: &lt;&lt;&lt;</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">&gt;&gt;&gt;&quot;</span><span class="p">,</span> <span class="n">ll_module</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">ll_module</span>
 
