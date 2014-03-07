@@ -304,7 +304,7 @@ number of parentheses in the generated code.</p>
 <p>Convert constructs with obvious C analogues.</p>
 <dl class="attribute">
 <dt id="ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP">
-<tt class="descname">PY_OP_TO_CTREE_OP</tt><em class="property"> = {&lt;class '_ast.Mult'&gt;: &lt;class 'ctree.c.nodes.Op.Mul'&gt;, &lt;class '_ast.Sub'&gt;: &lt;class 'ctree.c.nodes.Op.Sub'&gt;, &lt;class '_ast.Add'&gt;: &lt;class 'ctree.c.nodes.Op.Add'&gt;, &lt;class '_ast.Lt'&gt;: &lt;class 'ctree.c.nodes.Op.Lt'&gt;}</em><a class="headerlink" href="#ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">PY_OP_TO_CTREE_OP</tt><em class="property"> = {&lt;class '_ast.Add'&gt;: &lt;class 'ctree.c.nodes.Op.Add'&gt;, &lt;class '_ast.Lt'&gt;: &lt;class 'ctree.c.nodes.Op.Lt'&gt;, &lt;class '_ast.Mult'&gt;: &lt;class 'ctree.c.nodes.Op.Mul'&gt;, &lt;class '_ast.Sub'&gt;: &lt;class 'ctree.c.nodes.Op.Sub'&gt;}</em><a class="headerlink" href="#ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -412,11 +412,6 @@ of the target file.</p>
 <tt class="descname">codegen</tt><big>(</big><em>indent=0</em><big>)</big><a class="reference internal" href="_modules/ctree/types.html#CtreeType.codegen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.CtreeType.codegen" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="ctree.types.CtreeType.dotgen">
-<tt class="descname">dotgen</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/types.html#CtreeType.dotgen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.CtreeType.dotgen" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -448,6 +443,11 @@ of the target file.</p>
 <dl class="function">
 <dt id="ctree.util.singleton">
 <tt class="descclassname">ctree.util.</tt><tt class="descname">singleton</tt><big>(</big><em>cls</em><big>)</big><a class="reference internal" href="_modules/ctree/util.html#singleton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.util.singleton" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ctree.util.truncate">
+<tt class="descclassname">ctree.util.</tt><tt class="descname">truncate</tt><big>(</big><em>text</em><big>)</big><a class="reference internal" href="_modules/ctree/util.html#truncate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.util.truncate" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>

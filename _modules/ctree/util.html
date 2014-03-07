@@ -50,10 +50,25 @@
   <h1>Source code for ctree.util</h1><div class="highlight"><pre>
 <span class="n">__author__</span> <span class="o">=</span> <span class="s">&#39;Chick Markley&#39;</span>
 
+<span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">dedent</span>
+
+<span class="kn">import</span> <span class="nn">ctree</span>
+
 <div class="viewcode-block" id="singleton"><a class="viewcode-back" href="../../ctree.html#ctree.util.singleton">[docs]</a><span class="k">def</span> <span class="nf">singleton</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
     <span class="n">instance</span> <span class="o">=</span> <span class="n">cls</span><span class="p">()</span>
     <span class="n">instance</span><span class="o">.</span><span class="n">__call__</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">instance</span>
-    <span class="k">return</span> <span class="n">instance</span></div>
+    <span class="k">return</span> <span class="n">instance</span>
+</div>
+<div class="viewcode-block" id="truncate"><a class="viewcode-back" href="../../ctree.html#ctree.util.truncate">[docs]</a><span class="k">def</span> <span class="nf">truncate</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">max_display_lines</span> <span class="o">=</span> <span class="n">ctree</span><span class="o">.</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s">&quot;log&quot;</span><span class="p">,</span> <span class="s">&quot;max_lines_per_source&quot;</span><span class="p">)</span>
+    <span class="n">n_lines</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">n_lines</span> <span class="o">&lt;=</span> <span class="n">max_display_lines</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">text</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dedent</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s">        // </span><span class="si">%d</span><span class="s"> lines suppressed, only </span><span class="si">%d</span><span class="s"> allowed</span>
+<span class="s">        // consider adjusting config entry log.max_lines_per_source&quot;&quot;&quot;</span> \
+        <span class="o">%</span> <span class="p">(</span><span class="n">n_lines</span><span class="p">,</span> <span class="n">max_display_lines</span><span class="p">))</span></div>
 </pre></div>
 
           </div>

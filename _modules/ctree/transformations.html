@@ -172,8 +172,10 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compilation_dir</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compilation_dir</span> <span class="o">=</span> <span class="n">compilation_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="ResolveGeneratedPathRefs.visit_GeneratedPathRef"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.ResolveGeneratedPathRefs.visit_GeneratedPathRef">[docs]</a>    <span class="k">def</span> <span class="nf">visit_GeneratedPathRef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">String</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compilation_dir</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">get_filename</span><span class="p">()))</span></div></div>
 </pre></div>
 
