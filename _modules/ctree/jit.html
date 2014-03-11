@@ -165,7 +165,7 @@
                  <span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span><span class="p">])</span>
 
         <span class="n">args_subconfig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args_to_subconfig_safely</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
-        <span class="n">tuner_subconfig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tuner</span><span class="o">.</span><span class="n">get_configs</span><span class="p">()</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+        <span class="n">tuner_subconfig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tuner</span><span class="o">.</span><span class="n">configs</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
         <span class="n">program_config</span> <span class="o">=</span> <span class="p">(</span><span class="n">args_subconfig</span><span class="p">,</span> <span class="n">tuner_subconfig</span><span class="p">)</span>
 
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;specializer returned subconfig for arguments: </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span>
