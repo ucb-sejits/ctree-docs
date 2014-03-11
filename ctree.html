@@ -122,7 +122,7 @@
 <dl class="exception">
 <dt id="ctree.analyses.AstValidationError">
 <em class="property">exception </em><tt class="descclassname">ctree.analyses.</tt><tt class="descname">AstValidationError</tt><a class="reference internal" href="_modules/ctree/analyses.html#AstValidationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.analyses.AstValidationError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.Exception</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
 <p>Exception for non C nodes in an AST</p>
 </dd></dl>
 
@@ -228,7 +228,7 @@ or code object).</p>
 <dl class="class">
 <dt id="ctree.jit.JitModule">
 <em class="property">class </em><tt class="descclassname">ctree.jit.</tt><tt class="descname">JitModule</tt><a class="reference internal" href="_modules/ctree/jit.html#JitModule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.jit.JitModule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Manages compilation of multiple ASTs.</p>
 <dl class="method">
 <dt id="ctree.jit.JitModule.get_callable">
@@ -241,7 +241,7 @@ or code object).</p>
 <dl class="class">
 <dt id="ctree.jit.LazySpecializedFunction">
 <em class="property">class </em><tt class="descclassname">ctree.jit.</tt><tt class="descname">LazySpecializedFunction</tt><big>(</big><em>py_ast</em>, <em>entry_point_name</em><big>)</big><a class="reference internal" href="_modules/ctree/jit.html#LazySpecializedFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.jit.LazySpecializedFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>A callable object that will produce executable
 code just-in-time.</p>
 <dl class="method">
@@ -252,8 +252,8 @@ this particular invocation.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ctree.jit.LazySpecializedFunction.set_tuning_space">
-<tt class="descname">set_tuning_space</tt><big>(</big><em>space</em><big>)</big><a class="reference internal" href="_modules/ctree/jit.html#LazySpecializedFunction.set_tuning_space"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.jit.LazySpecializedFunction.set_tuning_space" title="Permalink to this definition">¶</a></dt>
+<dt id="ctree.jit.LazySpecializedFunction.get_tuning_driver">
+<tt class="descname">get_tuning_driver</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/jit.html#LazySpecializedFunction.get_tuning_driver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.jit.LazySpecializedFunction.get_tuning_driver" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define the space of possible implementations.</p>
 </dd></dl>
 
@@ -304,7 +304,7 @@ number of parentheses in the generated code.</p>
 <p>Convert constructs with obvious C analogues.</p>
 <dl class="attribute">
 <dt id="ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP">
-<tt class="descname">PY_OP_TO_CTREE_OP</tt><em class="property"> = {&lt;class '_ast.Lt'&gt;: &lt;class 'ctree.c.nodes.Op.Lt'&gt;, &lt;class '_ast.Mult'&gt;: &lt;class 'ctree.c.nodes.Op.Mul'&gt;, &lt;class '_ast.Sub'&gt;: &lt;class 'ctree.c.nodes.Op.Sub'&gt;, &lt;class '_ast.Add'&gt;: &lt;class 'ctree.c.nodes.Op.Add'&gt;}</em><a class="headerlink" href="#ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">PY_OP_TO_CTREE_OP</tt><em class="property"> = {&lt;class '_ast.Add'&gt;: &lt;class 'ctree.c.nodes.Add'&gt;, &lt;class '_ast.Lt'&gt;: &lt;class 'ctree.c.nodes.Lt'&gt;, &lt;class '_ast.Mult'&gt;: &lt;class 'ctree.c.nodes.Mul'&gt;, &lt;class '_ast.Sub'&gt;: &lt;class 'ctree.c.nodes.Sub'&gt;}</em><a class="headerlink" href="#ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -417,7 +417,7 @@ of the target file.</p>
 <dl class="class">
 <dt id="ctree.types.CtreeTypeResolver">
 <em class="property">class </em><tt class="descclassname">ctree.types.</tt><tt class="descname">CtreeTypeResolver</tt><a class="reference internal" href="_modules/ctree/types.html#CtreeTypeResolver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.CtreeTypeResolver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <dl class="staticmethod">
 <dt id="ctree.types.CtreeTypeResolver.resolve">
 <em class="property">static </em><tt class="descname">resolve</tt><big>(</big><em>obj</em><big>)</big><a class="reference internal" href="_modules/ctree/types.html#CtreeTypeResolver.resolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.types.CtreeTypeResolver.resolve" title="Permalink to this definition">¶</a></dt>
@@ -443,7 +443,7 @@ of the target file.</p>
 <dl class="class">
 <dt id="ctree.util.DotManager">
 <em class="property">class </em><tt class="descclassname">ctree.util.</tt><tt class="descname">DotManager</tt><a class="reference internal" href="_modules/ctree/util.html#DotManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.util.DotManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>take ast and return an ipython image file</p>
 <dl class="staticmethod">
 <dt id="ctree.util.DotManager.dot_ast_to_image">
@@ -483,7 +483,7 @@ of the target file.</p>
 <dl class="class">
 <dt id="ctree.Counter">
 <em class="property">class </em><tt class="descclassname">ctree.</tt><tt class="descname">Counter</tt><a class="reference internal" href="_modules/ctree.html#Counter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.Counter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Tracks events, reports counts upon garbage collections.</p>
 <dl class="method">
 <dt id="ctree.Counter.log">
