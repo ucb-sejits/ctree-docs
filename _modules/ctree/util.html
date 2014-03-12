@@ -54,10 +54,12 @@
 
 <span class="kn">import</span> <span class="nn">ctree</span>
 
+
 <div class="viewcode-block" id="singleton"><a class="viewcode-back" href="../../ctree.html#ctree.util.singleton">[docs]</a><span class="k">def</span> <span class="nf">singleton</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
     <span class="n">instance</span> <span class="o">=</span> <span class="n">cls</span><span class="p">()</span>
     <span class="n">instance</span><span class="o">.</span><span class="n">__call__</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">instance</span>
     <span class="k">return</span> <span class="n">instance</span>
+
 </div>
 <div class="viewcode-block" id="truncate"><a class="viewcode-back" href="../../ctree.html#ctree.util.truncate">[docs]</a><span class="k">def</span> <span class="nf">truncate</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
     <span class="n">max_display_lines</span> <span class="o">=</span> <span class="n">ctree</span><span class="o">.</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s">&quot;log&quot;</span><span class="p">,</span> <span class="s">&quot;max_lines_per_source&quot;</span><span class="p">)</span>
@@ -65,74 +67,10 @@
     <span class="k">if</span> <span class="n">n_lines</span> <span class="o">&lt;=</span> <span class="n">max_display_lines</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">text</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">dedent</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span><span class="se">\</span>
+        <span class="k">return</span> <span class="n">dedent</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">        // </span><span class="si">%d</span><span class="s"> lines suppressed, only </span><span class="si">%d</span><span class="s"> allowed</span>
-<span class="s">        // consider adjusting config entry log.max_lines_per_source&quot;&quot;&quot;</span> \
-        <span class="o">%</span> <span class="p">(</span><span class="n">n_lines</span><span class="p">,</span> <span class="n">max_display_lines</span><span class="p">))</span>
-</div>
-<div class="viewcode-block" id="DotManager"><a class="viewcode-back" href="../../ctree.html#ctree.util.DotManager">[docs]</a><span class="k">class</span> <span class="nc">DotManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    take ast and return an ipython image file</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="DotManager.dot_ast_to_image"><a class="viewcode-back" href="../../ctree.html#ctree.util.DotManager.dot_ast_to_image">[docs]</a>    <span class="k">def</span> <span class="nf">dot_ast_to_image</span><span class="p">(</span><span class="n">ast_node</span><span class="p">):</span>
-        <span class="kn">import</span> <span class="nn">io</span>
-        <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span>
-
-        <span class="kn">from</span>  <span class="nn">ctree.dotgen</span> <span class="kn">import</span> <span class="n">to_dot</span>
-
-        <span class="n">dot_text</span> <span class="o">=</span> <span class="n">to_dot</span><span class="p">(</span><span class="n">ast_node</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">DotManager</span><span class="o">.</span><span class="n">dot_text_to_image</span><span class="p">(</span><span class="n">dot_text</span><span class="p">)</span>
-</div>
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="DotManager.dot_text_to_image"><a class="viewcode-back" href="../../ctree.html#ctree.util.DotManager.dot_text_to_image">[docs]</a>    <span class="k">def</span> <span class="nf">dot_text_to_image</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span>
-
-        <span class="n">dot_output</span> <span class="o">=</span> <span class="n">DotManager</span><span class="o">.</span><span class="n">run_dot</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Image</span><span class="p">(</span><span class="n">dot_output</span><span class="p">,</span> <span class="n">embed</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-</div>
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="DotManager.run_dot"><a class="viewcode-back" href="../../ctree.html#ctree.util.DotManager.run_dot">[docs]</a>    <span class="k">def</span> <span class="nf">run_dot</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">output_format</span><span class="o">=</span><span class="s">&#39;png&#39;</span><span class="p">):</span>
-        <span class="c"># mostly copied from sphinx.ext.graphviz.render_dot</span>
-        <span class="kn">import</span> <span class="nn">os</span>
-        <span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">Popen</span><span class="p">,</span> <span class="n">PIPE</span>
-        <span class="kn">from</span> <span class="nn">sphinx.util.osutil</span> <span class="kn">import</span> <span class="n">EPIPE</span><span class="p">,</span> <span class="n">EINVAL</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="p">:</span>
-            <span class="n">options</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">dot_args</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;dot&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">options</span> <span class="o">+</span> <span class="p">[</span><span class="s">&#39;-T&#39;</span><span class="p">,</span> <span class="n">output_format</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;nt&#39;</span><span class="p">:</span>
-            <span class="c"># Avoid opening shell window.</span>
-            <span class="c"># * https://github.com/tkf/ipython-hierarchymagic/issues/1</span>
-            <span class="c"># * http://stackoverflow.com/a/2935727/727827</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="n">dot_args</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span>
-                      <span class="n">creationflags</span><span class="o">=</span><span class="mh">0x08000000</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="n">dot_args</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">)</span>
-        <span class="n">went_wrong</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c"># Graphviz may close standard input when an error occurs,</span>
-            <span class="c"># resulting in a broken pipe on communicate()</span>
-            <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="n">code</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">))</span>
-        <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">IOError</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">err</span><span class="o">.</span><span class="n">errno</span> <span class="o">!=</span> <span class="n">EPIPE</span><span class="p">:</span>
-                <span class="k">raise</span>
-            <span class="n">went_wrong</span> <span class="o">=</span> <span class="bp">True</span>
-        <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">err</span><span class="o">.</span><span class="n">errno</span> <span class="o">!=</span> <span class="n">EINVAL</span><span class="p">:</span>
-                <span class="k">raise</span>
-            <span class="n">went_wrong</span> <span class="o">=</span> <span class="bp">True</span>
-        <span class="k">if</span> <span class="n">went_wrong</span><span class="p">:</span>
-            <span class="c"># in this case, read the standard output and standard error streams</span>
-            <span class="c"># directly, to get the error message(s)</span>
-            <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">p</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;dot exited with error:</span><span class="se">\n</span><span class="s">[stderr]</span><span class="se">\n</span><span class="s">{0}&#39;</span>
-                               <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)))</span>
-        <span class="k">return</span> <span class="n">stdout</span></div></div>
+<span class="s">        // consider adjusting config entry log.max_lines_per_source&quot;&quot;&quot;</span>
+                      <span class="o">%</span> <span class="p">(</span><span class="n">n_lines</span><span class="p">,</span> <span class="n">max_display_lines</span><span class="p">))</span></div>
 </pre></div>
 
           </div>
