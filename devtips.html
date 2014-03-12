@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Ctree Development Tips &mdash; ctree alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="ctree alpha documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">ctree alpha documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ctree-development-tips">
+<h1>Ctree Development Tips<a class="headerlink" href="#ctree-development-tips" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="using-virtualenv">
+<h2>Using VirtualEnv<a class="headerlink" href="#using-virtualenv" title="Permalink to this headline">¶</a></h2>
+<p>If you want to switch between multiple versions of Python, and/or keep ctree dependences out of your system site-packages, you can use virtualenv to create standalone python installations and switch between them easily.</p>
+<p>To get started, install <tt class="docutils literal"><span class="pre">virtualenv</span></tt> using <tt class="docutils literal"><span class="pre">pip</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre>pip-2.7 install virtualenv
+</pre></div>
+</div>
+<p>Then, create a virtual environment. We have a <tt class="docutils literal"><span class="pre">.gitignore</span></tt> entry in place to ignore <tt class="docutils literal"><span class="pre">venv-*</span></tt> directories:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd $CTREE
+virtualenv-2.7 venv-2.7
+</pre></div>
+</div>
+<p>Use <tt class="docutils literal"><span class="pre">activate</span></tt> to switch to the new installation:</p>
+<div class="highlight-python"><div class="highlight"><pre>source venv-2.7/bin/activate
+</pre></div>
+</div>
+<p>Check out your new <tt class="docutils literal"><span class="pre">python</span></tt> and <tt class="docutils literal"><span class="pre">pip</span></tt> binaries:</p>
+<div class="highlight-python"><div class="highlight"><pre>zsh% which python
+./venv-2.7/bin/python
+
+zsh% which pip
+./venv-2.7/bin/pip
+</pre></div>
+</div>
+<p>Install <tt class="docutils literal"><span class="pre">ctree</span></tt> dependencies using the current <tt class="docutils literal"><span class="pre">pip</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre>pip install nose Sphinx numpy coverage
+cd $LLVMPY
+LLVM_CONFIG_PATH=... python setup.py install
+</pre></div>
+</div>
+<p>Change back to the <tt class="docutils literal"><span class="pre">ctree</span></tt> directory and run the test suite to make sure everything is okay:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd $CTREE
+nosetests
+</pre></div>
+</div>
+<p>To switch back to your default python installation, run:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">deactivate</span>
+</pre></div>
+</div>
+<p>You can re-activate the virtualenv at any time using:</p>
+<div class="highlight-python"><div class="highlight"><pre>source venv-2.7/bin/activate
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Ctree Development Tips</a><ul>
+<li><a class="reference internal" href="#using-virtualenv">Using VirtualEnv</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/devtips.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">ctree alpha documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Michael Driscoll.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
