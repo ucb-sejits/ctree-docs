@@ -248,13 +248,20 @@ code just-in-time.</p>
 <dt id="ctree.jit.LazySpecializedFunction.args_to_subconfig">
 <tt class="descname">args_to_subconfig</tt><big>(</big><em>args</em><big>)</big><a class="reference internal" href="_modules/ctree/jit.html#LazySpecializedFunction.args_to_subconfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.jit.LazySpecializedFunction.args_to_subconfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract features from the arguments to define uniqueness of
-this particular invocation.</p>
+this particular invocation. The return value must be a hashable
+object, or a dictionary of hashable objects.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ctree.jit.LazySpecializedFunction.get_tuning_driver">
 <tt class="descname">get_tuning_driver</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ctree/jit.html#LazySpecializedFunction.get_tuning_driver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.jit.LazySpecializedFunction.get_tuning_driver" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define the space of possible implementations.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ctree.jit.LazySpecializedFunction.report">
+<tt class="descname">report</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/ctree/jit.html#LazySpecializedFunction.report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.jit.LazySpecializedFunction.report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Records the performance of the most recent configuration.</p>
 </dd></dl>
 
 <dl class="method">
@@ -304,7 +311,7 @@ number of parentheses in the generated code.</p>
 <p>Convert constructs with obvious C analogues.</p>
 <dl class="attribute">
 <dt id="ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP">
-<tt class="descname">PY_OP_TO_CTREE_OP</tt><em class="property"> = {&lt;class '_ast.Mult'&gt;: &lt;class 'ctree.c.nodes.Mul'&gt;, &lt;class '_ast.Mod'&gt;: &lt;class 'ctree.c.nodes.Mod'&gt;, &lt;class '_ast.Sub'&gt;: &lt;class 'ctree.c.nodes.Sub'&gt;, &lt;class '_ast.Add'&gt;: &lt;class 'ctree.c.nodes.Add'&gt;, &lt;class '_ast.Lt'&gt;: &lt;class 'ctree.c.nodes.Lt'&gt;}</em><a class="headerlink" href="#ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">PY_OP_TO_CTREE_OP</tt><em class="property"> = {&lt;class '_ast.Mult'&gt;: &lt;class 'ctree.c.nodes.Mul'&gt;, &lt;class '_ast.Sub'&gt;: &lt;class 'ctree.c.nodes.Sub'&gt;, &lt;class '_ast.Lt'&gt;: &lt;class 'ctree.c.nodes.Lt'&gt;, &lt;class '_ast.Add'&gt;: &lt;class 'ctree.c.nodes.Add'&gt;, &lt;class '_ast.Mod'&gt;: &lt;class 'ctree.c.nodes.Mod'&gt;}</em><a class="headerlink" href="#ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
