@@ -65,7 +65,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">decl</span> <span class="o">=</span> <span class="bp">None</span>
 
 <div class="viewcode-block" id="DeclFinder.find"><a class="viewcode-back" href="../../ctree.html#ctree.analyses.DeclFinder.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-        <span class="s">&quot;look for a declaration of a symbol ref&quot;</span>
+        <span class="sd">&quot;&quot;&quot;look for a declaration of a symbol ref&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">SymbolRef</span><span class="p">),</span> \
             <span class="s">&quot;DeclFinder only works on SymbolRefs for now.&quot;</span>
 
@@ -103,7 +103,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
-        <span class="s">&quot;throw if child.parent is not the actual parent&quot;</span>
+        <span class="sd">&quot;&quot;&quot;throw if child.parent is not the actual parent&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">parent</span> <span class="o">!=</span> <span class="n">parent</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">AstValidationError</span><span class="p">(</span><span class="s">&quot;Expect parent of </span><span class="si">%s</span><span class="s"> to be </span><span class="si">%s</span><span class="s">, but got </span><span class="si">%s</span><span class="s"> instead.&quot;</span> <span class="o">%</span>
                                      <span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">child</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>

@@ -104,10 +104,10 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ctree.sse.html">ctree.sse package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ctree.sse.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ctree.sse.html#module-ctree.sse.codegen">ctree.sse.codegen module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ctree.sse.html#module-ctree.sse.dotgen">ctree.sse.dotgen module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ctree.sse.html#module-ctree.sse.nodes">ctree.sse.nodes module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ctree.sse.html#module-ctree.sse">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctree.sse.html#ctree-sse-codegen-module">ctree.sse.codegen module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctree.sse.html#ctree-sse-dotgen-module">ctree.sse.dotgen module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctree.sse.html#ctree-sse-nodes-module">ctree.sse.nodes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctree.sse.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -311,7 +311,7 @@ number of parentheses in the generated code.</p>
 <p>Convert constructs with obvious C analogues.</p>
 <dl class="attribute">
 <dt id="ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP">
-<tt class="descname">PY_OP_TO_CTREE_OP</tt><em class="property"> = {&lt;class '_ast.Mult'&gt;: &lt;class 'ctree.c.nodes.Mul'&gt;, &lt;class '_ast.Sub'&gt;: &lt;class 'ctree.c.nodes.Sub'&gt;, &lt;class '_ast.Lt'&gt;: &lt;class 'ctree.c.nodes.Lt'&gt;, &lt;class '_ast.Add'&gt;: &lt;class 'ctree.c.nodes.Add'&gt;, &lt;class '_ast.Mod'&gt;: &lt;class 'ctree.c.nodes.Mod'&gt;}</em><a class="headerlink" href="#ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">PY_OP_TO_CTREE_OP</tt><em class="property"> = {&lt;class '_ast.Mult'&gt;: &lt;class 'ctree.c.nodes.Mul'&gt;, &lt;class '_ast.Mod'&gt;: &lt;class 'ctree.c.nodes.Mod'&gt;, &lt;class '_ast.Sub'&gt;: &lt;class 'ctree.c.nodes.Sub'&gt;, &lt;class '_ast.Add'&gt;: &lt;class 'ctree.c.nodes.Add'&gt;, &lt;class '_ast.Lt'&gt;: &lt;class 'ctree.c.nodes.Lt'&gt;}</em><a class="headerlink" href="#ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -454,6 +454,12 @@ of the target file.</p>
 <div class="section" id="module-ctree.util">
 <span id="ctree-util-module"></span><h2>ctree.util module<a class="headerlink" href="#module-ctree.util" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
+<dt id="ctree.util.lower_case_underscore_to_camel_case">
+<tt class="descclassname">ctree.util.</tt><tt class="descname">lower_case_underscore_to_camel_case</tt><big>(</big><em>string</em><big>)</big><a class="reference internal" href="_modules/ctree/util.html#lower_case_underscore_to_camel_case"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.util.lower_case_underscore_to_camel_case" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert string or unicode from lower-case underscore to camel-case</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="ctree.util.singleton">
 <tt class="descclassname">ctree.util.</tt><tt class="descname">singleton</tt><big>(</big><em>cls</em><big>)</big><a class="reference internal" href="_modules/ctree/util.html#singleton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.util.singleton" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -488,6 +494,20 @@ of the target file.</p>
 <dd><p>send a counter report of all named events to the log</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="ctree.get_ast">
+<tt class="descclassname">ctree.</tt><tt class="descname">get_ast</tt><big>(</big><em>func</em><big>)</big><a class="reference internal" href="_modules/ctree.html#get_ast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.get_ast" title="Permalink to this definition">¶</a></dt>
+<dd><p>convenience method for displaying a callable objects ast</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ctree.ipython_show_ast">
+<tt class="descclassname">ctree.</tt><tt class="descname">ipython_show_ast</tt><big>(</big><em>tree</em><big>)</big><a class="reference internal" href="_modules/ctree.html#ipython_show_ast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.ipython_show_ast" title="Permalink to this definition">¶</a></dt>
+<dd><p>convenience method to display an AST in ipython
+converts tree in place to a dot format
+then renders that into a png file</p>
 </dd></dl>
 
 </div>
