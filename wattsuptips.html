@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using a WattsUpMeter &mdash; ctree alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="ctree alpha documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">ctree alpha documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="using-a-wattsupmeter">
+<h1>Using a WattsUpMeter<a class="headerlink" href="#using-a-wattsupmeter" title="Permalink to this headline">¶</a></h1>
+<p><tt class="docutils literal"><span class="pre">ctree</span></tt> includes support for a WattsUp? Pro meter.
+For more information on this device see <a class="reference external" href="https://www.wattsupmeters.com/secure/products.php?pn=0">watts up meters</a></p>
+<p>ctree supports the device directly with in it&#8217;s autotuning.
+Programmatic access to the device is included in the ctree.metrics package.</p>
+<p>The device is finicky, it is sometimes useful to talk to the device directly through an
+interactive shell in order to confirm it is working</p>
+<div class="section" id="using-the-interactive-shell">
+<h2>Using the interactive shell<a class="headerlink" href="#using-the-interactive-shell" title="Permalink to this headline">¶</a></h2>
+<p>From the command line:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ctree</span> <span class="o">--</span><span class="n">wattsupmeter</span>
+</pre></div>
+</div>
+<p>or in the cast that the shell cannot guess the device name:</p>
+<div class="highlight-python"><div class="highlight"><pre>ctree --wattsupmeter -p /dev/[name of usb device]
+</pre></div>
+</div>
+<p>or directly (assuming you are in the ctree directory) via:</p>
+<div class="highlight-python"><div class="highlight"><pre>python ctree/metrics/wattsupmeter.py -i
+</pre></div>
+</div>
+<p>The interpreter has a simple list of commands that can be listed
+via the help command.  Direct commands and their response can be typed
+in at the prompt:  See
+<a class="reference external" href="https://www.wattsupmeters.com/secure/downloads/CommunicationsProtocol090824.pdf">watts up meter API</a>.</p>
+<p>Usually the following commands are all it takes to see what&#8217;s going on:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">record</span>
+<span class="n">get_recording</span>
+</pre></div>
+</div>
+<p>The interpreter uses gnu getline so the standard arrow key magic is available.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Using a WattsUpMeter</a><ul>
+<li><a class="reference internal" href="#using-the-interactive-shell">Using the interactive shell</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/wattsuptips.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">ctree alpha documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Michael Driscoll.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
