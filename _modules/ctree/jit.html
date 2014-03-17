@@ -163,9 +163,8 @@
         <span class="n">tuner_subconfig</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tuner</span><span class="o">.</span><span class="n">configs</span><span class="p">)</span>
         <span class="n">program_config</span> <span class="o">=</span> <span class="p">(</span><span class="n">args_subconfig</span><span class="p">,</span> <span class="n">tuner_subconfig</span><span class="p">)</span>
 
-        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;tuner returned subconfig: </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">tuner_subconfig</span><span class="p">)</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;specializer returned subconfig for arguments: </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span>
-                 <span class="p">(</span><span class="n">args_subconfig</span><span class="p">,))</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;tuner subconfig: </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">tuner_subconfig</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;arguments subconfig: </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">args_subconfig</span><span class="p">)</span>
 
         <span class="n">config_hash</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_hash_dict</span><span class="p">(</span><span class="n">args_subconfig</span><span class="p">),</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">_hash_dict</span><span class="p">(</span><span class="n">tuner_subconfig</span><span class="p">)))</span>
