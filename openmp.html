@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using OpenMP with ctree &mdash; ctree alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="ctree alpha documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">ctree alpha documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="using-openmp-with-ctree">
+<h1>Using OpenMP with ctree<a class="headerlink" href="#using-openmp-with-ctree" title="Permalink to this headline">¶</a></h1>
+<p><tt class="docutils literal"><span class="pre">ctree</span></tt> can be configured to use <a class="reference external" href="http://clang-omp.github.io/">Intel&#8217;s version of Clang</a> with support for OpenMP.</p>
+<div class="section" id="installing-openmp-clang">
+<h2>Installing OpenMP/Clang<a class="headerlink" href="#installing-openmp-clang" title="Permalink to this headline">¶</a></h2>
+<p>These instructions are a combination of instructions found from
+<cite>http://clang-omp.github.io/</cite>,
+<cite>http://llvm.org/docs/GettingStarted.html</cite>
+and <cite>https://www.openmprtl.org/</cite>.</p>
+<p>First, get the source code:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ git clone https://github.com/clang-omp/llvm
+$ git clone https://github.com/clang-omp/compiler-rt llvm/projects/compiler-rt
+$ git clone -b clang-omp https://github.com/clang-omp/clang llvm/tools/clang
+</pre></div>
+</div>
+<p>Now, build clang/llvm:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ mkdir build
+$ cd build
+$ ../llvm/configure --enable-optimized --prefix=YOUR_INSTALL_PATH # i.e. /opt/llvm-omp
+$ REQUIRES_RTTI=1 make
+$ make install
+</pre></div>
+</div>
+<p>Setup your environment variables in your shell configuration. On Mac OS X,
+replace LD_LIBRARY_PATH with DYLD_LIBRARY_PATH.:</p>
+<div class="highlight-python"><div class="highlight"><pre>PATH=/install/prefix/bin:$PATH
+C_INCLUDE_PATH=/install/prefix/include:&lt;OpenMP include path&gt;:$C_INCLUDE_PATH
+CPLUS_INCLUDE_PATH=/install/prefix/include:&lt;OpenMP include path&gt;:$CPLUS_INCLUDE_PATH
+LIBRARY_PATH=/install/prefix/lib:&lt;OpenMP library path&gt;:$LIBRARY_PATH
+LD_LIBRARY_PATH=/install/prefix/lib:&lt;OpenMP library path&gt;:$LD_LIBRARY_PATH
+</pre></div>
+</div>
+<p>Download and install the Intel OpenMP Runtime Library from
+<cite>https://www.openmprtl.org/</cite>, or by installing the
+<a class="reference external" href="http://software.intel.com/en-us/intel-compilershttp://software.intel.com/en-us/intel-compilers">Intel Compilers</a>.
+You can use the evaluation version of the Intel compilers which will install
+the OpenMP runtime library.  After 30 days the compilers will cease to work but
+the runtime library will still be usable.</p>
+<p>Include the OpenMP RTL, for OSX with the evaluation Intel Compilers you can do:</p>
+<div class="highlight-python"><div class="highlight"><pre>DYLD_LIBRARY_PATH=/opt/intel/composerxe/lib:$DYLD_LIBRARY_PATH
+</pre></div>
+</div>
+<p>Download and checkout gentoo90&#8217;s llvmpy branch with llvm-3.4 support and build
+it:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ git clone -b llvm-3.4 https://github.com/gentoo90/llvmpy.git
+$ cd llvmpy
+$ LLVM_CONFIG_PATH=YOUR_INSTALL_PATH/bin/llvm-config python setup.py install
+</pre></div>
+</div>
+<p>Update your ~/.ctree.cfg to use the proper clang and the openmp RTL:</p>
+<div class="highlight-python"><div class="highlight"><pre>[jit]
+CC = /Users/your_name/opt/llvm-omp-3.4/bin/clang
+CFLAGS = -march=native -O3 -fopenmp -I/opt/intel/composerxe/include
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Using OpenMP with ctree</a><ul>
+<li><a class="reference internal" href="#installing-openmp-clang">Installing OpenMP/Clang</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/openmp.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">ctree alpha documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Michael Driscoll.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

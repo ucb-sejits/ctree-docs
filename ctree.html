@@ -311,7 +311,7 @@ number of parentheses in the generated code.</p>
 <p>Convert constructs with obvious C analogues.</p>
 <dl class="attribute">
 <dt id="ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP">
-<tt class="descname">PY_OP_TO_CTREE_OP</tt><em class="property"> = {&lt;class '_ast.Mod'&gt;: &lt;class 'ctree.c.nodes.Mod'&gt;, &lt;class '_ast.Lt'&gt;: &lt;class 'ctree.c.nodes.Lt'&gt;, &lt;class '_ast.Add'&gt;: &lt;class 'ctree.c.nodes.Add'&gt;, &lt;class '_ast.Sub'&gt;: &lt;class 'ctree.c.nodes.Sub'&gt;, &lt;class '_ast.Mult'&gt;: &lt;class 'ctree.c.nodes.Mul'&gt;}</em><a class="headerlink" href="#ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">PY_OP_TO_CTREE_OP</tt><em class="property"> = {&lt;class '_ast.Mult'&gt;: &lt;class 'ctree.c.nodes.Mul'&gt;, &lt;class '_ast.Lt'&gt;: &lt;class 'ctree.c.nodes.Lt'&gt;, &lt;class '_ast.Sub'&gt;: &lt;class 'ctree.c.nodes.Sub'&gt;, &lt;class '_ast.Add'&gt;: &lt;class 'ctree.c.nodes.Add'&gt;, &lt;class '_ast.Mod'&gt;: &lt;class 'ctree.c.nodes.Mod'&gt;}</em><a class="headerlink" href="#ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -494,6 +494,14 @@ of the target file.</p>
 <dd><p>send a counter report of all named events to the log</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="ctree.browser_show_ast">
+<tt class="descclassname">ctree.</tt><tt class="descname">browser_show_ast</tt><big>(</big><em>tree</em>, <em>file_name</em><big>)</big><a class="reference internal" href="_modules/ctree.html#browser_show_ast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.browser_show_ast" title="Permalink to this definition">¶</a></dt>
+<dd><p>convenience method to display an AST in ipython
+converts tree in place to a dot format
+then renders that into a png file</p>
 </dd></dl>
 
 <dl class="function">
