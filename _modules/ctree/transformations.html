@@ -57,7 +57,7 @@
 <span class="kn">from</span> <span class="nn">ctree.nodes</span> <span class="kn">import</span> <span class="n">Project</span>
 <span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="n">Op</span><span class="p">,</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">SymbolRef</span><span class="p">,</span> <span class="n">BinaryOp</span><span class="p">,</span> <span class="n">TernaryOp</span><span class="p">,</span> <span class="n">Return</span>
 <span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="n">If</span><span class="p">,</span> <span class="n">CFile</span><span class="p">,</span> <span class="n">FunctionCall</span><span class="p">,</span> <span class="n">FunctionDecl</span><span class="p">,</span> <span class="n">For</span><span class="p">,</span> <span class="n">Assign</span><span class="p">,</span> <span class="n">AugAssign</span>
-<span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="n">Lt</span><span class="p">,</span> <span class="n">PostInc</span><span class="p">,</span> <span class="n">AddAssign</span>
+<span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="n">Lt</span><span class="p">,</span> <span class="n">PostInc</span><span class="p">,</span> <span class="n">AddAssign</span><span class="p">,</span> <span class="n">SubAssign</span><span class="p">,</span> <span class="n">MulAssign</span><span class="p">,</span> <span class="n">DivAssign</span>
 <span class="kn">from</span> <span class="nn">ctree.c.types</span> <span class="kn">import</span> <span class="n">Long</span>
 <span class="kn">from</span> <span class="nn">ctree.visitors</span> <span class="kn">import</span> <span class="n">NodeTransformer</span>
 
@@ -183,6 +183,21 @@
 </div>
 <div class="viewcode-block" id="PyBasicConversions.visit_arg"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.PyBasicConversions.visit_arg">[docs]</a>    <span class="k">def</span> <span class="nf">visit_arg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">SymbolRef</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">arg</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">annotation</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="PyBasicConversions.visit_AugAssign"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.PyBasicConversions.visit_AugAssign">[docs]</a>    <span class="k">def</span> <span class="nf">visit_AugAssign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">)</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">Add</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">AddAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">Sub</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SubAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">Mult</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MulAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">Div</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DivAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="c"># Error?</span>
+        <span class="k">return</span> <span class="n">node</span>
 
 </div></div>
 <div class="viewcode-block" id="FixUpParentPointers"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.FixUpParentPointers">[docs]</a><span class="k">class</span> <span class="nc">FixUpParentPointers</span><span class="p">(</span><span class="n">NodeTransformer</span><span class="p">):</span>
