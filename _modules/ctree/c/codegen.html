@@ -230,7 +230,8 @@
         <span class="k">return</span> <span class="s">&quot;FILE&quot;</span>
 </div>
 <div class="viewcode-block" id="CCodeGen.visit_Define"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.codegen.CCodeGen.visit_Define">[docs]</a>    <span class="k">def</span> <span class="nf">visit_Define</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&quot;#define </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">defname</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">calc</span><span class="p">)</span></div></div>
+        <span class="n">params</span> <span class="o">=</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">params</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s">&quot;#define </span><span class="si">%s</span><span class="s">(</span><span class="si">%s</span><span class="s">) </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

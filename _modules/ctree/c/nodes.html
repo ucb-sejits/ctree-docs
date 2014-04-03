@@ -186,11 +186,11 @@
 
 <span class="c"># TODO: Decide on naming scheme for define statements</span></div>
 <div class="viewcode-block" id="Define"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.Define">[docs]</a><span class="k">class</span> <span class="nc">Define</span><span class="p">(</span><span class="n">Statement</span><span class="p">):</span>
-    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;defname&#39;</span><span class="p">,</span> <span class="s">&#39;calc&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defname</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">calc</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">defname</span> <span class="o">=</span> <span class="n">defname</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">calc</span> <span class="o">=</span> <span class="n">calc</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Define</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_requires_semicolon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

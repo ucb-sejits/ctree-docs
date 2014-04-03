@@ -85,6 +85,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        write the ocl program to a text file and compile it</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">os</span>
         <span class="n">cl_src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">compilation_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_filename</span><span class="p">())</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;file for generated OpenCL: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">cl_src_file</span><span class="p">)</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;generated OpenCL code: (((</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">)))&quot;</span> <span class="o">%</span> <span class="n">program_text</span><span class="p">)</span>
