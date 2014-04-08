@@ -111,21 +111,25 @@
 <span class="sd">    A function backed by generated code.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">entry_point_name</span><span class="p">,</span> <span class="n">entry_point_typesig</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_point_name</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">entry_point_typesig</span><span class="p">,</span> <span class="n">extra_args</span><span class="o">=</span><span class="nb">tuple</span><span class="p">()):</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">Project</span><span class="p">),</span> \
             <span class="s">&quot;Expected a Project but it got a </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">project</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">,</span> \
             <span class="s">&quot;Expected null project.parent, but got: </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+
+        <span class="n">VerifyOnlyCtreeNodes</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">codegen</span><span class="p">()</span>
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;full LLVM program is: &lt;&lt;&lt;</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">&gt;&gt;&gt;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">ll_module</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">get_callable</span><span class="p">(</span><span class="n">entry_point_name</span><span class="p">,</span>
                                            <span class="n">entry_point_typesig</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_extra_args</span> <span class="o">=</span> <span class="n">extra_args</span>
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">assert</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="p">,</span> \
             <span class="s">&quot;Passing kwargs to SpecializedFunction.__call__ isn&#39;t supported.&quot;</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">args</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extra_args</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="LazySpecializedFunction"><a class="viewcode-back" href="../../ctree.html#ctree.jit.LazySpecializedFunction">[docs]</a><span class="k">class</span> <span class="nc">LazySpecializedFunction</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -137,7 +141,7 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">py_ast</span><span class="p">,</span> <span class="n">entry_point_name</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">original_tree</span> <span class="o">=</span> <span class="n">py_ast</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">entry_point_name</span> <span class="o">=</span> <span class="n">entry_point_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">c_functions</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c"># config -&gt; callable map</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">concrete_functions</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c"># config -&gt; callable map</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tuner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tuning_driver</span><span class="p">()</span>
 
     <span class="nd">@staticmethod</span>
@@ -169,28 +173,23 @@
         <span class="n">config_hash</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_hash_dict</span><span class="p">(</span><span class="n">args_subconfig</span><span class="p">),</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">_hash_dict</span><span class="p">(</span><span class="n">tuner_subconfig</span><span class="p">)))</span>
 
-        <span class="k">if</span> <span class="n">config_hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_functions</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">config_hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">concrete_functions</span><span class="p">:</span>
             <span class="n">ctree</span><span class="o">.</span><span class="n">STATS</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&quot;specialized function cache hit&quot;</span><span class="p">)</span>
             <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;specialized function cache hit!&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ctree</span><span class="o">.</span><span class="n">STATS</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&quot;specialized function cache miss&quot;</span><span class="p">)</span>
             <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;specialized function cache miss.&quot;</span><span class="p">)</span>
-            <span class="n">c_ast</span><span class="p">,</span> <span class="n">entry_point_typesig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span>
+            <span class="n">translator_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span>
                 <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">original_tree</span><span class="p">),</span>
                 <span class="n">program_config</span>
             <span class="p">)</span>
 
-            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c_ast</span><span class="p">,</span> <span class="n">Project</span><span class="p">),</span> <span class="s">&quot;Expected transform() to return</span><span class="se">\</span>
-<span class="s">                            a Project instance, instead got </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="nb">repr</span><span class="p">(</span><span class="n">c_ast</span><span class="p">)</span>
-
-            <span class="n">VerifyOnlyCtreeNodes</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">c_ast</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">c_functions</span><span class="p">[</span><span class="n">config_hash</span><span class="p">]</span> <span class="o">=</span> <span class="n">_ConcreteSpecializedFunction</span><span class="p">(</span>
-                <span class="n">c_ast</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">concrete_functions</span><span class="p">[</span><span class="n">config_hash</span><span class="p">]</span> <span class="o">=</span> <span class="n">_ConcreteSpecializedFunction</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">entry_point_name</span><span class="p">,</span>
-                <span class="n">entry_point_typesig</span>
+                <span class="o">*</span><span class="n">translator_result</span>
             <span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_functions</span><span class="p">[</span><span class="n">config_hash</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">concrete_functions</span><span class="p">[</span><span class="n">config_hash</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
 <div class="viewcode-block" id="LazySpecializedFunction.report"><a class="viewcode-back" href="../../ctree.html#ctree.jit.LazySpecializedFunction.report">[docs]</a>    <span class="k">def</span> <span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
