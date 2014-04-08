@@ -241,7 +241,8 @@
     <span class="sd">&quot;&quot;&quot;Cite me.&quot;&quot;&quot;</span>
     <span class="n">_next_id</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sym_type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">_global</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sym_type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">_global</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                 <span class="n">_local</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">_const</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new symbol with the given name. If a declaration</span>
 <span class="sd">        type is specified, the symbol is considered a declaration</span>
@@ -249,11 +250,21 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">sym_type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_global</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_global</span> <span class="o">=</span> <span class="n">_global</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_local</span> <span class="o">=</span> <span class="n">_local</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_const</span> <span class="o">=</span> <span class="n">_const</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">SymbolRef</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
 <div class="viewcode-block" id="SymbolRef.set_global"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.SymbolRef.set_global">[docs]</a>    <span class="k">def</span> <span class="nf">set_global</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_global</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="bp">self</span>
+</div>
+<div class="viewcode-block" id="SymbolRef.set_local"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.SymbolRef.set_local">[docs]</a>    <span class="k">def</span> <span class="nf">set_local</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_local</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="bp">self</span>
+</div>
+<div class="viewcode-block" id="SymbolRef.set_const"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.SymbolRef.set_const">[docs]</a>    <span class="k">def</span> <span class="nf">set_const</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_const</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">return</span> <span class="bp">self</span>
 </div>
     <span class="nd">@classmethod</span>

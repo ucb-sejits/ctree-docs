@@ -138,6 +138,10 @@
         <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
         <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">_global</span><span class="p">:</span>
             <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;__global &quot;</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">_local</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;__local &quot;</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">_const</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;const &quot;</span>
         <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
             <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span>
         <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
