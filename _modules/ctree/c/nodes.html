@@ -385,6 +385,15 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">Cast</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
 </div>
+<div class="viewcode-block" id="ArrayDef"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.ArrayDef">[docs]</a><span class="k">class</span> <span class="nc">ArrayDef</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;doc&quot;&quot;&quot;</span>
+    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;body&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body</span> <span class="k">if</span> <span class="n">body</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ArrayDef</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+
+</div>
 <span class="nd">@singleton</span>
 <span class="k">class</span> <span class="nc">Op</span><span class="p">:</span>
     <span class="k">class</span> <span class="nc">_Op</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
