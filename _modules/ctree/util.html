@@ -48,7 +48,9 @@
           <div class="body">
             
   <h1>Source code for ctree.util</h1><div class="highlight"><pre>
-<span class="n">__author__</span> <span class="o">=</span> <span class="s">&#39;Chick Markley&#39;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">dedent</span>
 
@@ -77,7 +79,27 @@
     <span class="sd">&quot;&quot;&quot;Convert string or unicode from lower-case underscore to camel-case&quot;&quot;&quot;</span>
     <span class="c"># use string&#39;s class to work on the string to keep its type</span>
     <span class="n">class_</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">__class__</span>
-    <span class="k">return</span> <span class="n">class_</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">class_</span><span class="o">.</span><span class="n">capitalize</span><span class="p">,</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">)))</span></div>
+    <span class="k">return</span> <span class="n">class_</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">class_</span><span class="o">.</span><span class="n">capitalize</span><span class="p">,</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">)))</span>
+
+</div>
+<div class="viewcode-block" id="highlight"><a class="viewcode-back" href="../../ctree.html#ctree.util.highlight">[docs]</a><span class="k">def</span> <span class="nf">highlight</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s">&#39;c&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Syntax-highlight code using pygments, if installed.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">pygments.formatters.terminal256</span> <span class="kn">import</span> <span class="n">Terminal256Formatter</span>
+        <span class="kn">from</span> <span class="nn">pygments.lexers.compiled</span> <span class="kn">import</span> <span class="n">CLexer</span>
+        <span class="kn">from</span> <span class="nn">pygments.lexers.asm</span> <span class="kn">import</span> <span class="n">LlvmLexer</span>
+        <span class="kn">from</span> <span class="nn">pygments</span> <span class="kn">import</span> <span class="n">highlight</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;install pygments for syntax-highlighted output.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">code</span>
+
+    <span class="k">if</span>   <span class="n">language</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;llvm&#39;</span><span class="p">:</span> <span class="n">lexer</span> <span class="o">=</span> <span class="n">LlvmLexer</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">language</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;c&#39;</span><span class="p">:</span>    <span class="n">lexer</span> <span class="o">=</span> <span class="n">CLexer</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Unrecognized highlight language: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">language</span><span class="p">)</span>
+
+    <span class="n">style</span> <span class="o">=</span> <span class="n">ctree</span><span class="o">.</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;log&#39;</span><span class="p">,</span> <span class="s">&#39;pygments_style&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">highlight</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">lexer</span><span class="p">,</span> <span class="n">Terminal256Formatter</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">))</span></div>
 </pre></div>
 
           </div>

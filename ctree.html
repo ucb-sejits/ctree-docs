@@ -311,7 +311,7 @@ number of parentheses in the generated code.</p>
 <p>Convert constructs with obvious C analogues.</p>
 <dl class="attribute">
 <dt id="ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP">
-<tt class="descname">PY_OP_TO_CTREE_OP</tt><em class="property"> = {&lt;class '_ast.Add'&gt;: &lt;class 'ctree.c.nodes.Add'&gt;, &lt;class '_ast.Lt'&gt;: &lt;class 'ctree.c.nodes.Lt'&gt;, &lt;class '_ast.Sub'&gt;: &lt;class 'ctree.c.nodes.Sub'&gt;, &lt;class '_ast.Mult'&gt;: &lt;class 'ctree.c.nodes.Mul'&gt;, &lt;class '_ast.Mod'&gt;: &lt;class 'ctree.c.nodes.Mod'&gt;}</em><a class="headerlink" href="#ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">PY_OP_TO_CTREE_OP</tt><em class="property"> = {&lt;class '_ast.Sub'&gt;: &lt;class 'ctree.c.nodes.Sub'&gt;, &lt;class '_ast.Add'&gt;: &lt;class 'ctree.c.nodes.Add'&gt;, &lt;class '_ast.Lt'&gt;: &lt;class 'ctree.c.nodes.Lt'&gt;, &lt;class '_ast.Mod'&gt;: &lt;class 'ctree.c.nodes.Mod'&gt;, &lt;class '_ast.Mult'&gt;: &lt;class 'ctree.c.nodes.Mul'&gt;}</em><a class="headerlink" href="#ctree.transformations.PyBasicConversions.PY_OP_TO_CTREE_OP" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -458,6 +458,12 @@ of the target file.</p>
 </div>
 <div class="section" id="module-ctree.util">
 <span id="ctree-util-module"></span><h2>ctree.util module<a class="headerlink" href="#module-ctree.util" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="ctree.util.highlight">
+<tt class="descclassname">ctree.util.</tt><tt class="descname">highlight</tt><big>(</big><em>code</em>, <em>language='c'</em><big>)</big><a class="reference internal" href="_modules/ctree/util.html#highlight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.util.highlight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Syntax-highlight code using pygments, if installed.</p>
+</dd></dl>
+
 <dl class="function">
 <dt id="ctree.util.lower_case_underscore_to_camel_case">
 <tt class="descclassname">ctree.util.</tt><tt class="descname">lower_case_underscore_to_camel_case</tt><big>(</big><em>string</em><big>)</big><a class="reference internal" href="_modules/ctree/util.html#lower_case_underscore_to_camel_case"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.util.lower_case_underscore_to_camel_case" title="Permalink to this definition">¶</a></dt>

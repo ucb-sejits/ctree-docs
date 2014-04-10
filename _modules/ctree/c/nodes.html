@@ -60,7 +60,7 @@
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">ctree.nodes</span> <span class="kn">import</span> <span class="n">CtreeNode</span><span class="p">,</span> <span class="n">File</span>
-<span class="kn">from</span> <span class="nn">ctree.util</span> <span class="kn">import</span> <span class="n">singleton</span>
+<span class="kn">from</span> <span class="nn">ctree.util</span> <span class="kn">import</span> <span class="n">singleton</span><span class="p">,</span> <span class="n">highlight</span>
 
 
 <div class="viewcode-block" id="CNode"><a class="viewcode-back" href="../../../ctree.c.html#ctree.c.nodes.CNode">[docs]</a><span class="k">class</span> <span class="nc">CNode</span><span class="p">(</span><span class="n">CtreeNode</span><span class="p">):</span>
@@ -97,7 +97,10 @@
         <span class="n">ll_bc_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">compilation_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_bc_filename</span><span class="p">())</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;file for generated C: </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">c_src_file</span><span class="p">)</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;file for generated LLVM: </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ll_bc_file</span><span class="p">)</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;generated C program: (((</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">)))&quot;</span><span class="p">,</span> <span class="n">truncate</span><span class="p">(</span><span class="n">program_text</span><span class="p">))</span>
+
+        <span class="c"># syntax-highlight and print C program</span>
+        <span class="n">highlighted</span> <span class="o">=</span> <span class="n">highlight</span><span class="p">(</span><span class="n">program_text</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;generated C program: (((</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">)))&quot;</span><span class="p">,</span> <span class="n">highlighted</span><span class="p">)</span>
 
         <span class="c"># write program text to C file</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">c_src_file</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">c_file</span><span class="p">:</span>
@@ -115,7 +118,10 @@
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ll_bc_file</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">bc</span><span class="p">:</span>
             <span class="n">ll_module</span> <span class="o">=</span> <span class="n">llvm</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Module</span><span class="o">.</span><span class="n">from_bitcode</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;generated LLVM Program: (((</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">)))&quot;</span><span class="p">,</span> <span class="n">ll_module</span><span class="p">)</span>
+
+        <span class="c"># syntax-highlight and print LLVM program</span>
+        <span class="n">highlighted</span> <span class="o">=</span> <span class="n">highlight</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ll_module</span><span class="p">),</span> <span class="s">&#39;llvm&#39;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;generated LLVM Program: (((</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">)))&quot;</span><span class="p">,</span> <span class="n">highlighted</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">ll_module</span>
 
