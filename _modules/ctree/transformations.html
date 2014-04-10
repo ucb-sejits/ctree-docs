@@ -54,12 +54,13 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">ast</span>
 
-<span class="kn">from</span> <span class="nn">ctree.nodes</span> <span class="kn">import</span> <span class="n">Project</span>
+<span class="kn">from</span> <span class="nn">ctree.nodes</span> <span class="kn">import</span> <span class="n">Project</span><span class="p">,</span> <span class="n">CtreeNode</span>
 <span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="n">Op</span><span class="p">,</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">SymbolRef</span><span class="p">,</span> <span class="n">BinaryOp</span><span class="p">,</span> <span class="n">TernaryOp</span><span class="p">,</span> <span class="n">Return</span>
 <span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="n">If</span><span class="p">,</span> <span class="n">CFile</span><span class="p">,</span> <span class="n">FunctionCall</span><span class="p">,</span> <span class="n">FunctionDecl</span><span class="p">,</span> <span class="n">For</span><span class="p">,</span> <span class="n">Assign</span><span class="p">,</span> <span class="n">AugAssign</span>
 <span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="n">Lt</span><span class="p">,</span> <span class="n">PostInc</span><span class="p">,</span> <span class="n">AddAssign</span><span class="p">,</span> <span class="n">SubAssign</span><span class="p">,</span> <span class="n">MulAssign</span><span class="p">,</span> <span class="n">DivAssign</span>
 <span class="kn">from</span> <span class="nn">ctree.c.types</span> <span class="kn">import</span> <span class="n">Long</span>
 <span class="kn">from</span> <span class="nn">ctree.visitors</span> <span class="kn">import</span> <span class="n">NodeTransformer</span>
+<span class="kn">from</span> <span class="nn">ctree.util</span> <span class="kn">import</span> <span class="n">flatten</span>
 
 
 <div class="viewcode-block" id="PyCtxScrubber"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.PyCtxScrubber">[docs]</a><span class="k">class</span> <span class="nc">PyCtxScrubber</span><span class="p">(</span><span class="n">NodeTransformer</span><span class="p">):</span>
@@ -206,14 +207,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="FixUpParentPointers.generic_visit"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.FixUpParentPointers.generic_visit">[docs]</a>    <span class="k">def</span> <span class="nf">generic_visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">fieldname</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">iter_fields</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">grandchild</span> <span class="ow">in</span> <span class="n">child</span><span class="p">:</span>
-                    <span class="nb">setattr</span><span class="p">(</span><span class="n">grandchild</span><span class="p">,</span> <span class="s">&#39;parent&#39;</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">grandchild</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AST</span><span class="p">):</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="s">&#39;parent&#39;</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">fieldname</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">iter_fields</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">flatten</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">CtreeNode</span><span class="p">):</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="s">&#39;parent&#39;</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">node</span>
 
 </div></div>
