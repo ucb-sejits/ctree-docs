@@ -197,8 +197,16 @@
             <span class="k">return</span> <span class="n">MulAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">Div</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">DivAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="c"># Error?</span>
+        <span class="c"># TODO: Error?</span>
         <span class="k">return</span> <span class="n">node</span>
+</div>
+<div class="viewcode-block" id="PyBasicConversions.visit_Assign"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.PyBasicConversions.visit_Assign">[docs]</a>    <span class="k">def</span> <span class="nf">visit_Assign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">targets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c"># Raise exception?</span>
+            <span class="k">return</span> <span class="n">node</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">targets</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Assign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
 </div></div>
 <div class="viewcode-block" id="FixUpParentPointers"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.FixUpParentPointers">[docs]</a><span class="k">class</span> <span class="nc">FixUpParentPointers</span><span class="p">(</span><span class="n">NodeTransformer</span><span class="p">):</span>
