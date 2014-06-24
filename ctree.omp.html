@@ -36,9 +36,6 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
           <a href="ctree.py.html" title="ctree.py package"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -59,70 +56,11 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-ctree.omp">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ctree.omp" title="Permalink to this headline">¶</a></h2>
-<p>ctree extensions for OpenMP.</p>
+<div class="section" id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-ctree.omp.nodes">
-<span id="ctree-omp-nodes-module"></span><h2>ctree.omp.nodes module<a class="headerlink" href="#module-ctree.omp.nodes" title="Permalink to this headline">¶</a></h2>
-<p>OpenMP nodes supported by ctree.</p>
-<dl class="class">
-<dt id="ctree.omp.nodes.OmpClause">
-<em class="property">class </em><tt class="descclassname">ctree.omp.nodes.</tt><tt class="descname">OmpClause</tt><a class="reference internal" href="_modules/ctree/omp/nodes.html#OmpClause"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.omp.nodes.OmpClause" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ctree.omp.nodes.OmpNode" title="ctree.omp.nodes.OmpNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.omp.nodes.OmpNode</span></tt></a></p>
-<p>Base class for OpenMP clauses.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="ctree.omp.nodes.OmpIfClause">
-<em class="property">class </em><tt class="descclassname">ctree.omp.nodes.</tt><tt class="descname">OmpIfClause</tt><big>(</big><em>exp=None</em><big>)</big><a class="reference internal" href="_modules/ctree/omp/nodes.html#OmpIfClause"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.omp.nodes.OmpIfClause" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ctree.omp.nodes.OmpClause" title="ctree.omp.nodes.OmpClause"><tt class="xref py py-class docutils literal"><span class="pre">ctree.omp.nodes.OmpClause</span></tt></a></p>
-</dd></dl>
-
-<dl class="class">
-<dt id="ctree.omp.nodes.OmpIvDep">
-<em class="property">class </em><tt class="descclassname">ctree.omp.nodes.</tt><tt class="descname">OmpIvDep</tt><big>(</big><em>clauses=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="_modules/ctree/omp/nodes.html#OmpIvDep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.omp.nodes.OmpIvDep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ctree.omp.nodes.OmpNode" title="ctree.omp.nodes.OmpNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.omp.nodes.OmpNode</span></tt></a></p>
-</dd></dl>
-
-<dl class="class">
-<dt id="ctree.omp.nodes.OmpNoWaitClause">
-<em class="property">class </em><tt class="descclassname">ctree.omp.nodes.</tt><tt class="descname">OmpNoWaitClause</tt><a class="reference internal" href="_modules/ctree/omp/nodes.html#OmpNoWaitClause"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.omp.nodes.OmpNoWaitClause" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ctree.omp.nodes.OmpClause" title="ctree.omp.nodes.OmpClause"><tt class="xref py py-class docutils literal"><span class="pre">ctree.omp.nodes.OmpClause</span></tt></a></p>
-</dd></dl>
-
-<dl class="class">
-<dt id="ctree.omp.nodes.OmpNode">
-<em class="property">class </em><tt class="descclassname">ctree.omp.nodes.</tt><tt class="descname">OmpNode</tt><a class="reference internal" href="_modules/ctree/omp/nodes.html#OmpNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.omp.nodes.OmpNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.nodes.CtreeNode</span></tt></p>
-<p>Base class for all OpenMP nodes supported by ctree.</p>
-<dl class="method">
-<dt id="ctree.omp.nodes.OmpNode.codegen">
-<tt class="descname">codegen</tt><big>(</big><em>indent=0</em><big>)</big><a class="reference internal" href="_modules/ctree/omp/nodes.html#OmpNode.codegen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.omp.nodes.OmpNode.codegen" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ctree.omp.nodes.OmpNumThreadsClause">
-<em class="property">class </em><tt class="descclassname">ctree.omp.nodes.</tt><tt class="descname">OmpNumThreadsClause</tt><big>(</big><em>val=None</em><big>)</big><a class="reference internal" href="_modules/ctree/omp/nodes.html#OmpNumThreadsClause"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.omp.nodes.OmpNumThreadsClause" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ctree.omp.nodes.OmpClause" title="ctree.omp.nodes.OmpClause"><tt class="xref py py-class docutils literal"><span class="pre">ctree.omp.nodes.OmpClause</span></tt></a></p>
-</dd></dl>
-
-<dl class="class">
-<dt id="ctree.omp.nodes.OmpParallel">
-<em class="property">class </em><tt class="descclassname">ctree.omp.nodes.</tt><tt class="descname">OmpParallel</tt><big>(</big><em>clauses=None</em><big>)</big><a class="reference internal" href="_modules/ctree/omp/nodes.html#OmpParallel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.omp.nodes.OmpParallel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ctree.omp.nodes.OmpNode" title="ctree.omp.nodes.OmpNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.omp.nodes.OmpNode</span></tt></a></p>
-<p>Represents &#8216;#pragma omp parallel&#8217; annotations.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="ctree.omp.nodes.OmpParallelFor">
-<em class="property">class </em><tt class="descclassname">ctree.omp.nodes.</tt><tt class="descname">OmpParallelFor</tt><big>(</big><em>clauses=None</em><big>)</big><a class="reference internal" href="_modules/ctree/omp/nodes.html#OmpParallelFor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.omp.nodes.OmpParallelFor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ctree.omp.nodes.OmpNode" title="ctree.omp.nodes.OmpNode"><tt class="xref py py-class docutils literal"><span class="pre">ctree.omp.nodes.OmpNode</span></tt></a></p>
-<p>#pragma omp parallel for ...</p>
-</dd></dl>
-
+<div class="section" id="ctree-omp-nodes-module">
+<h2>ctree.omp.nodes module<a class="headerlink" href="#ctree-omp-nodes-module" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -136,8 +74,8 @@
   <ul>
 <li><a class="reference internal" href="#">ctree.omp package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-ctree.omp">Module contents</a></li>
-<li><a class="reference internal" href="#module-ctree.omp.nodes">ctree.omp.nodes module</a></li>
+<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li><a class="reference internal" href="#ctree-omp-nodes-module">ctree.omp.nodes module</a></li>
 </ul>
 </li>
 </ul>
@@ -176,9 +114,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
         <li class="right" >
           <a href="ctree.py.html" title="ctree.py package"
              >next</a> |</li>

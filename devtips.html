@@ -32,9 +32,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
         <li><a href="index.html">ctree alpha documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -90,6 +87,19 @@ nosetests
 </pre></div>
 </div>
 </div>
+<div class="section" id="cleaning-the-folder-of-temporary-files">
+<h2>Cleaning the Folder of Temporary Files<a class="headerlink" href="#cleaning-the-folder-of-temporary-files" title="Permalink to this headline">¶</a></h2>
+<p>If <tt class="docutils literal"><span class="pre">ctree</span></tt> is exiting uncleanly it may leave compilation directories in the temporary folder. If there are lots of them, <tt class="docutils literal"><span class="pre">rm</span></tt> may not be sufficient to remove them:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ CTREE_TMP_DIR=/var/folders/k3/_z9txmtx3vd1t_64hbx9y4qr0000gn/T
+$ rm -rf $CTREE_TMP_DIR/ctree-*
+zsh: argument list too long: rm
+</pre></div>
+</div>
+<p>Use a command like the following to rememdy the situation:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ find $CTREE_TMP_DIR -name &quot;ctree-*&quot; | xargs rm -rf
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -102,6 +112,7 @@ nosetests
   <ul>
 <li><a class="reference internal" href="#">Ctree Development Tips</a><ul>
 <li><a class="reference internal" href="#using-virtualenv">Using VirtualEnv</a></li>
+<li><a class="reference internal" href="#cleaning-the-folder-of-temporary-files">Cleaning the Folder of Temporary Files</a></li>
 </ul>
 </li>
 </ul>
@@ -134,9 +145,6 @@ nosetests
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
         <li><a href="index.html">ctree alpha documentation</a> &raquo;</li> 
       </ul>
     </div>

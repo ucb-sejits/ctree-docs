@@ -32,9 +32,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
         <li><a href="index.html">ctree alpha documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -47,6 +44,13 @@
   <div class="section" id="using-openmp-with-ctree">
 <h1>Using OpenMP with ctree<a class="headerlink" href="#using-openmp-with-ctree" title="Permalink to this headline">¶</a></h1>
 <p><tt class="docutils literal"><span class="pre">ctree</span></tt> can be configured to use <a class="reference external" href="http://clang-omp.github.io/">Intel&#8217;s version of Clang</a> with support for OpenMP.</p>
+</div>
+<div class="section" id="dependencies">
+<h1>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h1>
+<p>On OSX, ensure that you have the XCode Command Line Tools installed:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">xcode</span><span class="o">-</span><span class="n">select</span> <span class="o">--</span><span class="n">install</span>
+</pre></div>
+</div>
 <div class="section" id="installing-openmp-clang">
 <h2>Installing OpenMP/Clang<a class="headerlink" href="#installing-openmp-clang" title="Permalink to this headline">¶</a></h2>
 <p>These instructions are a combination of instructions found from
@@ -59,26 +63,37 @@ $ git clone https://github.com/clang-omp/compiler-rt llvm/projects/compiler-rt
 $ git clone -b clang-omp https://github.com/clang-omp/clang llvm/tools/clang
 </pre></div>
 </div>
+<p>IMPORTANT: At this point you need to decide where you want to install your llvm.  For this example
+We will assume that it will be in /usr/local/llvm_build, for the next step do this from the command
+line, via:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ export LLVM_BUILD_PATH=/usr/local/llvm_build  # Change this for your particular environment
+</pre></div>
+</div>
 <p>Now, build clang/llvm:</p>
 <div class="highlight-python"><div class="highlight"><pre>$ mkdir build
 $ cd build
-$ ../llvm/configure --enable-optimized --prefix=YOUR_INSTALL_PATH # i.e. /opt/llvm-omp
+$ # Make a build directory, i.e.
+$ # sudo mkdir /opt/llvm-omp
+$ # sudo chown username /opt/llvm-omp
+$ ../llvm/configure --enable-optimized --prefix=$LLVM_BUILD_PATH
 $ REQUIRES_RTTI=1 make
 $ make install
 </pre></div>
 </div>
-<p>Setup your environment variables in your shell configuration. On Mac OS X,
+<p>Setup your environment variables (add this to your .bashrc or .zshrc) in your shell configuration. On Mac OS X,
 replace LD_LIBRARY_PATH with DYLD_LIBRARY_PATH.:</p>
-<div class="highlight-python"><div class="highlight"><pre>PATH=/install/prefix/bin:$PATH
-C_INCLUDE_PATH=/install/prefix/include:&lt;OpenMP include path&gt;:$C_INCLUDE_PATH
-CPLUS_INCLUDE_PATH=/install/prefix/include:&lt;OpenMP include path&gt;:$CPLUS_INCLUDE_PATH
-LIBRARY_PATH=/install/prefix/lib:&lt;OpenMP library path&gt;:$LIBRARY_PATH
-LD_LIBRARY_PATH=/install/prefix/lib:&lt;OpenMP library path&gt;:$LD_LIBRARY_PATH
+<div class="highlight-python"><div class="highlight"><pre>export LLVM_BUILD_PATH=/usr/local/llvm_build  # Change this for your particular environment
+export OPENMP_RUNTIME_PATH=/usr/local/open_mp # Change this
+export PATH=$LLVM_BUILD_PATH/bin:$PATH
+export C_INCLUDE_PATH=$LLVM_BUILD_PATH/include:&lt;OpenMP include path&gt;:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=$LLVM_BUILD_PATH/include:&lt;OpenMP include path&gt;:$CPLUS_INCLUDE_PATH
+export LIBRARY_PATH=$LLVM_BUILD_PATH/lib:&lt;OpenMP library path&gt;:$LIBRARY_PATH
+export LD_LIBRARY_PATH=$LLVM_BUILD_PATH/lib:&lt;OpenMP library path&gt;:$LD_LIBRARY_PATH
 </pre></div>
 </div>
 <p>Download and install the Intel OpenMP Runtime Library from
 <cite>https://www.openmprtl.org/</cite>, or by installing the
-<a class="reference external" href="http://software.intel.com/en-us/intel-compilershttp://software.intel.com/en-us/intel-compilers">Intel Compilers</a>.
+<a class="reference external" href="http://software.intel.com/en-us/intel-compilers">Intel Compilers</a>.
 You can use the evaluation version of the Intel compilers which will install
 the OpenMP runtime library.  After 30 days the compilers will cease to work but
 the runtime library will still be usable.</p>
@@ -88,13 +103,13 @@ the runtime library will still be usable.</p>
 </div>
 <p>Download and checkout gentoo90&#8217;s llvmpy branch with llvm-3.4 support and build
 it:</p>
-<div class="highlight-python"><div class="highlight"><pre>$ git clone -b llvm-3.4 https://github.com/gentoo90/llvmpy.git
+<div class="highlight-python"><div class="highlight"><pre>$ git clone -b llvm-3.4 http://github.com/llvmpy/llvmpy.git
 $ cd llvmpy
 $ LLVM_CONFIG_PATH=YOUR_INSTALL_PATH/bin/llvm-config python setup.py install
 </pre></div>
 </div>
 <p>Update your ~/.ctree.cfg to use the proper clang and the openmp RTL:</p>
-<div class="highlight-python"><div class="highlight"><pre>[jit]
+<div class="highlight-python"><div class="highlight"><pre>[omp]
 CC = /Users/your_name/opt/llvm-omp-3.4/bin/clang
 CFLAGS = -march=native -O3 -fopenmp -I/opt/intel/composerxe/include
 </pre></div>
@@ -110,7 +125,8 @@ CFLAGS = -march=native -O3 -fopenmp -I/opt/intel/composerxe/include
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Using OpenMP with ctree</a><ul>
+<li><a class="reference internal" href="#">Using OpenMP with ctree</a></li>
+<li><a class="reference internal" href="#dependencies">Dependencies</a><ul>
 <li><a class="reference internal" href="#installing-openmp-clang">Installing OpenMP/Clang</a></li>
 </ul>
 </li>
@@ -144,9 +160,6 @@ CFLAGS = -march=native -O3 -fopenmp -I/opt/intel/composerxe/include
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
         <li><a href="index.html">ctree alpha documentation</a> &raquo;</li> 
       </ul>
     </div>
