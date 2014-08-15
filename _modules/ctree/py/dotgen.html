@@ -57,28 +57,34 @@
 <span class="c"># ---------------------------------------------------------------------------</span>
 <span class="c"># dot generator</span>
 
-<span class="kn">from</span> <span class="nn">ctree.dotgen</span> <span class="kn">import</span> <span class="n">DotGenVisitor</span><span class="p">,</span> <span class="n">to_dot</span>
+<span class="kn">from</span> <span class="nn">ctree.dotgen</span> <span class="kn">import</span> <span class="n">DotGenLabeller</span>
 
 
-<div class="viewcode-block" id="PyDotGen"><a class="viewcode-back" href="../../../ctree.py.html#ctree.py.dotgen.PyDotGen">[docs]</a><span class="k">class</span> <span class="nc">PyDotGen</span><span class="p">(</span><span class="n">DotGenVisitor</span><span class="p">):</span>
+<div class="viewcode-block" id="PyDotLabeller"><a class="viewcode-back" href="../../../ctree.py.html#ctree.py.dotgen.PyDotLabeller">[docs]</a><span class="k">class</span> <span class="nc">PyDotLabeller</span><span class="p">(</span><span class="n">DotGenLabeller</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Manages generation of DOT.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PyDotGen.label_arg"><a class="viewcode-back" href="../../../ctree.py.html#ctree.py.dotgen.PyDotGen.label_arg">[docs]</a>    <span class="k">def</span> <span class="nf">label_arg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<div class="viewcode-block" id="PyDotLabeller.visit_arg"><a class="viewcode-back" href="../../../ctree.py.html#ctree.py.dotgen.PyDotLabeller.visit_arg">[docs]</a>    <span class="k">def</span> <span class="nf">visit_arg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;name: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">arg</span>
         <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">annotation</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">annotation</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AST</span><span class="p">):</span>
             <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">annotation: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_qualified_name</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">annotation</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">s</span>
 </div>
-<div class="viewcode-block" id="PyDotGen.label_FunctionDef"><a class="viewcode-back" href="../../../ctree.py.html#ctree.py.dotgen.PyDotGen.label_FunctionDef">[docs]</a>    <span class="k">def</span> <span class="nf">label_FunctionDef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<div class="viewcode-block" id="PyDotLabeller.visit_FunctionDef"><a class="viewcode-back" href="../../../ctree.py.html#ctree.py.dotgen.PyDotLabeller.visit_FunctionDef">[docs]</a>    <span class="k">def</span> <span class="nf">visit_FunctionDef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="k">return</span> <span class="s">&quot;name: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span>
 </div>
-<div class="viewcode-block" id="PyDotGen.label_Num"><a class="viewcode-back" href="../../../ctree.py.html#ctree.py.dotgen.PyDotGen.label_Num">[docs]</a>    <span class="k">def</span> <span class="nf">label_Num</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<div class="viewcode-block" id="PyDotLabeller.visit_Num"><a class="viewcode-back" href="../../../ctree.py.html#ctree.py.dotgen.PyDotLabeller.visit_Num">[docs]</a>    <span class="k">def</span> <span class="nf">visit_Num</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="k">return</span> <span class="s">&quot;n: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">n</span>
 </div>
-<div class="viewcode-block" id="PyDotGen.label_Name"><a class="viewcode-back" href="../../../ctree.py.html#ctree.py.dotgen.PyDotGen.label_Name">[docs]</a>    <span class="k">def</span> <span class="nf">label_Name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&quot;id: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">id</span></div></div>
+<div class="viewcode-block" id="PyDotLabeller.visit_Name"><a class="viewcode-back" href="../../../ctree.py.html#ctree.py.dotgen.PyDotLabeller.visit_Name">[docs]</a>    <span class="k">def</span> <span class="nf">visit_Name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;id: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">id</span>
+</div>
+<div class="viewcode-block" id="PyDotLabeller.visit_Attribute"><a class="viewcode-back" href="../../../ctree.py.html#ctree.py.dotgen.PyDotLabeller.visit_Attribute">[docs]</a>    <span class="k">def</span> <span class="nf">visit_Attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;attr: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">attr</span>
+</div>
+<div class="viewcode-block" id="PyDotLabeller.visit_Str"><a class="viewcode-back" href="../../../ctree.py.html#ctree.py.dotgen.PyDotLabeller.visit_Str">[docs]</a>    <span class="k">def</span> <span class="nf">visit_Str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;str: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">node</span><span class="o">.</span><span class="n">s</span></div></div>
 </pre></div>
 
           </div>

@@ -64,22 +64,22 @@
 
         <span class="k">return</span> <span class="n">OclCodeGen</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </div>
-    <span class="k">def</span> <span class="nf">_to_dot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="OclNode.label"><a class="viewcode-back" href="../../../ctree.ocl.html#ctree.ocl.nodes.OclNode.label">[docs]</a>    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;generate dot element for this node&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">ctree.ocl.dotgen</span> <span class="kn">import</span> <span class="n">OclDotGen</span>
+        <span class="kn">from</span> <span class="nn">ctree.ocl.dotgen</span> <span class="kn">import</span> <span class="n">OclDotLabeller</span>
 
-        <span class="k">return</span> <span class="n">OclDotGen</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">OclDotLabeller</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-</div>
+</div></div>
 <div class="viewcode-block" id="OclFile"><a class="viewcode-back" href="../../../ctree.ocl.html#ctree.ocl.nodes.OclFile">[docs]</a><span class="k">class</span> <span class="nc">OclFile</span><span class="p">(</span><span class="n">OclNode</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents a .cl file.&quot;&quot;&quot;</span>
+    <span class="n">_ext</span> <span class="o">=</span> <span class="s">&quot;cl&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;generated&quot;</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">body</span><span class="p">:</span>
             <span class="n">body</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c">#TODO: Inspect complains about 2 args to __init__</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">OclFile</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ext</span> <span class="o">=</span> <span class="s">&quot;cl&quot;</span>
 
     <span class="k">def</span> <span class="nf">_compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">program_text</span><span class="p">,</span> <span class="n">compilation_dir</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

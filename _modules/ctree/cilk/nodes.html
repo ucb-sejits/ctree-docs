@@ -64,9 +64,9 @@
         <span class="k">return</span> <span class="n">CilkCodeGen</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </div>
     <span class="k">def</span> <span class="nf">_to_dot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">ctree.cilk.dotgen</span> <span class="kn">import</span> <span class="n">CilkDotGen</span>
+        <span class="kn">from</span> <span class="nn">ctree.cilk.dotgen</span> <span class="kn">import</span> <span class="n">CilkDotLabeller</span>
 
-        <span class="k">return</span> <span class="n">CilkDotGen</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">CilkDotLabeller</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 </pre></div>
 
           </div>

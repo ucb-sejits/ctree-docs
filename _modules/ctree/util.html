@@ -55,6 +55,7 @@
 <span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">dedent</span>
 
 <span class="kn">import</span> <span class="nn">ctree</span>
+<span class="kn">import</span> <span class="nn">time</span>
 
 
 <div class="viewcode-block" id="singleton"><a class="viewcode-back" href="../../ctree.html#ctree.util.singleton">[docs]</a><span class="k">def</span> <span class="nf">singleton</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
@@ -82,14 +83,18 @@
     <span class="k">return</span> <span class="n">class_</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">class_</span><span class="o">.</span><span class="n">capitalize</span><span class="p">,</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">)))</span>
 
 </div>
-<div class="viewcode-block" id="flatten"><a class="viewcode-back" href="../../ctree.html#ctree.util.flatten">[docs]</a><span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="n">obj_or_list</span><span class="p">):</span>
+<div class="viewcode-block" id="flatten"><a class="viewcode-back" href="../../ctree.html#ctree.util.flatten">[docs]</a><span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Iterator for all objects arbitrarily nested in lists.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj_or_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">gen</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">(</span><span class="n">flatten</span><span class="p">,</span> <span class="n">obj_or_list</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">(</span><span class="nb">set</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">gen</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">(</span><span class="n">flatten</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">elem</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">gen</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">(</span><span class="n">flatten</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">itervalues</span><span class="p">()):</span>
             <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="n">elem</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">yield</span> <span class="n">obj_or_list</span>
+        <span class="k">yield</span> <span class="n">obj</span>
 
 </div>
 <div class="viewcode-block" id="enumerate_flatten"><a class="viewcode-back" href="../../ctree.html#ctree.util.enumerate_flatten">[docs]</a><span class="k">def</span> <span class="nf">enumerate_flatten</span><span class="p">(</span><span class="n">obj_or_list</span><span class="p">):</span>
@@ -106,20 +111,33 @@
     <span class="sd">&quot;&quot;&quot;Syntax-highlight code using pygments, if installed.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">from</span> <span class="nn">pygments.formatters.terminal256</span> <span class="kn">import</span> <span class="n">Terminal256Formatter</span>
-        <span class="kn">from</span> <span class="nn">pygments.lexers.compiled</span> <span class="kn">import</span> <span class="n">CLexer</span>
-        <span class="kn">from</span> <span class="nn">pygments.lexers.asm</span> <span class="kn">import</span> <span class="n">LlvmLexer</span>
         <span class="kn">from</span> <span class="nn">pygments</span> <span class="kn">import</span> <span class="n">highlight</span>
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;install pygments for syntax-highlighted output.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">code</span>
 
-    <span class="k">if</span>   <span class="n">language</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;llvm&#39;</span><span class="p">:</span> <span class="n">lexer</span> <span class="o">=</span> <span class="n">LlvmLexer</span><span class="p">()</span>
-    <span class="k">elif</span> <span class="n">language</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;c&#39;</span><span class="p">:</span>    <span class="n">lexer</span> <span class="o">=</span> <span class="n">CLexer</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">language</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;llvm&#39;</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">pygments.lexers.asm</span> <span class="kn">import</span> <span class="n">LlvmLexer</span> <span class="k">as</span> <span class="n">TheLexer</span>
+    <span class="k">elif</span> <span class="n">language</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;c&#39;</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">pygments.lexers.compiled</span> <span class="kn">import</span> <span class="n">CLexer</span> <span class="k">as</span> <span class="n">TheLexer</span>
+    <span class="k">elif</span> <span class="n">language</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;diff&#39;</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">pygments.lexers.text</span> <span class="kn">import</span> <span class="n">DiffLexer</span> <span class="k">as</span> <span class="n">TheLexer</span>
+    <span class="k">elif</span> <span class="n">language</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;ini&#39;</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">pygments.lexers.text</span> <span class="kn">import</span> <span class="n">IniLexer</span> <span class="k">as</span> <span class="n">TheLexer</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Unrecognized highlight language: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">language</span><span class="p">)</span>
 
     <span class="n">style</span> <span class="o">=</span> <span class="n">ctree</span><span class="o">.</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;log&#39;</span><span class="p">,</span> <span class="s">&#39;pygments_style&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">highlight</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">lexer</span><span class="p">,</span> <span class="n">Terminal256Formatter</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">highlight</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">TheLexer</span><span class="p">(),</span> <span class="n">Terminal256Formatter</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">))</span>
+
+</div>
+<div class="viewcode-block" id="Timer"><a class="viewcode-back" href="../../ctree.html#ctree.util.Timer">[docs]</a><span class="k">class</span> <span class="nc">Timer</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interval</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span></div>
 </pre></div>
 
           </div>

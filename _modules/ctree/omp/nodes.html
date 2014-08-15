@@ -70,11 +70,11 @@
 
         <span class="k">return</span> <span class="n">OmpCodeGen</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </div>
-    <span class="k">def</span> <span class="nf">_to_dot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">ctree.omp.dotgen</span> <span class="kn">import</span> <span class="n">OmpDotGen</span>
+<div class="viewcode-block" id="OmpNode.label"><a class="viewcode-back" href="../../../ctree.omp.html#ctree.omp.nodes.OmpNode.label">[docs]</a>    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">ctree.omp.dotgen</span> <span class="kn">import</span> <span class="n">OmpDotLabeller</span>
 
-        <span class="k">return</span> <span class="n">OmpDotGen</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-
+        <span class="k">return</span> <span class="n">OmpDotLabeller</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</div>
     <span class="k">def</span> <span class="nf">_requires_semicolon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">False</span>
 
@@ -95,6 +95,24 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clauses</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clauses</span> <span class="o">=</span> <span class="n">clauses</span> <span class="k">if</span> <span class="n">clauses</span> <span class="k">else</span> <span class="p">[]</span>
+
+</div>
+<div class="viewcode-block" id="OmpParallelSections"><a class="viewcode-back" href="../../../ctree.omp.html#ctree.omp.nodes.OmpParallelSections">[docs]</a><span class="k">class</span> <span class="nc">OmpParallelSections</span><span class="p">(</span><span class="n">OmpNode</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; #pragma omp parallel sections... &quot;&quot;&quot;</span>
+    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;clauses&#39;</span><span class="p">,</span> <span class="s">&#39;sections&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clauses</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clauses</span> <span class="o">=</span> <span class="n">clauses</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sections</span> <span class="o">=</span> <span class="n">sections</span> <span class="ow">or</span> <span class="p">[]</span>
+
+</div>
+<div class="viewcode-block" id="OmpSection"><a class="viewcode-back" href="../../../ctree.omp.html#ctree.omp.nodes.OmpSection">[docs]</a><span class="k">class</span> <span class="nc">OmpSection</span><span class="p">(</span><span class="n">OmpNode</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; #pragma omp section ... &quot;&quot;&quot;</span>
+    <span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;clauses&#39;</span><span class="p">,</span> <span class="s">&#39;body&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clauses</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clauses</span> <span class="o">=</span> <span class="n">clauses</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body</span> <span class="ow">or</span> <span class="p">[]</span>
 
 </div>
 <div class="viewcode-block" id="OmpIvDep"><a class="viewcode-back" href="../../../ctree.omp.html#ctree.omp.nodes.OmpIvDep">[docs]</a><span class="k">class</span> <span class="nc">OmpIvDep</span><span class="p">(</span><span class="n">OmpNode</span><span class="p">):</span>

@@ -54,11 +54,12 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">ast</span>
 
+<span class="kn">from</span> <span class="nn">ctypes</span> <span class="kn">import</span> <span class="n">c_long</span>
+
 <span class="kn">from</span> <span class="nn">ctree.nodes</span> <span class="kn">import</span> <span class="n">Project</span><span class="p">,</span> <span class="n">CtreeNode</span>
 <span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="n">Op</span><span class="p">,</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">SymbolRef</span><span class="p">,</span> <span class="n">BinaryOp</span><span class="p">,</span> <span class="n">TernaryOp</span><span class="p">,</span> <span class="n">Return</span>
-<span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="n">If</span><span class="p">,</span> <span class="n">CFile</span><span class="p">,</span> <span class="n">FunctionCall</span><span class="p">,</span> <span class="n">FunctionDecl</span><span class="p">,</span> <span class="n">For</span><span class="p">,</span> <span class="n">Assign</span><span class="p">,</span> <span class="n">AugAssign</span>
+<span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="n">If</span><span class="p">,</span> <span class="n">CFile</span><span class="p">,</span> <span class="n">FunctionCall</span><span class="p">,</span> <span class="n">FunctionDecl</span><span class="p">,</span> <span class="n">For</span><span class="p">,</span> <span class="n">Assign</span><span class="p">,</span> <span class="n">AugAssign</span><span class="p">,</span> <span class="n">ArrayRef</span>
 <span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="n">Lt</span><span class="p">,</span> <span class="n">PostInc</span><span class="p">,</span> <span class="n">AddAssign</span><span class="p">,</span> <span class="n">SubAssign</span><span class="p">,</span> <span class="n">MulAssign</span><span class="p">,</span> <span class="n">DivAssign</span>
-<span class="kn">from</span> <span class="nn">ctree.c.types</span> <span class="kn">import</span> <span class="n">Long</span>
 <span class="kn">from</span> <span class="nn">ctree.visitors</span> <span class="kn">import</span> <span class="n">NodeTransformer</span>
 <span class="kn">from</span> <span class="nn">ctree.util</span> <span class="kn">import</span> <span class="n">flatten</span>
 
@@ -78,12 +79,30 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert constructs with obvious C analogues.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">names_dict</span><span class="o">=</span><span class="p">{},</span> <span class="n">constants_dict</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">names_dict</span> <span class="o">=</span> <span class="n">names_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constants_dict</span> <span class="o">=</span><span class="n">constants_dict</span>
+
     <span class="n">PY_OP_TO_CTREE_OP</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">ast</span><span class="o">.</span><span class="n">Add</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">Add</span><span class="p">,</span>
         <span class="n">ast</span><span class="o">.</span><span class="n">Mod</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">Mod</span><span class="p">,</span>
         <span class="n">ast</span><span class="o">.</span><span class="n">Mult</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">Mul</span><span class="p">,</span>
         <span class="n">ast</span><span class="o">.</span><span class="n">Sub</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">Sub</span><span class="p">,</span>
+        <span class="n">ast</span><span class="o">.</span><span class="n">Div</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">Div</span><span class="p">,</span>
         <span class="n">ast</span><span class="o">.</span><span class="n">Lt</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">Lt</span><span class="p">,</span>
+        <span class="n">ast</span><span class="o">.</span><span class="n">Gt</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">Gt</span><span class="p">,</span>
+        <span class="n">ast</span><span class="o">.</span><span class="n">LtE</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">LtE</span><span class="p">,</span>
+        <span class="n">ast</span><span class="o">.</span><span class="n">GtE</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">GtE</span><span class="p">,</span>
+        <span class="n">ast</span><span class="o">.</span><span class="n">BitAnd</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitAnd</span><span class="p">,</span>
+        <span class="n">ast</span><span class="o">.</span><span class="n">BitOr</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitOr</span><span class="p">,</span>
+        <span class="n">ast</span><span class="o">.</span><span class="n">Eq</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">Eq</span><span class="p">,</span>
+        <span class="n">ast</span><span class="o">.</span><span class="n">NotEq</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">NotEq</span><span class="p">,</span>
+        <span class="n">ast</span><span class="o">.</span><span class="n">Not</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">Not</span><span class="p">,</span>
+        <span class="n">ast</span><span class="o">.</span><span class="n">And</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">And</span><span class="p">,</span>
+        <span class="n">ast</span><span class="o">.</span><span class="n">Or</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">Or</span><span class="p">,</span>
+        <span class="n">ast</span><span class="o">.</span><span class="n">BitXor</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitXor</span><span class="p">,</span>
+        <span class="n">ast</span><span class="o">.</span><span class="n">LShift</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitShL</span><span class="p">,</span>
+        <span class="n">ast</span><span class="o">.</span><span class="n">RShift</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitShR</span><span class="p">,</span>
         <span class="c"># TODO list the rest</span>
     <span class="p">}</span>
 
@@ -94,6 +113,10 @@
         <span class="k">return</span> <span class="n">String</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="PyBasicConversions.visit_Name"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.PyBasicConversions.visit_Name">[docs]</a>    <span class="k">def</span> <span class="nf">visit_Name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants_dict</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Constant</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constants_dict</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">names_dict</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SymbolRef</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">names_dict</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">SymbolRef</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="PyBasicConversions.visit_BinOp"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.PyBasicConversions.visit_BinOp">[docs]</a>    <span class="k">def</span> <span class="nf">visit_BinOp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
@@ -128,11 +151,11 @@
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Cannot convert a for...range with </span><span class="si">%d</span><span class="s"> args.&quot;</span> <span class="o">%</span> <span class="n">nArgs</span><span class="p">)</span>
 
             <span class="c"># TODO allow any expressions castable to Long type</span>
-            <span class="k">assert</span> <span class="n">stop</span><span class="o">.</span><span class="n">get_type</span><span class="p">()</span>  <span class="o">==</span> <span class="n">Long</span><span class="p">(),</span> <span class="s">&quot;Can only convert range&#39;s with stop values of Long type.&quot;</span>
-            <span class="k">assert</span> <span class="n">start</span><span class="o">.</span><span class="n">get_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">Long</span><span class="p">(),</span> <span class="s">&quot;Can only convert range&#39;s with start values of Long type.&quot;</span>
-            <span class="k">assert</span> <span class="n">step</span><span class="o">.</span><span class="n">get_type</span><span class="p">()</span>  <span class="o">==</span> <span class="n">Long</span><span class="p">(),</span> <span class="s">&quot;Can only convert range&#39;s with step values of Long type.&quot;</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stop</span><span class="o">.</span><span class="n">get_type</span><span class="p">(),</span> <span class="n">c_long</span><span class="p">),</span> <span class="s">&quot;Can only convert range&#39;s with stop values of Long type.&quot;</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">start</span><span class="o">.</span><span class="n">get_type</span><span class="p">(),</span> <span class="n">c_long</span><span class="p">),</span> <span class="s">&quot;Can only convert range&#39;s with start values of Long type.&quot;</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">get_type</span><span class="p">(),</span> <span class="n">c_long</span><span class="p">),</span> <span class="s">&quot;Can only convert range&#39;s with step values of Long type.&quot;</span>
 
-            <span class="n">target</span> <span class="o">=</span> <span class="n">SymbolRef</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">Long</span><span class="p">())</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">SymbolRef</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">c_long</span><span class="p">())</span>
             <span class="n">for_loop</span> <span class="o">=</span> <span class="n">For</span><span class="p">(</span>
                 <span class="n">Assign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">start</span><span class="p">),</span>
                 <span class="n">Lt</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">stop</span><span class="p">),</span>
@@ -207,21 +230,14 @@
         <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">targets</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Assign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-</div></div>
-<div class="viewcode-block" id="FixUpParentPointers"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.FixUpParentPointers">[docs]</a><span class="k">class</span> <span class="nc">FixUpParentPointers</span><span class="p">(</span><span class="n">NodeTransformer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Add parent pointers if they&#39;re missing.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-<div class="viewcode-block" id="FixUpParentPointers.generic_visit"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.FixUpParentPointers.generic_visit">[docs]</a>    <span class="k">def</span> <span class="nf">generic_visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">fieldname</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">iter_fields</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">flatten</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">CtreeNode</span><span class="p">):</span>
-                    <span class="nb">setattr</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="s">&#39;parent&#39;</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">node</span>
-
+</div>
+<div class="viewcode-block" id="PyBasicConversions.visit_Subscript"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.PyBasicConversions.visit_Subscript">[docs]</a>    <span class="k">def</span> <span class="nf">visit_Subscript</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="p">,</span><span class="n">ast</span><span class="o">.</span><span class="n">Index</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ArrayRef</span><span class="p">(</span><span class="n">value</span><span class="p">,</span><span class="n">index</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">node</span>
 </div></div>
 <div class="viewcode-block" id="ResolveGeneratedPathRefs"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.ResolveGeneratedPathRefs">[docs]</a><span class="k">class</span> <span class="nc">ResolveGeneratedPathRefs</span><span class="p">(</span><span class="n">NodeTransformer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -235,7 +251,37 @@
 
 <div class="viewcode-block" id="ResolveGeneratedPathRefs.visit_GeneratedPathRef"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.ResolveGeneratedPathRefs.visit_GeneratedPathRef">[docs]</a>    <span class="k">def</span> <span class="nf">visit_GeneratedPathRef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="n">String</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compilation_dir</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">get_filename</span><span class="p">()))</span></div></div>
+        <span class="k">return</span> <span class="n">String</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compilation_dir</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">get_filename</span><span class="p">()))</span>
+
+</div></div>
+<div class="viewcode-block" id="Lifter"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.Lifter">[docs]</a><span class="k">class</span> <span class="nc">Lifter</span><span class="p">(</span><span class="n">NodeTransformer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    To aid in adding new includes or parameters during tree</span>
+<span class="sd">    traversals, users can store them with arbirary child nodes and call this</span>
+<span class="sd">    transformation to move them to the correct position.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lift_params</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">lift_includes</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lift_params</span> <span class="o">=</span> <span class="n">lift_params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lift_includes</span> <span class="o">=</span> <span class="n">lift_includes</span>
+
+<div class="viewcode-block" id="Lifter.visit_FunctionDecl"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.Lifter.visit_FunctionDecl">[docs]</a>    <span class="k">def</span> <span class="nf">visit_FunctionDecl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lift_params</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="s">&#39;_lift_params&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+                    <span class="k">if</span> <span class="n">param</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
+                        <span class="n">node</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+                    <span class="c">#del child._lift_params</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generic_visit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Lifter.visit_CFile"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.Lifter.visit_CFile">[docs]</a>    <span class="k">def</span> <span class="nf">visit_CFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lift_includes</span><span class="p">:</span>
+            <span class="n">new_includes</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">include</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="s">&#39;_lift_includes&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+                    <span class="k">if</span> <span class="n">include</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_includes</span><span class="p">:</span>
+                        <span class="n">new_includes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">include</span><span class="p">)</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">new_includes</span><span class="p">)</span> <span class="o">+</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generic_visit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

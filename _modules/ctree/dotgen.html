@@ -54,13 +54,46 @@
 <span class="kn">from</span> <span class="nn">ctree.util</span> <span class="kn">import</span> <span class="n">enumerate_flatten</span>
 
 
+<div class="viewcode-block" id="label_for_py_ast_nodes"><a class="viewcode-back" href="../../ctree.html#ctree.dotgen.label_for_py_ast_nodes">[docs]</a><span class="k">def</span> <span class="nf">label_for_py_ast_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">ctree.py.dotgen</span> <span class="kn">import</span> <span class="n">PyDotLabeller</span>
+
+    <span class="k">return</span> <span class="n">PyDotLabeller</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="to_dot_outer_for_py_ast_nodes"><a class="viewcode-back" href="../../ctree.html#ctree.dotgen.to_dot_outer_for_py_ast_nodes">[docs]</a><span class="k">def</span> <span class="nf">to_dot_outer_for_py_ast_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">&quot;digraph mytree {</span><span class="se">\n</span><span class="si">%s</span><span class="s">}&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_dot</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="to_dot_inner_for_py_ast_nodes"><a class="viewcode-back" href="../../ctree.html#ctree.dotgen.to_dot_inner_for_py_ast_nodes">[docs]</a><span class="k">def</span> <span class="nf">to_dot_inner_for_py_ast_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">ctree.dotgen</span> <span class="kn">import</span> <span class="n">DotGenVisitor</span>
+
+    <span class="k">return</span> <span class="n">DotGenVisitor</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</div>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Bind to_dot_for_py_ast_nodes to all classes that derive from ast.AST. Ideally</span>
+<span class="sd">we&#39;d be able to bind one method to ast.AST, but it&#39;s a built-in type so we</span>
+<span class="sd">can&#39;t.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AST</span><span class="p">):</span>
+            <span class="n">entry</span><span class="o">.</span><span class="n">label</span>   <span class="o">=</span> <span class="n">label_for_py_ast_nodes</span>
+            <span class="n">entry</span><span class="o">.</span><span class="n">to_dot</span>  <span class="o">=</span> <span class="n">to_dot_outer_for_py_ast_nodes</span>
+            <span class="n">entry</span><span class="o">.</span><span class="n">_to_dot</span> <span class="o">=</span> <span class="n">to_dot_inner_for_py_ast_nodes</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="DotGenLabeller"><a class="viewcode-back" href="../../ctree.html#ctree.dotgen.DotGenLabeller">[docs]</a><span class="k">class</span> <span class="nc">DotGenLabeller</span><span class="p">(</span><span class="n">NodeVisitor</span><span class="p">):</span>
+<div class="viewcode-block" id="DotGenLabeller.generic_visit"><a class="viewcode-back" href="../../ctree.html#ctree.dotgen.DotGenLabeller.generic_visit">[docs]</a>    <span class="k">def</span> <span class="nf">generic_visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;&quot;</span>
+
+</div></div>
 <div class="viewcode-block" id="DotGenVisitor"><a class="viewcode-back" href="../../ctree.html#ctree.dotgen.DotGenVisitor">[docs]</a><span class="k">class</span> <span class="nc">DotGenVisitor</span><span class="p">(</span><span class="n">NodeVisitor</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generates a representation of the AST in the DOT graph language.</span>
 <span class="sd">    See http://en.wikipedia.org/wiki/DOT_(graph_description_language)</span>
-
-<span class="sd">    We can use pydot to do this, instead of using plain string concatenation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_visited</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_qualified_name</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
@@ -72,22 +105,18 @@
 <div class="viewcode-block" id="DotGenVisitor.label"><a class="viewcode-back" href="../../ctree.html#ctree.dotgen.DotGenVisitor.label">[docs]</a>    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A string to provide useful information for visualization, debugging, etc.</span>
-<span class="sd">        This routine will attempt to call a label_XXX routine for class XXX, if</span>
-<span class="sd">        such a routine exists (much like the visit_XXX routines).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">out_string</span> <span class="o">=</span> <span class="s">r&quot;</span><span class="si">%s</span><span class="s">\n&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span>
-        <span class="n">labeller</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;label_&quot;</span> <span class="o">+</span> <span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">labeller</span><span class="p">:</span>
-            <span class="n">out_string</span> <span class="o">+=</span> <span class="n">labeller</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">out_string</span>
+        <span class="k">return</span> <span class="s">r&quot;</span><span class="si">%s</span><span class="s">\n</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">label</span><span class="p">())</span>
 </div>
 <div class="viewcode-block" id="DotGenVisitor.generic_visit"><a class="viewcode-back" href="../../ctree.html#ctree.dotgen.DotGenVisitor.generic_visit">[docs]</a>    <span class="k">def</span> <span class="nf">generic_visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="c"># abort if visited</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_visited</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_visited</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
         <span class="c"># label this node</span>
         <span class="n">out_string</span> <span class="o">=</span> <span class="s">&#39;n</span><span class="si">%s</span><span class="s"> [label=&quot;</span><span class="si">%s</span><span class="s">&quot;];</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">node</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">node</span><span class="p">))</span>
-
-        <span class="c"># edge to parent</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s">&#39;parent&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">out_string</span> <span class="o">+=</span> <span class="s">&#39;n</span><span class="si">%s</span><span class="s"> -&gt; n</span><span class="si">%s</span><span class="s"> [label=&quot;parent&quot;,style=dotted];</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">node</span><span class="p">),</span> <span class="nb">id</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
 
         <span class="c"># edges to children</span>
         <span class="k">for</span> <span class="n">fieldname</span><span class="p">,</span> <span class="n">fieldvalue</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">iter_fields</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
@@ -95,32 +124,8 @@
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AST</span><span class="p">):</span>
                     <span class="n">suffix</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&quot;[</span><span class="si">%d</span><span class="s">]&quot;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">index</span><span class="p">])</span>
                     <span class="n">out_string</span> <span class="o">+=</span> <span class="s">&#39;n</span><span class="si">%d</span><span class="s"> -&gt; n</span><span class="si">%d</span><span class="s"> [label=&quot;</span><span class="si">%s%s</span><span class="s">&quot;];</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">node</span><span class="p">),</span> <span class="nb">id</span><span class="p">(</span><span class="n">child</span><span class="p">),</span> <span class="n">fieldname</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span>
-                    <span class="n">out_string</span> <span class="o">+=</span> <span class="n">_to_dot</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">out_string</span>
-
-</div></div>
-<span class="k">def</span> <span class="nf">_to_dot</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert node to DOT, even if it&#39;s a Python AST node.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">ctree.nodes</span> <span class="kn">import</span> <span class="n">CtreeNode</span>
-    <span class="kn">from</span> <span class="nn">ctree.py.dotgen</span> <span class="kn">import</span> <span class="n">PyDotGen</span>
-
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AST</span><span class="p">),</span> \
-        <span class="s">&quot;Cannot convert </span><span class="si">%s</span><span class="s"> to DOT.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">CtreeNode</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">_to_dot</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">PyDotGen</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="to_dot"><a class="viewcode-back" href="../../ctree.html#ctree.dotgen.to_dot">[docs]</a><span class="k">def</span> <span class="nf">to_dot</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns a DOT representation of &#39;node&#39; suitable for viewing with a DOT viewer like Graphviz.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AST</span><span class="p">),</span> \
-        <span class="s">&quot;Cannot convert </span><span class="si">%s</span><span class="s"> to DOT.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-    <span class="k">return</span> <span class="s">&quot;digraph myprogram {</span><span class="se">\n</span><span class="si">%s</span><span class="s">}&quot;</span> <span class="o">%</span> <span class="n">_to_dot</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
+                    <span class="n">out_string</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out_string</span></div></div>
 </pre></div>
 
           </div>

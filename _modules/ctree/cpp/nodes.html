@@ -63,11 +63,11 @@
 
         <span class="k">return</span> <span class="n">CppCodeGen</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </div>
-    <span class="k">def</span> <span class="nf">_to_dot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">ctree.cpp.dotgen</span> <span class="kn">import</span> <span class="n">CppDotGen</span>
+<div class="viewcode-block" id="CppNode.label"><a class="viewcode-back" href="../../../ctree.cpp.html#ctree.cpp.nodes.CppNode.label">[docs]</a>    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">ctree.cpp.dotgen</span> <span class="kn">import</span> <span class="n">CppDotLabeller</span>
 
-        <span class="k">return</span> <span class="n">CppDotGen</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-
+        <span class="k">return</span> <span class="n">CppDotLabeller</span><span class="p">()</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</div>
     <span class="k">def</span> <span class="nf">_requires_semicolon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">False</span>
 
@@ -80,12 +80,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">angled_brackets</span> <span class="o">=</span> <span class="n">angled_brackets</span>
 
 </div>
-<div class="viewcode-block" id="Comment"><a class="viewcode-back" href="../../../ctree.cpp.html#ctree.cpp.nodes.Comment">[docs]</a><span class="k">class</span> <span class="nc">Comment</span><span class="p">(</span><span class="n">CppNode</span><span class="p">):</span>
+<div class="viewcode-block" id="CppComment"><a class="viewcode-back" href="../../../ctree.cpp.html#ctree.cpp.nodes.CppComment">[docs]</a><span class="k">class</span> <span class="nc">CppComment</span><span class="p">(</span><span class="n">CppNode</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents // foo&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">text</span><span class="p">,</span> <span class="s">&quot;Comment only supports single-line comments.&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span>
+
 </div>
 <div class="viewcode-block" id="CppDefine"><a class="viewcode-back" href="../../../ctree.cpp.html#ctree.cpp.nodes.CppDefine">[docs]</a><span class="k">class</span> <span class="nc">CppDefine</span><span class="p">(</span><span class="n">CppNode</span><span class="p">):</span>
 

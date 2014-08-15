@@ -94,27 +94,7 @@
 <div class="viewcode-block" id="VerifyOnlyCtreeNodes.visit"><a class="viewcode-back" href="../../ctree.html#ctree.analyses.VerifyOnlyCtreeNodes.visit">[docs]</a>    <span class="k">def</span> <span class="nf">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">CtreeNode</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">AstValidationError</span><span class="p">(</span><span class="s">&quot;Expected a pure C ast, but found a non-CtreeNode: </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="n">node</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">generic_visit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-
-</div></div>
-<div class="viewcode-block" id="VerifyParentPointers"><a class="viewcode-back" href="../../ctree.html#ctree.analyses.VerifyParentPointers">[docs]</a><span class="k">class</span> <span class="nc">VerifyParentPointers</span><span class="p">(</span><span class="n">NodeVisitor</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Checks that parent pointers are set correctly, and throws</span>
-<span class="sd">    an AstValidationError if they&#39;re not.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;throw if child.parent is not the actual parent&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">parent</span> <span class="o">!=</span> <span class="n">parent</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">AstValidationError</span><span class="p">(</span><span class="s">&quot;Expect parent of </span><span class="si">%s</span><span class="s"> to be </span><span class="si">%s</span><span class="s">, but got </span><span class="si">%s</span><span class="s"> instead.&quot;</span> <span class="o">%</span>
-                                     <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">child</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">parent</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">parent</span><span class="p">)))</span>
-
-<div class="viewcode-block" id="VerifyParentPointers.generic_visit"><a class="viewcode-back" href="../../ctree.html#ctree.analyses.VerifyParentPointers.generic_visit">[docs]</a>    <span class="k">def</span> <span class="nf">generic_visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">iter_fields</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">flatten</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AST</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_check</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generic_visit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

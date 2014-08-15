@@ -36,6 +36,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="ctree.cpp.html" title="ctree.cpp package"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -56,17 +59,46 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="ctree-cilk-codegen-module">
-<h2>ctree.cilk.codegen module<a class="headerlink" href="#ctree-cilk-codegen-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ctree.cilk.codegen">
+<span id="ctree-cilk-codegen-module"></span><h2>ctree.cilk.codegen module<a class="headerlink" href="#module-ctree.cilk.codegen" title="Permalink to this headline">¶</a></h2>
+<p>Code generation for Cilk.</p>
+<dl class="class">
+<dt id="ctree.cilk.codegen.CilkCodeGen">
+<em class="property">class </em><tt class="descclassname">ctree.cilk.codegen.</tt><tt class="descname">CilkCodeGen</tt><big>(</big><em>indent=0</em><big>)</big><a class="reference internal" href="_modules/ctree/cilk/codegen.html#CilkCodeGen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.cilk.codegen.CilkCodeGen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ctree.html#ctree.codegen.CodeGenVisitor" title="ctree.codegen.CodeGenVisitor"><tt class="xref py py-class docutils literal"><span class="pre">ctree.codegen.CodeGenVisitor</span></tt></a></p>
+<p>Visitor to generate Cilk code.</p>
+</dd></dl>
+
 </div>
-<div class="section" id="ctree-cilk-dotgen-module">
-<h2>ctree.cilk.dotgen module<a class="headerlink" href="#ctree-cilk-dotgen-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ctree.cilk.dotgen">
+<span id="ctree-cilk-dotgen-module"></span><h2>ctree.cilk.dotgen module<a class="headerlink" href="#module-ctree.cilk.dotgen" title="Permalink to this headline">¶</a></h2>
+<p>DOT labeller for Cilk.</p>
+<dl class="class">
+<dt id="ctree.cilk.dotgen.CilkDotLabeller">
+<em class="property">class </em><tt class="descclassname">ctree.cilk.dotgen.</tt><tt class="descname">CilkDotLabeller</tt><a class="reference internal" href="_modules/ctree/cilk/dotgen.html#CilkDotLabeller"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.cilk.dotgen.CilkDotLabeller" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ctree.html#ctree.dotgen.DotGenLabeller" title="ctree.dotgen.DotGenLabeller"><tt class="xref py py-class docutils literal"><span class="pre">ctree.dotgen.DotGenLabeller</span></tt></a></p>
+<p>Visitor to label DOT nodes.</p>
+</dd></dl>
+
 </div>
-<div class="section" id="ctree-cilk-nodes-module">
-<h2>ctree.cilk.nodes module<a class="headerlink" href="#ctree-cilk-nodes-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ctree.cilk.nodes">
+<span id="ctree-cilk-nodes-module"></span><h2>ctree.cilk.nodes module<a class="headerlink" href="#module-ctree.cilk.nodes" title="Permalink to this headline">¶</a></h2>
+<p>Cilk nodes supported by ctree.</p>
+<dl class="class">
+<dt id="ctree.cilk.nodes.CilkNode">
+<em class="property">class </em><tt class="descclassname">ctree.cilk.nodes.</tt><tt class="descname">CilkNode</tt><a class="reference internal" href="_modules/ctree/cilk/nodes.html#CilkNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.cilk.nodes.CilkNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ctree.nodes.CtreeNode</span></tt></p>
+<p>Base class for all Cilk nodes supported by ctree.</p>
+<dl class="method">
+<dt id="ctree.cilk.nodes.CilkNode.codegen">
+<tt class="descname">codegen</tt><big>(</big><em>indent=0</em><big>)</big><a class="reference internal" href="_modules/ctree/cilk/nodes.html#CilkNode.codegen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ctree.cilk.nodes.CilkNode.codegen" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ctree.cilk">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ctree.cilk" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -80,10 +112,10 @@
   <ul>
 <li><a class="reference internal" href="#">ctree.cilk package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#ctree-cilk-codegen-module">ctree.cilk.codegen module</a></li>
-<li><a class="reference internal" href="#ctree-cilk-dotgen-module">ctree.cilk.dotgen module</a></li>
-<li><a class="reference internal" href="#ctree-cilk-nodes-module">ctree.cilk.nodes module</a></li>
-<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li><a class="reference internal" href="#module-ctree.cilk.codegen">ctree.cilk.codegen module</a></li>
+<li><a class="reference internal" href="#module-ctree.cilk.dotgen">ctree.cilk.dotgen module</a></li>
+<li><a class="reference internal" href="#module-ctree.cilk.nodes">ctree.cilk.nodes module</a></li>
+<li><a class="reference internal" href="#module-ctree.cilk">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -122,6 +154,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="ctree.cpp.html" title="ctree.cpp package"
              >next</a> |</li>
