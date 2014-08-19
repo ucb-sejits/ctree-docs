@@ -103,6 +103,8 @@
         <span class="n">ast</span><span class="o">.</span><span class="n">BitXor</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitXor</span><span class="p">,</span>
         <span class="n">ast</span><span class="o">.</span><span class="n">LShift</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitShL</span><span class="p">,</span>
         <span class="n">ast</span><span class="o">.</span><span class="n">RShift</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">BitShR</span><span class="p">,</span>
+        <span class="n">ast</span><span class="o">.</span><span class="n">Is</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span><span class="n">Eq</span><span class="p">,</span>
+        <span class="n">ast</span><span class="o">.</span><span class="n">IsNot</span><span class="p">:</span> <span class="n">Op</span><span class="o">.</span> <span class="n">NotEq</span>
         <span class="c"># TODO list the rest</span>
     <span class="p">}</span>
 
@@ -122,7 +124,7 @@
 <div class="viewcode-block" id="PyBasicConversions.visit_BinOp"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.PyBasicConversions.visit_BinOp">[docs]</a>    <span class="k">def</span> <span class="nf">visit_BinOp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="n">lhs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
         <span class="n">rhs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
-        <span class="n">op</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PY_OP_TO_CTREE_OP</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">)]()</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PY_OP_TO_CTREE_OP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">))()</span>
         <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="PyBasicConversions.visit_Return"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.PyBasicConversions.visit_Return">[docs]</a>    <span class="k">def</span> <span class="nf">visit_Return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
@@ -185,7 +187,8 @@
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">ops</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> \
             <span class="s">&quot;PyBasicConversions doesn&#39;t support Compare nodes with more than one operator.&quot;</span>
         <span class="n">lhs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
-        <span class="n">op</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PY_OP_TO_CTREE_OP</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">ops</span><span class="p">[</span><span class="mi">0</span><span class="p">])]()</span>
+
+        <span class="n">op</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PY_OP_TO_CTREE_OP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">ops</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">ops</span><span class="p">[</span><span class="mi">0</span><span class="p">]))()</span>
         <span class="n">rhs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">comparators</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">BinaryOp</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
 </div>
@@ -257,7 +260,7 @@
 <div class="viewcode-block" id="Lifter"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.Lifter">[docs]</a><span class="k">class</span> <span class="nc">Lifter</span><span class="p">(</span><span class="n">NodeTransformer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    To aid in adding new includes or parameters during tree</span>
-<span class="sd">    traversals, users can store them with arbirary child nodes and call this</span>
+<span class="sd">    traversals, users can store them with arbitrary child nodes and call this</span>
 <span class="sd">    transformation to move them to the correct position.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lift_params</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">lift_includes</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
