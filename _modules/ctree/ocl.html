@@ -93,14 +93,18 @@
 <span class="p">})</span>
 
 
-<span class="n">device_context_map</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">devices_context_queue_map</span> <span class="o">=</span> <span class="p">{}</span>
 
-<div class="viewcode-block" id="get_context_from_device"><a class="viewcode-back" href="../../ctree.ocl.html#ctree.ocl.get_context_from_device">[docs]</a><span class="k">def</span> <span class="nf">get_context_from_device</span><span class="p">(</span><span class="n">device</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_context_and_queue_from_devices"><a class="viewcode-back" href="../../ctree.ocl.html#ctree.ocl.get_context_and_queue_from_devices">[docs]</a><span class="k">def</span> <span class="nf">get_context_and_queue_from_devices</span><span class="p">(</span><span class="n">devices</span><span class="p">):</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">vendor_id</span> <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">devices</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">device_context_map</span><span class="p">[</span><span class="n">device</span><span class="o">.</span><span class="n">vendor_id</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">devices_context_queue_map</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="n">device_context_map</span><span class="p">[</span><span class="n">device</span><span class="o">.</span><span class="n">vendor_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">pycl</span><span class="o">.</span><span class="n">clCreateContext</span><span class="p">([</span><span class="n">device</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">device_context_map</span><span class="p">[</span><span class="n">device</span><span class="o">.</span><span class="n">vendor_id</span><span class="p">]</span></div>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">pycl</span><span class="o">.</span><span class="n">clCreateContext</span><span class="p">(</span><span class="n">devices</span><span class="p">)</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">pycl</span><span class="o">.</span><span class="n">clCreateCommandQueue</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="n">devices_context_queue_map</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">queue</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">devices_context_queue_map</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
 </pre></div>
 
           </div>
