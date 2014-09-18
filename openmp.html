@@ -70,28 +70,17 @@ $ git clone -b clang-omp https://github.com/clang-omp/clang llvm/tools/clang
 We will assume that it will be in /usr/local/llvm_build, for the next step do this from the command
 line, via:</p>
 <div class="highlight-python"><div class="highlight"><pre>$ export LLVM_BUILD_PATH=/usr/local/llvm_build  # Change this for your particular environment
+$ mkdir $LLVM_BUILD_PATH
 </pre></div>
 </div>
+<p>Depending on the location of LLVM_BUILD_PATH it may be necessary to use sudo with the mkdir command above, and
+in that case you may also want to make that directory owned by someone other than root</p>
 <p>Now, build clang/llvm:</p>
 <div class="highlight-python"><div class="highlight"><pre>$ mkdir build
 $ cd build
-$ # Make a build directory, i.e.
-$ # sudo mkdir /opt/llvm-omp
-$ # sudo chown username /opt/llvm-omp
 $ ../llvm/configure --enable-optimized --prefix=$LLVM_BUILD_PATH
 $ REQUIRES_RTTI=1 make
 $ make install
-</pre></div>
-</div>
-<p>Setup your environment variables (add this to your .bashrc or .zshrc) in your shell configuration. On Mac OS X,
-replace LD_LIBRARY_PATH with DYLD_LIBRARY_PATH.:</p>
-<div class="highlight-python"><div class="highlight"><pre>export LLVM_BUILD_PATH=/usr/local/llvm_build  # Change this for your particular environment
-export OPENMP_RUNTIME_PATH=/usr/local/open_mp # Change this
-export PATH=$LLVM_BUILD_PATH/bin:$PATH
-export C_INCLUDE_PATH=$LLVM_BUILD_PATH/include:&lt;OpenMP include path&gt;:$C_INCLUDE_PATH
-export CPLUS_INCLUDE_PATH=$LLVM_BUILD_PATH/include:&lt;OpenMP include path&gt;:$CPLUS_INCLUDE_PATH
-export LIBRARY_PATH=$LLVM_BUILD_PATH/lib:&lt;OpenMP library path&gt;:$LIBRARY_PATH
-export LD_LIBRARY_PATH=$LLVM_BUILD_PATH/lib:&lt;OpenMP library path&gt;:$LD_LIBRARY_PATH
 </pre></div>
 </div>
 <p>Download and install the Intel OpenMP Runtime Library from
@@ -100,8 +89,41 @@ export LD_LIBRARY_PATH=$LLVM_BUILD_PATH/lib:&lt;OpenMP library path&gt;:$LD_LIBR
 You can use the evaluation version of the Intel compilers which will install
 the OpenMP runtime library.  After 30 days the compilers will cease to work but
 the runtime library will still be usable.</p>
-<p>Include the OpenMP RTL, for OSX with the evaluation Intel Compilers you can do:</p>
-<div class="highlight-python"><div class="highlight"><pre>DYLD_LIBRARY_PATH=/opt/intel/composerxe/lib:$DYLD_LIBRARY_PATH
+<dl class="docutils">
+<dt>Setup your environment variables for a linux system (add this to your .bashrc or .zshrc) in your shell configuration.::</dt>
+<dd><p class="first">export LLVM_BUILD_PATH=/usr/local/llvm_build  # Change this for your particular environment
+export OPENMP_RUNTIME_PATH=/usr/local/open_mp # Change this</p>
+<p>export LLVM_BUILD_PATH=/usr/local/llvm-omp
+export OPENMP_RUNTIME_PATH=/opt/intel/composerxe</p>
+<p>export LD_LIBRARY_PATH=/opt/intel/composerxe/lib</p>
+<p>export CPLUS_INCLUDE_PATH=/usr/include/:/usr/include/c++
+export C_INCLUDE_PATH=/usr/include/:/usr/include/c++</p>
+<p class="last">export PATH=$LLVM_BUILD_PATH/bin:$PATH
+export C_INCLUDE_PATH=$LLVM_BUILD_PATH/include:$OPENMP_RUNTIME_PATH/include:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=$LLVM_BUILD_PATH/include:$OPENMP_RUNTIME_PATH/include:$CPLUS_INCLUDE_PATH
+export LIBRARY_PATH=$LLVM_BUILD_PATH/lib:&lt;OpenMP library path&gt;:$LIBRARY_PATH
+export LD_LIBRARY_PATH=$LLVM_BUILD_PATH/lib:&lt;OpenMP library path&gt;:$LD_LIBRARY_PATH</p>
+</dd>
+</dl>
+<p>On Mac OS X, replace LD_LIBRARY_PATH with DYLD_LIBRARY_PATH.:</p>
+<div class="highlight-python"><div class="highlight"><pre>export LLVM_BUILD_PATH=/usr/local/llvm_build  # Change this for your particular environment
+export OPENMP_RUNTIME_PATH=/usr/local/open_mp # Change this
+
+export LLVM_BUILD_PATH=/usr/local/llvm-omp
+export OPENMP_RUNTIME_PATH=/opt/intel/composerxe
+
+export LD_LIBRARY_PATH=/opt/intel/composerxe/lib
+
+export CPLUS_INCLUDE_PATH=/usr/include/:/usr/include/c++
+export C_INCLUDE_PATH=/usr/include/:/usr/include/c++
+
+export PATH=$LLVM_BUILD_PATH/bin:$PATH
+export C_INCLUDE_PATH=$LLVM_BUILD_PATH/include:$OPENMP_RUNTIME_PATH/include:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=$LLVM_BUILD_PATH/include:$OPENMP_RUNTIME_PATH/include:$CPLUS_INCLUDE_PATH
+export LIBRARY_PATH=$LLVM_BUILD_PATH/lib:&lt;OpenMP library path&gt;:$LIBRARY_PATH
+export LD_LIBRARY_PATH=$LLVM_BUILD_PATH/lib:&lt;OpenMP library path&gt;:$LD_LIBRARY_PATH
+
+export DYLD_LIBRARY_PATH=/opt/intel/composerxe/lib:$DYLD_LIBRARY_PATH
 </pre></div>
 </div>
 <p>Download and checkout gentoo90&#8217;s llvmpy branch with llvm-3.4 support and build
