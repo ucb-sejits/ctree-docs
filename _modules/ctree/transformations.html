@@ -225,8 +225,16 @@
             <span class="k">return</span> <span class="n">DivAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">BitXor</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">BitXorAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">BitAnd</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">BitAndAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">BitOr</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">BitOrAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">Mod</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">ModAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">LShift</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">BitShLAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">RShift</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">BitShRAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="c"># TODO: Error?</span>
         <span class="k">return</span> <span class="n">node</span>
 </div>
