@@ -53,15 +53,14 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">ast</span>
-
 <span class="kn">from</span> <span class="nn">ctypes</span> <span class="kn">import</span> <span class="n">c_long</span>
 
-<span class="kn">from</span> <span class="nn">ctree.nodes</span> <span class="kn">import</span> <span class="n">Project</span><span class="p">,</span> <span class="n">CtreeNode</span>
+<span class="kn">from</span> <span class="nn">ctree.nodes</span> <span class="kn">import</span> <span class="n">Project</span>
 <span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="n">Op</span><span class="p">,</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">SymbolRef</span><span class="p">,</span> <span class="n">BinaryOp</span><span class="p">,</span> <span class="n">TernaryOp</span><span class="p">,</span> <span class="n">Return</span>
-<span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="n">If</span><span class="p">,</span> <span class="n">CFile</span><span class="p">,</span> <span class="n">FunctionCall</span><span class="p">,</span> <span class="n">FunctionDecl</span><span class="p">,</span> <span class="n">For</span><span class="p">,</span> <span class="n">Assign</span><span class="p">,</span> <span class="n">AugAssign</span><span class="p">,</span> <span class="n">ArrayRef</span>
-<span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="n">Lt</span><span class="p">,</span> <span class="n">PostInc</span><span class="p">,</span> <span class="n">AddAssign</span><span class="p">,</span> <span class="n">SubAssign</span><span class="p">,</span> <span class="n">MulAssign</span><span class="p">,</span> <span class="n">DivAssign</span>
+<span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="n">If</span><span class="p">,</span> <span class="n">CFile</span><span class="p">,</span> <span class="n">FunctionCall</span><span class="p">,</span> <span class="n">FunctionDecl</span><span class="p">,</span> <span class="n">For</span><span class="p">,</span> <span class="n">Assign</span><span class="p">,</span> <span class="n">ArrayRef</span>
+<span class="kn">from</span> <span class="nn">ctree.c.nodes</span> <span class="kn">import</span> <span class="n">Lt</span><span class="p">,</span> <span class="n">AddAssign</span>
+<span class="kn">import</span> <span class="nn">ctree.c.nodes</span>
 <span class="kn">from</span> <span class="nn">ctree.visitors</span> <span class="kn">import</span> <span class="n">NodeTransformer</span>
-<span class="kn">from</span> <span class="nn">ctree.util</span> <span class="kn">import</span> <span class="n">flatten</span>
 
 
 <div class="viewcode-block" id="PyCtxScrubber"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.PyCtxScrubber">[docs]</a><span class="k">class</span> <span class="nc">PyCtxScrubber</span><span class="p">(</span><span class="n">NodeTransformer</span><span class="p">):</span>
@@ -215,27 +214,24 @@
         <span class="n">op</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">)</span>
         <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">Add</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">AddAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">Sub</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">SubAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">Mult</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">MulAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">Div</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">DivAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">BitXor</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">BitXorAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">BitAnd</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">BitAndAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">BitOr</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">BitOrAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">Mod</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ModAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">LShift</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">BitShLAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">ast</span><span class="o">.</span><span class="n">RShift</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">BitShRAssign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="c"># TODO: Error?</span>
+        <span class="c"># if op is ast.Add:</span>
+        <span class="c">#     return AddAssign(target, value)</span>
+        <span class="c"># elif op is ast.Sub:</span>
+        <span class="c">#     return SubAssign(target, value)</span>
+        <span class="c"># elif op is ast.Mult:</span>
+        <span class="c">#     return MulAssign(target, value)</span>
+        <span class="c"># elif op is ast.Div:</span>
+        <span class="c">#     return DivAssign(target, value)</span>
+        <span class="c"># elif op is ast.BitXor:</span>
+        <span class="c">#     return BitXorAssign(target, value)</span>
+        <span class="c"># # TODO: Error?</span>
+        <span class="n">lookup</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">ast</span><span class="o">.</span><span class="n">Add</span><span class="p">:</span> <span class="s">&#39;AddAssign&#39;</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Sub</span><span class="p">:</span> <span class="s">&#39;SubAssign&#39;</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Mult</span><span class="p">:</span> <span class="s">&#39;MulAssign&#39;</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Div</span><span class="p">:</span> <span class="s">&#39;DivAssign&#39;</span><span class="p">,</span>
+            <span class="n">ast</span><span class="o">.</span><span class="n">BitAnd</span><span class="p">:</span> <span class="s">&#39;BitAndAssign&#39;</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">BitOr</span><span class="p">:</span> <span class="s">&#39;BitOrAssign&#39;</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">BitXor</span><span class="p">:</span> <span class="s">&#39;BitXorAssign&#39;</span><span class="p">,</span>
+            <span class="n">ast</span><span class="o">.</span><span class="n">LShift</span><span class="p">:</span> <span class="s">&#39;BitShLAssign&#39;</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">RShift</span><span class="p">:</span> <span class="s">&#39;BitShRAssign&#39;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">lookup</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ctree</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">lookup</span><span class="p">[</span><span class="n">op</span><span class="p">])(</span><span class="n">target</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">node</span>
 </div>
 <div class="viewcode-block" id="PyBasicConversions.visit_Assign"><a class="viewcode-back" href="../../ctree.html#ctree.transformations.PyBasicConversions.visit_Assign">[docs]</a>    <span class="k">def</span> <span class="nf">visit_Assign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
